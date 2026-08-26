@@ -564,14 +564,8 @@ def format_raw_data(signals: dict, compact: bool = False) -> str:
             if len(hio) > MAX_RAW_HIO:
                 lines.append(f"  ...and {len(hio) - MAX_RAW_HIO} more")
 
-    lines.append("\nSCADA drops today (>=100MW, fuel-filtered):")
-    drops = signals.get("scada_drops_today", [])
-    if drops:
-        for d in drops:
-            lines.append(f"  {d['time']} {d['duid']} ({d.get('station') or '?'}) [{d.get('region') or '?'}]: "
-                         f"{d['previous_mw']:.0f} -> {d['current_mw']:.0f}MW ({d['drop_mw']:+.0f}MW)")
-    else:
-        lines.append("  (none)")
+    # SCADA drops display removed - market_read is forward-looking, and scada_drop_monitor.py
+    # already has its own dedicated real-time alert for this. Signal kept for causal_rules.py.
 
     lines.append("\nNegative pricing (trailing week):")
     neg = signals.get("negative_pricing", {})
