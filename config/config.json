@@ -1,0 +1,33 @@
+{
+  "ntfy_base_url": "https://ntfy.sh",
+  "request_timeout_seconds": 30,
+  "user_agent": "nem-intelligence-system/1.0",
+  "cap_strike": 300,
+  "nem_regions": ["NSW1", "QLD1", "VIC1", "SA1", "TAS1"],
+  "_spot_spike_note": "Top threshold should track the current NEM Market Price Cap, which AEMO raises each 1 July (indexed) - it was $17,500 for FY2024-25. Check the current MPC and update this list each financial year.",
+  "spot_spike_thresholds": [300, 1000, 5000, 15000],
+  "_ntfy_note": "ntfy.sh topics are unauthenticated - anyone who knows the topic string can subscribe. This repo is public, so the real topic names live in the NTFY_TOPICS_JSON GitHub Actions repository secret (same shape as this object) rather than here - nemweb_common.load_config() overrides this placeholder with that secret's contents at runtime. These placeholders are only used for a local/laptop run with no env var set.",
+  "ntfy_topics": {
+    "pasa": "CHANGE_ME-pasa",
+    "cap_payouts": "CHANGE_ME-cappayouts",
+    "rebid": "CHANGE_ME-rebid",
+    "spot": "CHANGE_ME-spot",
+    "interconnector": "CHANGE_ME-interconnector",
+    "predispatch": "CHANGE_ME-predispatch",
+    "gas_spread": "CHANGE_ME-gasspread",
+    "customer": "CHANGE_ME-customer",
+    "market_read": "CHANGE_ME-marketread",
+    "reserve_outlook": "CHANGE_ME-reserveoutlook",
+    "recap": "CHANGE_ME-recap"
+  },
+  "_customer_note": "customer_watch_all=true watches every DUID in the registry (all companies, all fuel types) rather than one portfolio - no fuel filter, so wind/solar noise is expected at this threshold. Set it back to false and use customer_portfolios (owner-name substrings, e.g. 'Origin Energy') if you want one specific company's assets instead.",
+  "customer_watch_all": true,
+  "customer_portfolios": [],
+  "customer_watch_threshold_mw": 20,
+  "_gas_spread_note": "Both international_lng_jkm_usd_mmbtu (scraped live from tradingeconomics.com, a CFD-tracked proxy, not the official Platts benchmark) and audusd_fx_rate (live from frankfurter.app) are now fetched automatically each run by gas_spread_tracker.py. The values below are only a fallback used if a live fetch ever fails - update them occasionally so the fallback stays roughly sane, but they're no longer what drives the alert day to day. last_updated/staleness only applies when actually running on this fallback.",
+  "gas_benchmark": {
+    "international_lng_jkm_usd_mmbtu": 12.50,
+    "audusd_fx_rate": 0.66,
+    "last_updated": "2026-07-28"
+  }
+}

@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+
+# Windows Task Scheduler setup scripts - specific to the old laptop-based deployment,
+# not used now that this runs on GitHub Actions instead.
+switch_tasks_to_system.ps1
+fix_wake_and_battery_settings.ps1
+update_market_read_and_recap_schedule.ps1
+enable_unattended_tasks.ps1
