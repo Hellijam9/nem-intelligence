@@ -485,7 +485,7 @@ def flow_direction_label(ic_id: str, flow: float) -> str:
 def format_raw_data(signals: dict, compact: bool = False) -> str:
     lines = ["=== RAW DATA ==="]
 
-    lines.append("\nSpot prices - qtr-to-date avg / today expected / tomorrow expected:")
+    lines.append("\nSpot prices:")
     all_regions = sorted(set(signals.get("current_prices", {})) | set(signals.get("qtd_spot_avg", {})))
     for region in all_regions:
         qtd = signals.get("qtd_spot_avg", {}).get(region)
@@ -500,7 +500,7 @@ def format_raw_data(signals: dict, compact: bool = False) -> str:
             parts.append(f"tomorrow ~${tomorrow:,.2f}")
         lines.append(f"  {region}: " + (", ".join(parts) if parts else "no data"))
 
-    lines.append("\nCap payout - today (actual+forecast) / tomorrow (forecast), $300 strike, per 1MW held:")
+    lines.append("\nCap payout ($300 strike, per 1MW held):")
     for region in all_regions:
         today_payout = signals.get("today_cap_payout", {}).get(region)
         tomorrow_payout = signals.get("tomorrow_cap_payout", {}).get(region)
