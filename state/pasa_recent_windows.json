@@ -8458,5 +8458,45 @@
     "start": "2026-09-14",
     "end": "2026-09-18",
     "found_at": "2026-08-26T06:49:24.909379"
+  },
+  {
+    "duid": "MP2",
+    "station": "Mt Piper",
+    "owner": "EnergyAustralia NSW Pty Ltd",
+    "region": "NSW1",
+    "delta": -700,
+    "start": "2026-08-30",
+    "end": "2026-08-31",
+    "found_at": "2026-08-26T09:41:13.349261"
+  },
+  {
+    "duid": "TNPS1",
+    "station": "Tarong North",
+    "owner": "Stanwell Corporation Limited",
+    "region": "QLD1",
+    "delta": -400,
+    "start": "2026-09-16",
+    "end": "2026-09-16",
+    "found_at": "2026-08-26T09:41:13.349261"
+  },
+  {
+    "duid": "YWPS4",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": 370,
+    "start": "2026-09-02",
+    "end": "2026-09-03",
+    "found_at": "2026-08-26T09:41:13.349261"
+  },
+  {
+    "duid": "BW03",
+    "station": "Bayswater",
+    "owner": "AGL Macquarie Pty Limited",
+    "region": "NSW1",
+    "delta": -325,
+    "start": "2026-08-30",
+    "end": "2026-09-11",
+    "found_at": "2026-08-26T09:41:13.349261"
   }
 ]
