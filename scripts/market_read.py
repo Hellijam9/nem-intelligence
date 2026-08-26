@@ -511,38 +511,11 @@ def format_raw_data(signals: dict, compact: bool = False) -> str:
             parts.append(f"tomorrow ${tomorrow_payout:,.2f}")
         lines.append(f"  {region}: " + (", ".join(parts) if parts else "no data"))
 
-    ic_flagged = signals.get("interconnectors_flagged", {})
-    ic_raw = signals.get("interconnectors_raw", {})
-    if compact:
-        # Every interconnector printed in full every run was mostly noise - the only ones
-        # that actually matter day to day are the ones near their limit. Everything else
-        # collapses to a single "N others normal" line.
-        flagged_ids = [i for i in ic_raw if ic_flagged.get(i)]
-        lines.append("\nInterconnectors:")
-        if flagged_ids:
-            for ic_id in flagged_ids:
-                info = ic_raw[ic_id]
-                label = INTERCONNECTOR_LABELS.get(ic_id, ic_id)
-                util = info["utilization"]
-                util_str = f"{util*100:.0f}% of limit" if util is not None else "n/a"
-                direction = flow_direction_label(ic_id, info["flow"])
-                direction_str = f", {direction}" if direction else ""
-                lines.append(f"  {label} ({ic_id}): {info['flow']:.0f}MW{direction_str}, {util_str}  <-- AT/NEAR LIMIT")
-            others = len(ic_raw) - len(flagged_ids)
-            if others:
-                lines.append(f"  ({others} other(s) within normal limits)")
-        else:
-            lines.append(f"  All {len(ic_raw)} within normal limits.")
-    else:
-        lines.append("\nInterconnectors (live):")
-        for ic_id, info in ic_raw.items():
-            label = INTERCONNECTOR_LABELS.get(ic_id, ic_id)
-            util = info["utilization"]
-            util_str = f"{util*100:.0f}% of limit" if util is not None else "n/a"
-            flag = "  <-- AT/NEAR LIMIT" if ic_flagged.get(ic_id) else ""
-            direction = flow_direction_label(ic_id, info["flow"])
-            direction_str = f", {direction}" if direction else ""
-            lines.append(f"  {label} ({ic_id}): {info['flow']:.0f}MW{direction_str}, {util_str}{flag}")
+    # Live interconnector flow/limit display removed from market_read entirely - it duplicates
+    # interconnector_monitor.py's own dedicated notification, which already alerts on anything
+    # actually at/near its limit. The underlying interconnectors_raw/interconnectors_flagged
+    # signals are kept (not removed) since causal_rules.py's SA/Heywood constraint finding
+    # still depends on them.
 
     # These two sections had no cap at all until now - a 7-day window can carry one reduction
     # entry per day per side per interconnector (41 seen live) and a 60-day HIO window easily
