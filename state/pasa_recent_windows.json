@@ -8408,5 +8408,55 @@
     "start": "2026-10-12",
     "end": "2026-10-14",
     "found_at": "2026-08-26T14:33:45.701764"
+  },
+  {
+    "duid": "YWPS2",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": -340,
+    "start": "2026-10-12",
+    "end": "2026-10-19",
+    "found_at": "2026-08-26T06:49:24.909379"
+  },
+  {
+    "duid": "YWPS1",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": -330,
+    "start": "2026-10-28",
+    "end": "2026-11-01",
+    "found_at": "2026-08-26T06:49:24.909379"
+  },
+  {
+    "duid": "YWPS1",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": 330,
+    "start": "2026-10-21",
+    "end": "2026-10-25",
+    "found_at": "2026-08-26T06:49:24.909379"
+  },
+  {
+    "duid": "YWPS2",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": 320,
+    "start": "2026-09-29",
+    "end": "2026-10-06",
+    "found_at": "2026-08-26T06:49:24.909379"
+  },
+  {
+    "duid": "UPPTUMUT",
+    "station": "Upper Tumut",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": -184,
+    "start": "2026-09-14",
+    "end": "2026-09-18",
+    "found_at": "2026-08-26T06:49:24.909379"
   }
 ]
