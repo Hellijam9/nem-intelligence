@@ -567,13 +567,9 @@ def format_raw_data(signals: dict, compact: bool = False) -> str:
     # SCADA drops display removed - market_read is forward-looking, and scada_drop_monitor.py
     # already has its own dedicated real-time alert for this. Signal kept for causal_rules.py.
 
-    lines.append("\nNegative pricing (trailing week):")
-    neg = signals.get("negative_pricing", {})
-    if neg:
-        for region, info in sorted(neg.items()):
-            lines.append(f"  {region}: {info['pct']:.1f}%" + (f"  ({info['trend']})" if info.get("trend") else ""))
-    else:
-        lines.append("  (no history yet)")
+    # Negative pricing display removed - backward-looking trailing-week stat, and
+    # negative_pricing_tracker.py already has its own dedicated alert for it. Signal kept:
+    # feeds causal_rules.py's finding and the regional outlook's SA1/QLD1 blurbs below.
 
     coal = signals.get("coal_fleet_trend", {})
     if coal:
