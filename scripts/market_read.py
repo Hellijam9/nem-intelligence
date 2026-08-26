@@ -611,6 +611,7 @@ def format_commentary(findings: list[causal_rules.Finding], compact: bool = Fals
 
     order = {"notable": 0, "watch": 1, "info": 2}
     findings = sorted(findings, key=lambda f: order.get(f.severity, 3))
+    absorbed_headlines = set()
 
     if compact:
         # "info" is this system's own lowest-priority label - dropping it from the actual push
@@ -622,17 +623,20 @@ def format_commentary(findings: list[causal_rules.Finding], compact: bool = Fals
             return "No notable or watch-level patterns matched right now - only lower-priority info-level signals."
         findings = significant
 
-        # De-duplicate: rule_compound_risk() lists its precursor findings by headline inside
-        # its own detail text (with a per-region breakdown), so printing those same findings
-        # again in full right below it was pure repetition, not extra information.
+        # rule_compound_risk() lists its precursor findings by headline inside its own detail
+        # text (with a per-region breakdown), so repeating their full explanatory rationale
+        # again right below it was pure repetition. But their own detail - e.g. the PASA
+        # finding's actual list of which plant, how much MW, what dates - is NOT repeated
+        # anywhere else (High Impact Outages only covers transmission/interconnector assets,
+        # never generators), so that concrete list still needs to survive. Absorbed findings
+        # keep their headline+detail, just skip the redundant Pattern/precedent line.
         compound = next((f for f in findings if f.severity == "notable" and "precursor patterns active" in f.headline), None)
         if compound:
-            absorbed = {
+            absorbed_headlines = {
                 line.strip().lstrip("-").strip()
                 for line in compound.detail.split("\n")
                 if line.strip().startswith("-")
             }
-            findings = [f for f in findings if f is compound or f.headline not in absorbed]
 
     lines = [f"=== MARKET READ ({len(findings)} pattern(s)) ===\n"]
     # Plain text tags, not emoji - "info source" (ℹ️) in particular is a text-style
@@ -658,11 +662,15 @@ def format_commentary(findings: list[causal_rules.Finding], compact: bool = Fals
         # In compact mode (the actual ntfy push) only the first sentence of the QED-precedent
         # rationale is kept - these paragraphs were a big contributor to the message blowing
         # well past ntfy's ~4KB limit and silently turning into an unreadable file attachment.
-        # The full rationale is still there when you run the script directly.
-        precedent = f.precedent
-        if compact:
-            precedent = precedent.split(". ")[0].rstrip(".") + "."
-        lines.append(f"   Pattern: {precedent}")
+        # The full rationale is still there when you run the script directly. Skipped entirely
+        # for a finding absorbed into compound risk - its rationale is compound risk's own
+        # rationale, already printed there; only this finding's concrete detail (which plant,
+        # how much MW, what dates) is unique and needs to survive.
+        if f.headline not in absorbed_headlines:
+            precedent = f.precedent
+            if compact:
+                precedent = precedent.split(". ")[0].rstrip(".") + "."
+            lines.append(f"   Pattern: {precedent}")
         lines.append("")
     return "\n".join(lines)
 
