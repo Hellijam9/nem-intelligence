@@ -8498,5 +8498,15 @@
     "start": "2026-08-30",
     "end": "2026-09-11",
     "found_at": "2026-08-26T09:41:13.349261"
+  },
+  {
+    "duid": "MSTUART1",
+    "station": "Mt Stuart",
+    "owner": "Origin Energy Mt Stuart",
+    "region": "QLD1",
+    "delta": -138,
+    "start": "2026-09-01",
+    "end": "2026-09-04",
+    "found_at": "2026-08-28T14:56:29.550586"
   }
 ]
