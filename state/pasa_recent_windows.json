@@ -8538,5 +8538,25 @@
     "start": "2026-11-24",
     "end": "2026-11-28",
     "found_at": "2026-08-31T04:00:24.591564"
+  },
+  {
+    "duid": "TNPS1",
+    "station": "Tarong North",
+    "owner": "Stanwell Corporation Limited",
+    "region": "QLD1",
+    "delta": -443,
+    "start": "2028-04-21",
+    "end": "2028-07-14",
+    "found_at": "2026-08-31T12:52:13.815815"
+  },
+  {
+    "duid": "TNPS1",
+    "station": "Tarong North",
+    "owner": "Stanwell Corporation Limited",
+    "region": "QLD1",
+    "delta": 443,
+    "start": "2027-04-02",
+    "end": "2027-06-25",
+    "found_at": "2026-08-31T12:52:13.815815"
   }
 ]
