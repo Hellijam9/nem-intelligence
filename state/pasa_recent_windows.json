@@ -8628,5 +8628,35 @@
     "start": "2027-12-01",
     "end": "2027-12-14",
     "found_at": "2026-09-01T00:24:38.046537"
+  },
+  {
+    "duid": "MSTUART1",
+    "station": "Mt Stuart",
+    "owner": "Origin Energy Mt Stuart",
+    "region": "QLD1",
+    "delta": -138,
+    "start": "2028-04-24",
+    "end": "2028-06-17",
+    "found_at": "2026-09-01T13:57:34.825848"
+  },
+  {
+    "duid": "MSTUART2",
+    "station": "Mt Stuart",
+    "owner": "Origin Energy Mt Stuart",
+    "region": "QLD1",
+    "delta": -138,
+    "start": "2028-04-24",
+    "end": "2028-06-17",
+    "found_at": "2026-09-01T13:57:34.825848"
+  },
+  {
+    "duid": "MSTUART3",
+    "station": "Mt Stuart",
+    "owner": "Origin Energy Mt Stuart",
+    "region": "QLD1",
+    "delta": -132,
+    "start": "2028-04-24",
+    "end": "2028-05-20",
+    "found_at": "2026-09-01T13:57:34.825848"
   }
 ]
