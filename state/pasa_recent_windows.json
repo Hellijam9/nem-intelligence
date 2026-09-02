@@ -8698,5 +8698,35 @@
     "start": "2027-02-08",
     "end": "2027-02-12",
     "found_at": "2026-09-02T03:10:44.309828"
+  },
+  {
+    "duid": "REECE1",
+    "station": "Reece",
+    "owner": "Hydro-Electric Corporation",
+    "region": "TAS1",
+    "delta": -119,
+    "start": "2027-02-08",
+    "end": "2027-04-01",
+    "found_at": "2026-09-02T10:45:27.078979"
+  },
+  {
+    "duid": "REECE1",
+    "station": "Reece",
+    "owner": "Hydro-Electric Corporation",
+    "region": "TAS1",
+    "delta": 119,
+    "start": "2026-10-26",
+    "end": "2026-11-22",
+    "found_at": "2026-09-02T10:45:27.078979"
+  },
+  {
+    "duid": "REECE1",
+    "station": "Reece",
+    "owner": "Hydro-Electric Corporation",
+    "region": "TAS1",
+    "delta": 119,
+    "start": "2026-12-18",
+    "end": "2027-01-01",
+    "found_at": "2026-09-02T10:45:27.078979"
   }
 ]
