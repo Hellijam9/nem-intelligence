@@ -8658,5 +8658,45 @@
     "start": "2028-04-24",
     "end": "2028-05-20",
     "found_at": "2026-09-01T13:57:34.825848"
+  },
+  {
+    "duid": "LNGS1",
+    "station": "Laverton North",
+    "owner": "Snowy Hydro Ltd",
+    "region": "VIC1",
+    "delta": 162,
+    "start": "2026-09-15",
+    "end": "2026-09-17",
+    "found_at": "2026-09-02T03:10:44.309828"
+  },
+  {
+    "duid": "LNGS2",
+    "station": "Laverton North",
+    "owner": "Snowy Hydro Ltd",
+    "region": "VIC1",
+    "delta": 162,
+    "start": "2026-09-15",
+    "end": "2026-09-17",
+    "found_at": "2026-09-02T03:10:44.309828"
+  },
+  {
+    "duid": "LNGS1",
+    "station": "Laverton North",
+    "owner": "Snowy Hydro Ltd",
+    "region": "VIC1",
+    "delta": -151,
+    "start": "2027-02-08",
+    "end": "2027-02-12",
+    "found_at": "2026-09-02T03:10:44.309828"
+  },
+  {
+    "duid": "LNGS2",
+    "station": "Laverton North",
+    "owner": "Snowy Hydro Ltd",
+    "region": "VIC1",
+    "delta": -151,
+    "start": "2027-02-08",
+    "end": "2027-02-12",
+    "found_at": "2026-09-02T03:10:44.309828"
   }
 ]
