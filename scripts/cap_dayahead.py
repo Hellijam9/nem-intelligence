@@ -187,13 +187,11 @@ def main() -> None:
         lines.append(f"    Qtr-to-date before today: ${baseline_payout_scaled:,.2f}")
         lines.append(
             f"    Today:    ${combined_payout:,.2f}  "
-            f"-  adds approx. ${today_qrtr_add:,.2f} to qrtr  "
-            f"->  qtr-to-date now ${through_today_payout:,.2f}"
+            f"-  adds approx. ${today_qrtr_add:,.2f} to qrtr"
         )
         lines.append(
             f"    Tomorrow: ${tomorrow_payout:,.2f}  "
-            f"-  adds approx. ${tomorrow_qrtr_add:,.2f} to qrtr  "
-            f"->  qtr-to-date then ${through_tomorrow_payout:,.2f}"
+            f"-  adds approx. ${tomorrow_qrtr_add:,.2f} to qrtr"
         )
 
         current_values[region] = [round(combined_payout, 2), round(tomorrow_payout, 2)]
