@@ -1,12 +1,19 @@
-name: Every 5 minutes
+name: Spot spike
 
+# Split out from every-5-min.yml into its own single-script workflow (2026-09-03) - the
+# bundled 4-script job was averaging 201 minutes between runs instead of 5 (measured live:
+# 57 runs over 8 days instead of the ~2300 a true 5-min cadence would produce, worst gap
+# 11 hours). A smaller/faster job is less likely to still be running when the next
+# scheduled trigger fires, which is one real, fixable contributing factor - though the
+# evidence (gaps as low as 22 min even when it did fire) points mostly to GitHub Actions'
+# own scheduler deprioritizing high-frequency crons, which this alone may not fully fix.
 on:
   schedule:
     - cron: "*/5 * * * *"
   workflow_dispatch: {}
 
 concurrency:
-  group: every-5-min
+  group: spot-spike
   cancel-in-progress: false
 
 permissions:
@@ -28,9 +35,7 @@ jobs:
 
       - run: pip install -r requirements.txt
 
-      - run: python scripts/customer_watcher.py
-      - run: python scripts/interconnector_monitor.py
-      - run: python scripts/scada_drop_monitor.py
+      - run: python scripts/spot_spike.py
 
       - name: Commit and push state changes
         run: |
