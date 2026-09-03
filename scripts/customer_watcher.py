@@ -150,9 +150,10 @@ def main() -> None:
         for _, row in owner_moves.iterrows():
             station = row.get("STATIONNAME") or row.get("UNIT_NAME") or ""
             region = row.get("REGIONID") or row.get("REGION") or ""
+            fuel = row.get("FUEL") or "?"
             sign = "+" if row["delta"] > 0 else ""
             label = row["DUID"] + (f" ({station})" if station else "")
-            lines.append(f"  {label} [{region}]: {row['SCADAVALUE_prev']:.0f} -> {row['SCADAVALUE_curr']:.0f}MW "
+            lines.append(f"  {label} [{region}, {fuel}]: {row['SCADAVALUE_prev']:.0f} -> {row['SCADAVALUE_curr']:.0f}MW "
                          f"({sign}{row['delta']:.0f}MW)")
 
     message = "\n".join(lines)
