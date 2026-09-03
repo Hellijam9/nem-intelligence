@@ -2,10 +2,10 @@
   "flagged": {
     "N-Q-MNSP1": false,
     "T-V-MNSP1": true,
-    "V-S-MNSP1": true,
+    "V-S-MNSP1": false,
     "V-SA": true,
     "VIC1-NSW1": false,
     "NSW1-QLD1": false
   },
-  "last_settlementdate": "2026/09/03 16:20:00"
+  "last_settlementdate": "2026/09/03 21:25:00"
 }
