@@ -119,42 +119,75 @@ def main() -> None:
     )
     merged = merged[merged["DUID"].isin(customer_duids)]
     merged["delta"] = merged["SCADAVALUE_curr"] - merged["SCADAVALUE_prev"]
-
-    moves = merged[merged["delta"].abs() >= threshold].copy()
+    merged = registry.enrich(merged, duid_col="DUID")
 
     nw.write_state(STATE_FILE, {"latest_url": latest_url, "checked_at": datetime.now().isoformat()})
 
-    if moves.empty:
-        print(f"[customer_watcher] No customer DUID moves >= {threshold}MW this interval.")
+    if merged.empty:
+        print("[customer_watcher] No customer DUID data this interval.")
         return
 
-    moves = registry.enrich(moves, duid_col="DUID")
     interval_time = parse_settlementdate(curr_df["SETTLEMENTDATE"].iloc[0])
+    merged["_fuel"] = merged["FUEL"].fillna("Other")
 
-    # Grouped by owner (biggest single move within each owner's group determines sort order),
-    # not one flat list - so all of e.g. Origin's moves sit together under "Origin Energy",
-    # rather than interleaved with every other company's moves by raw MW size.
-    moves = moves.copy()
-    moves["_owner"] = moves["Owner"].fillna("UNKNOWN") if "Owner" in moves.columns else "UNKNOWN"
-    owner_order = (
-        moves.assign(_absdelta=moves["delta"].abs())
-        .groupby("_owner")["_absdelta"].max()
-        .sort_values(ascending=False)
-        .index
-    )
+    # Per-QED-history review (2026-08-27): every single-unit event AEMO's own quarterly
+    # reports ever named as price-moving across 35 quarters was a large coal/gas/hydro
+    # unit (Torrens Island 120MW up to Bayswater 760MW) - never an individual wind farm,
+    # solar farm, or battery, even when much larger. So thermal/hydro get a real per-DUID
+    # threshold; wind/solar/battery are summed into one net-movement line each instead,
+    # since no single one of those units is individually meaningful the way a coal/gas/
+    # hydro unit tripping is.
+    INDIVIDUAL_FUELS = {"Black Coal", "Brown Coal", "Gas", "Hydro", "Diesel", "Other"}
+    AGGREGATE_FUELS = {"Wind", "Solar", "Battery"}
+    AGGREGATE_THRESHOLD_MW = 100
 
-    lines = [f"Customer DUID move(s) >= {threshold}MW at {interval_time.strftime('%H:%M')} NEM time:"]
-    for owner in owner_order:
-        lines.append(f"\n{owner}:")
-        owner_moves = moves[moves["_owner"] == owner].sort_values("delta", key=abs, ascending=False)
-        for _, row in owner_moves.iterrows():
-            station = row.get("STATIONNAME") or row.get("UNIT_NAME") or ""
-            region = row.get("REGIONID") or row.get("REGION") or ""
-            fuel = row.get("FUEL") or "?"
-            sign = "+" if row["delta"] > 0 else ""
-            label = row["DUID"] + (f" ({station})" if station else "")
-            lines.append(f"  {label} [{region}, {fuel}]: {row['SCADAVALUE_prev']:.0f} -> {row['SCADAVALUE_curr']:.0f}MW "
-                         f"({sign}{row['delta']:.0f}MW)")
+    lines = [f"Customer DUID activity at {interval_time.strftime('%H:%M')} NEM time:"]
+    any_content = False
+
+    individual = merged[merged["_fuel"].isin(INDIVIDUAL_FUELS)]
+    moves = individual[individual["delta"].abs() >= threshold].copy()
+    if not moves.empty:
+        any_content = True
+        # Grouped by owner (biggest single move within each owner's group determines sort
+        # order), not one flat list - so all of e.g. Origin's moves sit together under
+        # "Origin Energy", rather than interleaved with every other company's moves.
+        moves["_owner"] = moves["Owner"].fillna("UNKNOWN") if "Owner" in moves.columns else "UNKNOWN"
+        owner_order = (
+            moves.assign(_absdelta=moves["delta"].abs())
+            .groupby("_owner")["_absdelta"].max()
+            .sort_values(ascending=False)
+            .index
+        )
+        lines.append(f"\nThermal/hydro moves >= {threshold}MW:")
+        for owner in owner_order:
+            lines.append(f"\n{owner}:")
+            owner_moves = moves[moves["_owner"] == owner].sort_values("delta", key=abs, ascending=False)
+            for _, row in owner_moves.iterrows():
+                station = row.get("STATIONNAME") or row.get("UNIT_NAME") or ""
+                region = row.get("REGIONID") or row.get("REGION") or ""
+                fuel = row.get("FUEL") or "?"
+                sign = "+" if row["delta"] > 0 else ""
+                label = row["DUID"] + (f" ({station})" if station else "")
+                lines.append(f"  {label} [{region}, {fuel}]: {row['SCADAVALUE_prev']:.0f} -> {row['SCADAVALUE_curr']:.0f}MW "
+                             f"({sign}{row['delta']:.0f}MW)")
+
+    aggregate_lines = []
+    for fuel in sorted(AGGREGATE_FUELS):
+        fuel_rows = merged[merged["_fuel"] == fuel]
+        if fuel_rows.empty:
+            continue
+        net = fuel_rows["delta"].sum()
+        if abs(net) >= AGGREGATE_THRESHOLD_MW:
+            sign = "+" if net > 0 else ""
+            aggregate_lines.append(f"  {fuel}: net {sign}{net:.0f}MW this interval ({len(fuel_rows)} unit(s))")
+    if aggregate_lines:
+        any_content = True
+        lines.append(f"\nWind/solar/battery (aggregate, net >= {AGGREGATE_THRESHOLD_MW}MW):")
+        lines.extend(aggregate_lines)
+
+    if not any_content:
+        print("[customer_watcher] No customer DUID activity above threshold this interval.")
+        return
 
     message = "\n".join(lines)
     print(message)

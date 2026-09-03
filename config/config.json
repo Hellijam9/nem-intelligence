@@ -23,7 +23,7 @@
   "_customer_note": "customer_watch_all=true watches every DUID in the registry (all companies, all fuel types) rather than one portfolio - no fuel filter, so wind/solar noise is expected at this threshold. Set it back to false and use customer_portfolios (owner-name substrings, e.g. 'Origin Energy') if you want one specific company's assets instead.",
   "customer_watch_all": true,
   "customer_portfolios": [],
-  "customer_watch_threshold_mw": 20,
+  "customer_watch_threshold_mw": 100,
   "_gas_spread_note": "Both international_lng_jkm_usd_mmbtu (scraped live from tradingeconomics.com, a CFD-tracked proxy, not the official Platts benchmark) and audusd_fx_rate (live from frankfurter.app) are now fetched automatically each run by gas_spread_tracker.py. The values below are only a fallback used if a live fetch ever fails - update them occasionally so the fallback stays roughly sane, but they're no longer what drives the alert day to day. last_updated/staleness only applies when actually running on this fallback.",
   "gas_benchmark": {
     "international_lng_jkm_usd_mmbtu": 12.50,
