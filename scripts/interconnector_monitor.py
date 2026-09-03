@@ -56,6 +56,29 @@ INTERCONNECTOR_LABELS = {
 }
 PRIORITY_INTERCONNECTORS = {"V-SA", "V-S-MNSP1"}  # Heywood + Murraylink - see module docstring
 
+# Which region each ID's positive MWFLOW direction runs FROM -> TO (verified empirically
+# against which side was actually pricier at the time, same verification as market_read.py's
+# copy of this mapping). Used instead of a bare "import"/"export" label - per your request,
+# a generic direction word doesn't say which actual region is the constrained side, and
+# AEMO's own export/import sign convention isn't even consistent across every ID (see
+# module docstring), so naming the two real regions is both clearer and more reliable.
+INTERCONNECTOR_DIRECTIONS = {
+    "NSW1-QLD1": ("NSW1", "QLD1"),
+    "N-Q-MNSP1": ("NSW1", "QLD1"),
+    "VIC1-NSW1": ("VIC1", "NSW1"),
+    "V-SA": ("VIC1", "SA1"),
+    "V-S-MNSP1": ("VIC1", "SA1"),
+    "T-V-MNSP1": ("TAS1", "VIC1"),
+}
+
+
+def flow_direction_label(ic_id: str, flow: float) -> str:
+    pair = INTERCONNECTOR_DIRECTIONS.get(ic_id)
+    if pair is None or flow == 0:
+        return ""
+    frm, to = pair if flow > 0 else (pair[1], pair[0])
+    return f"{frm} -> {to}"
+
 ENTER_THRESHOLD = 0.90  # alert once utilization reaches this
 EXIT_THRESHOLD = 0.80   # must drop back below this before it can alert again (hysteresis, avoids flapping at 90%)
 
@@ -181,13 +204,14 @@ def main() -> None:
             continue
 
         was_flagged = flagged.get(ic_id, False)
-        direction = "export" if row["MWFLOW"] >= 0 else "import"
+        direction = flow_direction_label(ic_id, row["MWFLOW"])
 
         if util >= enter_threshold and not was_flagged:
             label = INTERCONNECTOR_LABELS.get(ic_id, ic_id)
             star = " ★" if ic_id in PRIORITY_INTERCONNECTORS else ""
+            direction_str = f", {direction}" if direction else ""
             alerts.append(
-                f"{label}{star}: {row['MWFLOW']:.0f}MW ({direction}), "
+                f"{label}{star}: {row['MWFLOW']:.0f}MW{direction_str}, "
                 f"{util*100:.0f}% of limit at {interval_time.strftime('%H:%M')} NEM time"
             )
             flagged[ic_id] = True
