@@ -8728,5 +8728,35 @@
     "start": "2026-12-18",
     "end": "2027-01-01",
     "found_at": "2026-09-02T10:45:27.078979"
+  },
+  {
+    "duid": "BW03",
+    "station": "Bayswater",
+    "owner": "AGL Macquarie Pty Limited",
+    "region": "NSW1",
+    "delta": -360,
+    "start": "2026-09-06",
+    "end": "2026-09-11",
+    "found_at": "2026-09-03T03:12:40.183517"
+  },
+  {
+    "duid": "W/HOE#1",
+    "station": "Wivenhoe",
+    "owner": "CleanCo Queensland Limited",
+    "region": "QLD1",
+    "delta": -285,
+    "start": "2026-09-19",
+    "end": "2026-10-06",
+    "found_at": "2026-09-03T03:12:40.183517"
+  },
+  {
+    "duid": "CPP_4",
+    "station": "Callide C",
+    "owner": "Joint Venture; Callide Energy Pty Ltd and IG Power (Callide) Ltd.",
+    "region": "QLD1",
+    "delta": -276,
+    "start": "2026-09-09",
+    "end": "2026-09-09",
+    "found_at": "2026-09-03T03:12:40.183517"
   }
 ]
