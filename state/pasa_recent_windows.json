@@ -8798,5 +8798,15 @@
     "start": "2026-09-09",
     "end": "2026-09-09",
     "found_at": "2026-09-04T10:43:46.339615"
+  },
+  {
+    "duid": "TVCC201",
+    "station": "Tamar Valley Combined Cycle",
+    "owner": "AETV Pty Ltd",
+    "region": "TAS1",
+    "delta": 208,
+    "start": "2026-09-21",
+    "end": "2026-09-28",
+    "found_at": "2026-09-07T03:12:02.859577"
   }
 ]
