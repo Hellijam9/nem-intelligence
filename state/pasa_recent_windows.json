@@ -8808,5 +8808,75 @@
     "start": "2026-09-21",
     "end": "2026-09-28",
     "found_at": "2026-09-07T03:12:02.859577"
+  },
+  {
+    "duid": "LYA1",
+    "station": "Loy Yang A",
+    "owner": "AGL Loy Yang Marketing Pty Ltd",
+    "region": "VIC1",
+    "delta": -560,
+    "start": "2026-09-13",
+    "end": "2026-09-24",
+    "found_at": "2026-09-08T03:20:09.127351"
+  },
+  {
+    "duid": "LYA3",
+    "station": "Loy Yang A",
+    "owner": "AGL Loy Yang Marketing Pty Ltd",
+    "region": "VIC1",
+    "delta": -560,
+    "start": "2026-11-26",
+    "end": "2026-11-28",
+    "found_at": "2026-09-08T03:20:09.127351"
+  },
+  {
+    "duid": "LYA3",
+    "station": "Loy Yang A",
+    "owner": "AGL Loy Yang Marketing Pty Ltd",
+    "region": "VIC1",
+    "delta": 560,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-08T03:20:09.127351"
+  },
+  {
+    "duid": "LYA3",
+    "station": "Loy Yang A",
+    "owner": "AGL Loy Yang Marketing Pty Ltd",
+    "region": "VIC1",
+    "delta": -540,
+    "start": "2026-11-29",
+    "end": "2026-12-05",
+    "found_at": "2026-09-08T03:20:09.127351"
+  },
+  {
+    "duid": "TNPS1",
+    "station": "Tarong North",
+    "owner": "Stanwell Corporation Limited",
+    "region": "QLD1",
+    "delta": 400,
+    "start": "2026-09-16",
+    "end": "2026-09-16",
+    "found_at": "2026-09-08T03:20:09.127351"
+  },
+  {
+    "duid": "OAKEY1",
+    "station": "Oakey",
+    "owner": "Oakey Power Holdings Pty Ltd",
+    "region": "QLD1",
+    "delta": -167,
+    "start": "2026-09-14",
+    "end": "2026-10-09",
+    "found_at": "2026-09-08T03:20:09.127351"
+  },
+  {
+    "duid": "OAKEY2",
+    "station": "Oakey",
+    "owner": "Oakey Power Holdings Pty Ltd",
+    "region": "QLD1",
+    "delta": -167,
+    "start": "2026-09-14",
+    "end": "2026-10-09",
+    "found_at": "2026-09-08T03:20:09.127351"
   }
 ]
