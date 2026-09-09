@@ -74,10 +74,14 @@ STATE_FILE = "recap_state.json"
 SYDNEY_TZ = ZoneInfo("Australia/Sydney")
 
 # Shown as-is, one full block per push: rebid_reconciler runs once daily (nothing to pool),
-# interconnector_monitor already debounces at the source (state-tracked "flagged" dict - only
-# fires on a NEW crossing, not every interval it stays at/near limit), pasa_monitor only pushes
-# on an actual >=100MW declared-availability change (own state-file debounce, same as above).
-ASIS_DISCRETE_SOURCES = ["rebid_reconciler", "interconnector_monitor", "pasa_monitor"]
+# pasa_monitor only pushes on an actual >=100MW declared-availability change (own state-file
+# debounce). interconnector_monitor is handled separately (format_pooled_interconnector_section)
+# - it debounces per-crossing at the source, but a sustained multi-hour bind can still repeat
+# across many pushes with no clear/hysteresis pairing available, and its own planned-outage
+# lines got pooled AND dropped entirely once format_network_outage_changes_overnight started
+# covering all transmission assets (confirmed live: a 29-line dump, a strict subset of the
+# broader section - keeping both was pure duplication).
+ASIS_DISCRETE_SOURCES = ["rebid_reconciler", "pasa_monitor"]
 # Pooled across the whole overnight window into one summary line per DUID instead - both
 # scripts check each 5-min interval independently with NO debounce, confirmed live (neither
 # has any state suppressing a repeat push), so a genuinely volatile night could otherwise
@@ -243,6 +247,48 @@ def format_pooled_discrete_section(source: str, entries: list[dict]) -> list[str
     return lines
 
 
+INTERCONNECTOR_CONSTRAINT_RE = re.compile(
+    r"^\s*(.+?):\s*(-?\d+)MW,\s*(?:[A-Z0-9]+\s*->\s*[A-Z0-9]+,\s*)?(\d+)% of limit at (\d{2}:\d{2}) NEM time"
+)
+
+
+def format_pooled_interconnector_section(entries: list[dict]) -> list[str]:
+    """
+    Pools interconnector_monitor's own 'at/near limit' constraint lines across the overnight
+    window by interconnector - each new 5-min crossing is logged as its own push with no
+    clear/hysteresis pairing available here, so a sustained bind can repeat across many blocks.
+    One summary line per interconnector instead: how many times flagged, the util% range seen.
+    The "Planned outage(s) affecting..." portion of these same pushes is dropped entirely -
+    format_network_outage_changes_overnight already covers ALL transmission assets (a strict
+    superset of the 6 interconnectors this script tracks), so repeating it here is just
+    duplicate noise (confirmed live: a 29-line dump for exactly this reason).
+    """
+    if not entries:
+        return []
+    stats: dict[str, dict] = {}
+    for e in entries:
+        for line in body_lines(e):
+            m = INTERCONNECTOR_CONSTRAINT_RE.match(line)
+            if not m:
+                continue
+            label = m.group(1).strip()
+            util = int(m.group(3))
+            d = stats.setdefault(label, {"count": 0, "min_util": util, "max_util": util})
+            d["count"] += 1
+            d["min_util"] = min(d["min_util"], util)
+            d["max_util"] = max(d["max_util"], util)
+
+    lines = [f"\ninterconnector_monitor ({len(entries)} interval(s) overnight):"]
+    if not stats:
+        lines.append("  None.")
+        return lines
+    for label in sorted(stats, key=lambda k: -stats[k]["count"]):
+        d = stats[label]
+        util_str = f"{d['min_util']}%" if d["min_util"] == d["max_util"] else f"{d['min_util']}-{d['max_util']}%"
+        lines.append(f"  {label}: flagged {d['count']}x, {util_str} of limit")
+    return lines
+
+
 def format_threshold_section(source: str, entries: list[dict]) -> list[str]:
     still_active = net_effect_lines(entries)
     if not still_active:
@@ -317,7 +363,7 @@ def format_network_outage_changes_overnight(now: datetime) -> list[str]:
     seen = seen or {}
 
     current: dict[str, str] = {}
-    changes = []
+    changes = []  # (kind, asset, region, start, finish)
     for _, row in df.iterrows():
         key = f"{row.get('Network Asset')}|{row.get('Start')}|{row.get('Finish')}"
         status = str(row.get("Status") or "")
@@ -328,9 +374,9 @@ def format_network_outage_changes_overnight(now: datetime) -> list[str]:
         asset = row.get("Network Asset") or "?"
         region = row.get("Region") or "?"
         if prev_status is None:
-            changes.append(f"  NEW: {asset} [{region}]: {row.get('Start')} to {row.get('Finish', '?')} ({status})")
+            changes.append(("NEW", asset, region, row.get("Start"), row.get("Finish", "?")))
         elif prev_status != status:
-            changes.append(f"  CHANGED: {asset} [{region}]: {row.get('Start')} to {row.get('Finish', '?')} - now {status} (was {prev_status})")
+            changes.append(("CHANGED", asset, region, row.get("Start"), row.get("Finish", "?")))
 
     nw.write_state(NETWORK_OUTAGE_RECAP_STATE_FILE, current)
 
@@ -340,7 +386,26 @@ def format_network_outage_changes_overnight(now: datetime) -> list[str]:
     elif not changes:
         lines.append("  None.")
     else:
-        lines.extend(changes)
+        # Pool by asset - the same asset can announce many windows at once (recurring
+        # maintenance), which would otherwise be one line per window. One summary line per
+        # asset instead: how many NEW/CHANGED, spanning what date range.
+        by_asset: dict[str, list] = {}
+        for c in changes:
+            by_asset.setdefault(c[1], []).append(c)
+        for asset in sorted(by_asset, key=lambda a: -len(by_asset[a])):
+            rows = by_asset[asset]
+            region = rows[0][2]
+            new_count = sum(1 for r in rows if r[0] == "NEW")
+            changed_count = sum(1 for r in rows if r[0] == "CHANGED")
+            kind_bits = []
+            if new_count:
+                kind_bits.append(f"{new_count} new")
+            if changed_count:
+                kind_bits.append(f"{changed_count} changed")
+            starts = sorted(r[3] for r in rows if r[3])
+            finishes = sorted(r[4] for r in rows if r[4] and r[4] != "?")
+            span = f", {starts[0]} to {finishes[-1]}" if starts and finishes else ""
+            lines.append(f"  {asset} [{region}]: {', '.join(kind_bits)}{span}")
     return lines
 
 
@@ -901,6 +966,9 @@ def build_recap(now: datetime, log_entries: list[dict]) -> str:
         if source in by_source:
             overnight_had_content = True
             lines.extend(format_pooled_discrete_section(source, by_source[source]))
+    if "interconnector_monitor" in by_source:
+        overnight_had_content = True
+        lines.extend(format_pooled_interconnector_section(by_source["interconnector_monitor"]))
     for source in THRESHOLD_SOURCES:
         section = format_threshold_section(source, by_source.get(source, []))
         if section:
