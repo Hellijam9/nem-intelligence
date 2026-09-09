@@ -134,7 +134,6 @@ def main() -> None:
     pd_df["RRP"] = pd.to_numeric(pd_df["RRP"], errors="coerce")
     pd_df["_period_dt"] = pd_df["PERIODID"].apply(parse_price_datetime)
 
-    header = f"CAP PAYOUT TODAY & TOMORROW (projected) - vs {q_label} ({baseline_note})"
     region_lines: dict[str, list[str]] = {}
     current_values: dict[str, list[float]] = {}
     for region in regions:
@@ -196,7 +195,7 @@ def main() -> None:
 
         current_values[region] = [round(combined_payout, 2), round(tomorrow_payout, 2)]
 
-    full_message = header + "\n" + "\n".join(line for region in regions for line in region_lines[region])
+    full_message = "\n".join(line for region in regions for line in region_lines[region])
     print(full_message)
 
     # Only notify if the outcome is genuinely different, not just time-dependent drift as
@@ -253,7 +252,7 @@ def main() -> None:
 
     # Trim the pushed message down to only the region(s) that actually moved >=10% - the
     # other regions' unchanged numbers aren't worth repeating in every notification.
-    trimmed_message = header + "\n" + "\n".join(line for region in changed_regions for line in region_lines[region])
+    trimmed_message = "\n".join(line for region in changed_regions for line in region_lines[region])
 
     nw.write_state("cap_dayahead_notify_state.json", {"date": today_str, "values": current_values})
     nw.push_ntfy(
