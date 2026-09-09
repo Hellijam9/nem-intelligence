@@ -8888,5 +8888,205 @@
     "start": "2029-09-02",
     "end": "2029-09-09",
     "found_at": "2026-09-08T10:42:15.175579"
+  },
+  {
+    "duid": "YWPS1",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": -345,
+    "start": "2027-07-02",
+    "end": "2027-07-06",
+    "found_at": "2026-09-09T03:23:29.917450"
+  },
+  {
+    "duid": "YWPS1",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": 345,
+    "start": "2027-07-24",
+    "end": "2027-07-28",
+    "found_at": "2026-09-09T03:23:29.917450"
+  },
+  {
+    "duid": "YWPS2",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": -340,
+    "start": "2027-09-04",
+    "end": "2027-09-18",
+    "found_at": "2026-09-09T03:23:29.917450"
+  },
+  {
+    "duid": "YWPS2",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": -340,
+    "start": "2028-03-01",
+    "end": "2028-03-03",
+    "found_at": "2026-09-09T03:23:29.917450"
+  },
+  {
+    "duid": "YWPS2",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": 340,
+    "start": "2027-03-13",
+    "end": "2027-03-26",
+    "found_at": "2026-09-09T03:23:29.917450"
+  },
+  {
+    "duid": "YWPS2",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": 340,
+    "start": "2027-04-03",
+    "end": "2027-04-15",
+    "found_at": "2026-09-09T03:23:29.917450"
+  },
+  {
+    "duid": "YWPS2",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": 340,
+    "start": "2027-09-25",
+    "end": "2027-10-01",
+    "found_at": "2026-09-09T03:23:29.917450"
+  },
+  {
+    "duid": "YWPS2",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": 340,
+    "start": "2028-03-04",
+    "end": "2028-03-10",
+    "found_at": "2026-09-09T03:23:29.917450"
+  },
+  {
+    "duid": "YWPS1",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": -330,
+    "start": "2026-10-28",
+    "end": "2026-10-30",
+    "found_at": "2026-09-09T03:23:29.917450"
+  },
+  {
+    "duid": "YWPS1",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": -330,
+    "start": "2027-04-10",
+    "end": "2027-04-16",
+    "found_at": "2026-09-09T03:23:29.917450"
+  },
+  {
+    "duid": "YWPS1",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": -330,
+    "start": "2027-09-25",
+    "end": "2027-10-09",
+    "found_at": "2026-09-09T03:23:29.917450"
+  },
+  {
+    "duid": "YWPS1",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": -330,
+    "start": "2028-03-11",
+    "end": "2028-03-17",
+    "found_at": "2026-09-09T03:23:29.917450"
+  },
+  {
+    "duid": "YWPS1",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": 330,
+    "start": "2026-11-02",
+    "end": "2026-11-04",
+    "found_at": "2026-09-09T03:23:29.917450"
+  },
+  {
+    "duid": "YWPS1",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": 330,
+    "start": "2027-04-24",
+    "end": "2027-04-30",
+    "found_at": "2026-09-09T03:23:29.917450"
+  },
+  {
+    "duid": "YWPS1",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": 330,
+    "start": "2027-10-16",
+    "end": "2027-10-22",
+    "found_at": "2026-09-09T03:23:29.917450"
+  },
+  {
+    "duid": "YWPS1",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": 330,
+    "start": "2028-03-25",
+    "end": "2028-03-31",
+    "found_at": "2026-09-09T03:23:29.917450"
+  },
+  {
+    "duid": "YWPS2",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": -330,
+    "start": "2028-02-26",
+    "end": "2028-02-29",
+    "found_at": "2026-09-09T03:23:29.917450"
+  },
+  {
+    "duid": "YWPS1",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": -320,
+    "start": "2027-12-11",
+    "end": "2027-12-15",
+    "found_at": "2026-09-09T03:23:29.917450"
+  },
+  {
+    "duid": "YWPS1",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": 320,
+    "start": "2027-01-19",
+    "end": "2027-01-26",
+    "found_at": "2026-09-09T03:23:29.917450"
+  },
+  {
+    "duid": "YWPS1",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": 320,
+    "start": "2028-01-08",
+    "end": "2028-01-12",
+    "found_at": "2026-09-09T03:23:29.917450"
   }
 ]
