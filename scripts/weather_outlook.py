@@ -120,24 +120,42 @@ def main() -> None:
     wind_capacity = registry_capacity_by_region(registry, "Wind")
     solar_capacity = registry_capacity_by_region(registry, "Solar")
 
-    tomorrow_df = df[df["_interval_dt"].dt.date == tomorrow]
+    # "Tomorrow" isn't always actually in the latest STPASA snapshot's window - confirmed
+    # live: a run outside the intended 5am slot can land after the window has already
+    # advanced past it, silently producing zero rows for a hardcoded date filter. Picks the
+    # earliest available date >= tomorrow instead, falling back to the earliest date in the
+    # snapshot at all so this never comes up empty just because of run-timing.
+    available_dates = sorted(df["_interval_dt"].dt.date.unique())
+    later_dates = [d for d in available_dates if d >= tomorrow]
+    target_date = later_dates[0] if later_dates else (available_dates[0] if available_dates else tomorrow)
+    if target_date != tomorrow:
+        print(f"[weather_outlook] NOTE: 'tomorrow' ({tomorrow}) not in the STPASA window - "
+              f"using {target_date} instead (run timing, not a bug).")
+
+    target_df = df[df["_interval_dt"].dt.date == target_date]
     weather = fetch_weather(cfg)
 
-    lines = [f"Weather & generation outlook for tomorrow ({tomorrow.strftime('%a %d-%b')}):"]
+    lines = [f"Weather & generation outlook for {target_date.strftime('%a %d-%b')}:"]
     for region in regions:
         parts = []
         fc = weather.get(region)
         if fc and fc.get("dates"):
-            idx = 1 if len(fc["dates"]) > 1 else 0  # index 1 = tomorrow (0 = today)
-            max_t = fc["max_temp"][idx] if idx < len(fc.get("max_temp", [])) else None
-            min_t = fc["min_temp"][idx] if idx < len(fc.get("min_temp", [])) else None
-            wind = fc["max_wind_kmh"][idx] if idx < len(fc.get("max_wind_kmh", [])) else None
-            if min_t is not None and max_t is not None:
-                parts.append(f"{min_t:.0f}-{max_t:.0f}C")
-            if wind is not None:
-                parts.append(f"{wind:.0f}km/h max wind")
+            # Match by the actual target date string, not a fixed index - open-meteo's
+            # array always starts at today regardless of call time, but target_date can
+            # legitimately be later than "tomorrow" per the STPASA-window note above, so a
+            # fixed index 1 would silently grab the wrong day once those two diverge.
+            target_str = target_date.strftime("%Y-%m-%d")
+            idx = fc["dates"].index(target_str) if target_str in fc["dates"] else None
+            if idx is not None:
+                max_t = fc["max_temp"][idx] if idx < len(fc.get("max_temp", [])) else None
+                min_t = fc["min_temp"][idx] if idx < len(fc.get("min_temp", [])) else None
+                wind = fc["max_wind_kmh"][idx] if idx < len(fc.get("max_wind_kmh", [])) else None
+                if min_t is not None and max_t is not None:
+                    parts.append(f"{min_t:.0f}-{max_t:.0f}C")
+                if wind is not None:
+                    parts.append(f"{wind:.0f}km/h max wind")
 
-        region_rows = tomorrow_df[tomorrow_df["REGIONID"] == region]
+        region_rows = target_df[target_df["REGIONID"] == region]
         if not region_rows.empty:
             wind_cap = wind_capacity.get(region)
             solar_cap = solar_capacity.get(region)
