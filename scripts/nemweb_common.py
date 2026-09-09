@@ -227,7 +227,15 @@ def fetch_high_impact_outages() -> pd.DataFrame:
     # returned nothing. Strip the raw BOM bytes before decoding instead.
     if raw_bytes.startswith(b"\xef\xbb\xbf"):
         raw_bytes = raw_bytes[3:]
-    raw = raw_bytes.decode("cp1252", errors="replace")
+    # The UTF-8 BOM signals this file is mostly genuine UTF-8 (confirmed live: multi-byte
+    # characters like en-dashes decode correctly as UTF-8, but came through mangled -
+    # "Keilor \xc3\xa2\xe2\x82\xac\xe2\x80\x9c Sydenham" - under cp1252, which was the wrong
+    # default for this file). Try UTF-8 first; only fall back to cp1252 (which never raises,
+    # since it's a single-byte encoding) if the file genuinely isn't valid UTF-8.
+    try:
+        raw = raw_bytes.decode("utf-8")
+    except UnicodeDecodeError:
+        raw = raw_bytes.decode("cp1252", errors="replace")
     df = pd.read_csv(io.StringIO(raw), on_bad_lines="skip")
     df.columns = [c.strip() for c in df.columns]
 

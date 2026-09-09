@@ -217,6 +217,8 @@ def pool_discrete_moves(entries: list[dict]) -> list[str]:
     for label in sorted(individual, key=lambda k: -abs(individual[k]["last_curr"] - individual[k]["first_prev"])):
         d = individual[label]
         net = d["last_curr"] - d["first_prev"]
+        if net == 0:
+            net = 0.0  # kills float's negative-zero sign bit - confirmed live, produced "net +-0MW"
         sign = "+" if net >= 0 else ""
         move_str = f"{d['count']} move(s), " if d["count"] > 1 else ""
         bracket = f"{d['region']}, {d['fuel']}" if d["fuel"] != "?" else d["region"]
@@ -225,8 +227,9 @@ def pool_discrete_moves(entries: list[dict]) -> list[str]:
     if aggregate:
         for fuel in sorted(aggregate):
             d = aggregate[fuel]
-            sign = "+" if d["net_sum"] >= 0 else ""
-            lines.append(f"  {fuel}: {d['count']} interval(s), cumulative net {sign}{d['net_sum']:.0f}MW")
+            net_sum = d["net_sum"] if d["net_sum"] != 0 else 0.0
+            sign = "+" if net_sum >= 0 else ""
+            lines.append(f"  {fuel}: {d['count']} interval(s), cumulative net {sign}{net_sum:.0f}MW")
 
     return lines
 
