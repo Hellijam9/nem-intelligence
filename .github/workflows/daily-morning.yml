@@ -40,6 +40,7 @@ jobs:
       - run: python scripts/negative_pricing_tracker.py
       - run: python scripts/coal_fleet_trend.py
       - run: python scripts/reserve_outlook.py
+      - run: python scripts/weather_outlook.py
 
       - name: Commit and push state changes
         run: |

@@ -18,7 +18,8 @@
     "customer": "CHANGE_ME-customer",
     "market_read": "CHANGE_ME-marketread",
     "reserve_outlook": "CHANGE_ME-reserveoutlook",
-    "recap": "CHANGE_ME-recap"
+    "recap": "CHANGE_ME-recap",
+    "weather": "CHANGE_ME-weather"
   },
   "_customer_note": "customer_watch_all=true watches every DUID in the registry (all companies, all fuel types) rather than one portfolio - no fuel filter, so wind/solar noise is expected at this threshold. Set it back to false and use customer_portfolios (owner-name substrings, e.g. 'Origin Energy') if you want one specific company's assets instead.",
   "customer_watch_all": true,
