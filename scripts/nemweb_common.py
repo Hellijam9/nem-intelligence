@@ -218,7 +218,16 @@ def fetch_high_impact_outages() -> pd.DataFrame:
     dated.sort()
     latest_url = dated[-1][1]
 
-    raw = download_bytes(latest_url).decode("cp1252", errors="replace")
+    raw_bytes = download_bytes(latest_url)
+    # This file has a UTF-8 BOM (EF BB BF) despite being cp1252 otherwise (it has literal
+    # bullet characters that aren't valid UTF-8) - decoding the BOM bytes as cp1252 mangles
+    # them into 3 garbage characters instead of one clean U+FEFF, which plain .strip() doesn't
+    # catch either way. Confirmed live: the first column came through as "\xef\xbb\xbfRegion",
+    # not "Region", so every row.get("Region") call anywhere in this project has silently
+    # returned nothing. Strip the raw BOM bytes before decoding instead.
+    if raw_bytes.startswith(b"\xef\xbb\xbf"):
+        raw_bytes = raw_bytes[3:]
+    raw = raw_bytes.decode("cp1252", errors="replace")
     df = pd.read_csv(io.StringIO(raw), on_bad_lines="skip")
     df.columns = [c.strip() for c in df.columns]
 
@@ -568,6 +577,40 @@ def push_ntfy(topic: str, message: str, title: Optional[str] = None,
         print(f"[nemweb_common] WARNING: ntfy push to {topic!r} failed: {exc}")
     try:
         _log_notification(topic, title, message)
+    except Exception as exc:
+        print(f"[nemweb_common] WARNING: failed to log notification: {exc}")
+
+
+def push_ntfy_attachment(topic: str, filename: str, content: str, short_message: str,
+                          title: Optional[str] = None, priority: Optional[str] = None,
+                          tags: Optional[list[str]] = None) -> None:
+    """
+    Push a notification whose full content rides as a downloadable file attachment instead of
+    the message body - for content too long for ntfy's ~4096-byte body limit (push_ntfy's own
+    NTFY_MAX_MESSAGE_BYTES guard truncates instead; this is for callers who don't want any of
+    it cut). `content` should be `.html` (filename should end .html too) - a phone opens that
+    straight in its browser with no dependency on a text-file app being installed/registered,
+    unlike a plain .txt attachment (confirmed to sometimes have no default handler on mobile).
+    `short_message` is the actual notification text people see before opening the attachment -
+    keep it to a one-line summary.
+    """
+    url = f"{CONFIG['ntfy_base_url'].rstrip('/')}/{topic}"
+    headers = dict(HTTP_HEADERS)
+    headers["Filename"] = filename
+    headers["Message"] = short_message
+    if title:
+        headers["Title"] = title
+    if priority:
+        headers["Priority"] = priority
+    if tags:
+        headers["Tags"] = ",".join(tags)
+    try:
+        requests.post(url, data=content.encode("utf-8"), headers=headers,
+                       timeout=CONFIG["request_timeout_seconds"])
+    except requests.RequestException as exc:
+        print(f"[nemweb_common] WARNING: ntfy attachment push to {topic!r} failed: {exc}")
+    try:
+        _log_notification(topic, title, short_message)
     except Exception as exc:
         print(f"[nemweb_common] WARNING: failed to log notification: {exc}")
 

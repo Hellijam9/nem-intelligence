@@ -130,7 +130,10 @@ def check_high_impact_outages() -> list[str]:
     grouped: dict[str, dict] = {}
     for _, row in relevant.iterrows():
         try:
-            start_dt = datetime.strptime(row["Start"], "%d-%m-%Y %H:%M")
+            # AEMO's High Impact Outages CSV uses slash-separated dates (DD/MM/YYYY) - a dash
+            # format here silently failed on every single row (confirmed live: 0/206 parsed),
+            # meaning this alert has never actually fired since it was built.
+            start_dt = datetime.strptime(row["Start"], "%d/%m/%Y %H:%M")
         except (ValueError, TypeError):
             continue
         if start_dt > horizon:

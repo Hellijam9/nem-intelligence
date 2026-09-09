@@ -1,0 +1,64 @@
+name: Morning recap
+
+# Weekdays only, 7:30am Sydney time (Australia/Sydney, real DST-aware timezone - unlike this
+# project's NEM_TZ elsewhere, which is a fixed UTC+10). A single UTC cron can't track DST
+# perfectly: 21:30 UTC is 7:30am AEST (Apr-Oct) but 8:30am AEDT (Oct-Apr), since Sydney shifts
+# to UTC+11 for daylight saving. That's fine here - schedule: is a fallback only (see
+# spot-spike.yml for the measured evidence on why schedule:-only crons run unreliably), and
+# notification_recap.py's own main() re-checks the real Sydney weekday at execution time and
+# skips weekends regardless of when the trigger actually landed.
+#
+# Day-of-week note: cron's weekday field is UTC, but 21:30 UTC on a given UTC day is already
+# the NEXT calendar day in Sydney (UTC+10/11 ahead) - so to land on Sydney Mon-Fri the cron
+# needs UTC Sun-Thu (0-4), not Mon-Fri (1-5).
+#
+# repository_dispatch (tick-recap) needs its own new cron-job.org job pointed at this event
+# type, timed for actual Sydney-local 7:30am on weekdays - not yet set up (same manual step
+# every other tick-* event needed).
+on:
+  schedule:
+    - cron: "30 21 * * 0-4"
+  repository_dispatch:
+    types: [tick-recap]
+  workflow_dispatch: {}
+
+concurrency:
+  group: morning-recap
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    env:
+      NTFY_TOPICS_JSON: ${{ secrets.NTFY_TOPICS_JSON }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install -r requirements.txt
+
+      - run: python scripts/notification_recap.py
+
+      - name: Commit and push state changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add state/
+          if git diff --cached --quiet; then
+            echo "No state changes to commit."
+          else
+            git commit -m "Update state [skip ci]"
+            for i in 1 2 3; do
+              git pull --rebase origin main && git push && break
+              echo "Push attempt $i failed, retrying..."
+              sleep 5
+            done
+          fi

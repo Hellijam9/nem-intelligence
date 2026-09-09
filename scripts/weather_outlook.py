@@ -20,8 +20,11 @@ Two data sources per region:
      general weather alone doesn't say what AEMO itself expects wind/solar output to
      actually be.
 
-Shows tomorrow specifically (not every day of the ~6-day STPASA horizon) - one day's
-worth of forward context each morning, not a multi-day dump.
+Shows the next 7 days (2026-09-10: widened from a single "tomorrow" line) - one block
+per region, one line per day. AEMO's own wind/solar generation forecast only actually
+carries real values out to ~6 days ahead (confirmed live), so day 7 usually shows
+weather only with "no generation forecast yet" - still shown rather than dropped, since
+the weather half is real regardless.
 
 Always pushes (like gas_spread_tracker.py/reserve_outlook.py) - this is forward
 context you want every morning, not a threshold-gated alert.
@@ -43,7 +46,7 @@ NEM_TZ = timezone(timedelta(hours=10))
 
 REGION_COORDS = {
     "NSW1": (-33.87, 151.21), "VIC1": (-37.81, 144.96), "QLD1": (-27.47, 153.03),
-    "SA1": (-34.93, 138.60), "TAS1": (-42.88, 147.33),
+    "SA1": (-34.93, 138.60),
 }
 
 
@@ -59,7 +62,7 @@ def fetch_weather(cfg: dict) -> dict:
         resp = requests.get(
             "https://api.open-meteo.com/v1/forecast",
             params={"latitude": lats, "longitude": lons, "daily": "temperature_2m_max,temperature_2m_min,wind_speed_10m_max",
-                    "timezone": "Australia/Sydney", "forecast_days": 3},
+                    "timezone": "Australia/Sydney", "forecast_days": 8},
             timeout=cfg.get("request_timeout_seconds", 30),
         )
         resp.raise_for_status()
@@ -98,11 +101,13 @@ def registry_capacity_by_region(registry: nw.Registry, fuel: str) -> dict[str, f
 
 def main() -> None:
     cfg = nw.CONFIG
-    regions = cfg.get("nem_regions", ["NSW1", "QLD1", "VIC1", "SA1", "TAS1"])
+    # This script's own region list, not cfg's nem_regions (shared by every other script) -
+    # TAS1 dropped from weather specifically, per your request.
+    regions = list(REGION_COORDS)
     topic = cfg.get("ntfy_topics", {}).get("weather", "weather-outlook")
 
     now = datetime.now(NEM_TZ).replace(tzinfo=None)
-    tomorrow = (now + timedelta(days=1)).date()
+    target_dates = [(now + timedelta(days=i)).date() for i in range(1, 8)]  # next 7 days
 
     try:
         files = nw.get_latest_files(STPASA_URL, STPASA_PATTERN, n=1)
@@ -120,64 +125,63 @@ def main() -> None:
     wind_capacity = registry_capacity_by_region(registry, "Wind")
     solar_capacity = registry_capacity_by_region(registry, "Solar")
 
-    # "Tomorrow" isn't always actually in the latest STPASA snapshot's window - confirmed
-    # live: a run outside the intended 5am slot can land after the window has already
-    # advanced past it, silently producing zero rows for a hardcoded date filter. Picks the
-    # earliest available date >= tomorrow instead, falling back to the earliest date in the
-    # snapshot at all so this never comes up empty just because of run-timing.
-    available_dates = sorted(df["_interval_dt"].dt.date.unique())
-    later_dates = [d for d in available_dates if d >= tomorrow]
-    target_date = later_dates[0] if later_dates else (available_dates[0] if available_dates else tomorrow)
-    if target_date != tomorrow:
-        print(f"[weather_outlook] NOTE: 'tomorrow' ({tomorrow}) not in the STPASA window - "
-              f"using {target_date} instead (run timing, not a bug).")
-
-    target_df = df[df["_interval_dt"].dt.date == target_date]
+    # STPASA's own window (confirmed live to carry real generation-forecast values ~6 days
+    # ahead) rarely covers the full 7 requested here - day 7 (and occasionally day 6) will
+    # show weather only, with "no generation forecast yet" rather than being dropped.
+    available_dates = set(df["_interval_dt"].dt.date.unique())
     weather = fetch_weather(cfg)
 
-    lines = [f"Weather & generation outlook for {target_date.strftime('%a %d-%b')}:"]
+    lines = [f"Weather & generation outlook, {target_dates[0].strftime('%a %d-%b')} to {target_dates[-1].strftime('%a %d-%b')}:"]
     for region in regions:
-        parts = []
         fc = weather.get(region)
-        if fc and fc.get("dates"):
-            # Match by the actual target date string, not a fixed index - open-meteo's
-            # array always starts at today regardless of call time, but target_date can
-            # legitimately be later than "tomorrow" per the STPASA-window note above, so a
-            # fixed index 1 would silently grab the wrong day once those two diverge.
-            target_str = target_date.strftime("%Y-%m-%d")
-            idx = fc["dates"].index(target_str) if target_str in fc["dates"] else None
-            if idx is not None:
-                max_t = fc["max_temp"][idx] if idx < len(fc.get("max_temp", [])) else None
-                min_t = fc["min_temp"][idx] if idx < len(fc.get("min_temp", [])) else None
-                wind = fc["max_wind_kmh"][idx] if idx < len(fc.get("max_wind_kmh", [])) else None
-                if min_t is not None and max_t is not None:
-                    parts.append(f"{min_t:.0f}-{max_t:.0f}C")
-                if wind is not None:
-                    parts.append(f"{wind:.0f}km/h max wind")
+        wind_cap = wind_capacity.get(region)
+        solar_cap = solar_capacity.get(region)
+        cap_bits = []
+        if wind_cap:
+            cap_bits.append(f"wind {wind_cap:,.0f}MW")
+        if solar_cap:
+            cap_bits.append(f"solar {solar_cap:,.0f}MW")
+        cap_note = f" ({' / '.join(cap_bits)} registered capacity)" if cap_bits else ""
+        lines.append(f"\n{region}{cap_note}:")
 
-        region_rows = target_df[target_df["REGIONID"] == region]
-        if not region_rows.empty:
-            wind_cap = wind_capacity.get(region)
-            solar_cap = solar_capacity.get(region)
-            if wind_cap and wind_cap > 0:
-                wind_avg_pct = region_rows["SS_WIND_UIGF"].mean() / wind_cap * 100
-                wind_peak_pct = region_rows["SS_WIND_UIGF"].max() / wind_cap * 100
-                parts.append(f"wind avg {wind_avg_pct:.0f}% / peak {wind_peak_pct:.0f}% of {wind_cap:,.0f}MW capacity")
-            if solar_cap and solar_cap > 0:
-                solar_peak_pct = region_rows["SS_SOLAR_UIGF"].max() / solar_cap * 100
-                parts.append(f"solar peak {solar_peak_pct:.0f}% of {solar_cap:,.0f}MW capacity")
+        for target_date in target_dates:
+            parts = []
+            if fc and fc.get("dates"):
+                # Match by the actual date string, not a fixed index - keeps each day
+                # correctly aligned even if open-meteo's array start ever shifts.
+                target_str = target_date.strftime("%Y-%m-%d")
+                idx = fc["dates"].index(target_str) if target_str in fc["dates"] else None
+                if idx is not None:
+                    max_t = fc["max_temp"][idx] if idx < len(fc.get("max_temp", [])) else None
+                    min_t = fc["min_temp"][idx] if idx < len(fc.get("min_temp", [])) else None
+                    wind = fc["max_wind_kmh"][idx] if idx < len(fc.get("max_wind_kmh", [])) else None
+                    if min_t is not None and max_t is not None:
+                        parts.append(f"{min_t:.0f}-{max_t:.0f}C")
+                    if wind is not None:
+                        parts.append(f"{wind:.0f}km/h wind")
 
-        if parts:
-            lines.append(f"  {region}: " + ", ".join(parts))
-        else:
-            lines.append(f"  {region}: no data")
+            if target_date in available_dates:
+                region_rows = df[(df["REGIONID"] == region) & (df["_interval_dt"].dt.date == target_date)]
+                if not region_rows.empty:
+                    if wind_cap and wind_cap > 0:
+                        wind_avg_pct = region_rows["SS_WIND_UIGF"].mean() / wind_cap * 100
+                        wind_peak_pct = region_rows["SS_WIND_UIGF"].max() / wind_cap * 100
+                        parts.append(f"wind avg{wind_avg_pct:.0f}%/peak{wind_peak_pct:.0f}%")
+                    if solar_cap and solar_cap > 0:
+                        solar_peak_pct = region_rows["SS_SOLAR_UIGF"].max() / solar_cap * 100
+                        parts.append(f"solar peak{solar_peak_pct:.0f}%")
+            else:
+                parts.append("no generation forecast yet")
+
+            day_label = target_date.strftime("%a %d-%b")
+            lines.append(f"  {day_label}: " + (", ".join(parts) if parts else "no data"))
 
     message = "\n".join(lines)
     print(message)
 
     nw.push_ntfy(
         topic=topic,
-        title="Weather & generation outlook",
+        title="Weather & generation outlook (7 days)",
         message=message,
         tags=["partly_sunny", "wind_blowing_face"],
     )
