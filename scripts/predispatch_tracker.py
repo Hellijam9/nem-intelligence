@@ -50,6 +50,44 @@ def is_significant(prev: float, curr: float, threshold: float = 0.10) -> bool:
     return abs(curr - prev) / abs(prev) >= threshold
 
 
+def pool_into_ranges(alerts: list[tuple]) -> list[dict]:
+    """
+    Groups alerts by (REGIONID, kind) into contiguous 30-min-period runs, so a sustained
+    stretch above threshold reads as one "16:00 to 22:00" line instead of 12 separate
+    per-period lines - per your request, that per-period listing was the actual noise
+    source on a day with any real sustained price elevation, not the alert count itself.
+    """
+    by_key: dict[tuple, list[tuple]] = {}
+    for row, kind, price, prev_price in alerts:
+        by_key.setdefault((row["REGIONID"], kind), []).append((row["_period_dt"], price, prev_price))
+
+    groups = []
+    for (region, kind), entries in by_key.items():
+        entries.sort(key=lambda e: e[0])
+        run = [entries[0]]
+        for entry in entries[1:]:
+            if entry[0] - run[-1][0] == timedelta(minutes=30):
+                run.append(entry)
+            else:
+                groups.append((region, kind, run))
+                run = [entry]
+        groups.append((region, kind, run))
+
+    result = []
+    for region, kind, run in groups:
+        start = run[0][0]
+        end = run[-1][0] + timedelta(minutes=30)
+        prices = [e[1] for e in run]
+        prev_prices = [e[2] for e in run if e[2] is not None]
+        result.append({
+            "region": region, "kind": kind, "start": start, "end": end,
+            "price_min": min(prices), "price_max": max(prices),
+            "prev_min": min(prev_prices) if prev_prices else None,
+            "prev_max": max(prev_prices) if prev_prices else None,
+        })
+    return result
+
+
 def main() -> None:
     cfg = nw.CONFIG
     threshold = cfg.get("predispatch_alert_threshold", ALERT_THRESHOLD)
@@ -100,15 +138,24 @@ def main() -> None:
         return
 
     lines = [f"Predispatch forecast: price(s) above ${threshold} within the next {horizon_hours:.0f}h:"]
-    for row, kind, price, prev_price in sorted(new_alerts, key=lambda a: a[0]["_period_dt"]):
-        time_str = row["_period_dt"].strftime("%H:%M")
-        if kind == "new":
-            lines.append(f"  {row['REGIONID']}: ${price:,.0f}/MWh forecast for {time_str} NEM time")
+
+    pooled_new = pool_into_ranges(new_alerts)
+    pooled_dropped = pool_into_ranges([(row, "dropped", price, prev_price) for row, prev_price, price in dropped_alerts])
+
+    for g in sorted(pooled_new, key=lambda g: (g["region"], g["start"])):
+        span = f"{g['start'].strftime('%H:%M')} to {g['end'].strftime('%H:%M')}"
+        price_str = f"${g['price_min']:,.0f}" if g["price_min"] == g["price_max"] else f"${g['price_min']:,.0f}-${g['price_max']:,.0f}"
+        if g["kind"] == "new":
+            lines.append(f"  {g['region']}: above ${threshold} from {span} NEM time ({price_str}/MWh)")
         else:
-            lines.append(f"  {row['REGIONID']}: revised to ${price:,.0f}/MWh (was ${prev_price:,.0f}) for {time_str} NEM time")
-    for row, prev_price, price in sorted(dropped_alerts, key=lambda a: a[0]["_period_dt"]):
-        time_str = row["_period_dt"].strftime("%H:%M")
-        lines.append(f"  {row['REGIONID']}: back under ${threshold} (${price:,.0f}, was ${prev_price:,.0f}) for {time_str} NEM time")
+            prev_str = f"${g['prev_min']:,.0f}" if g['prev_min'] == g['prev_max'] else f"${g['prev_min']:,.0f}-${g['prev_max']:,.0f}"
+            lines.append(f"  {g['region']}: revised to {price_str}/MWh (was {prev_str}) from {span} NEM time")
+
+    for g in sorted(pooled_dropped, key=lambda g: (g["region"], g["start"])):
+        span = f"{g['start'].strftime('%H:%M')} to {g['end'].strftime('%H:%M')}"
+        price_str = f"${g['price_min']:,.0f}" if g["price_min"] == g["price_max"] else f"${g['price_min']:,.0f}-${g['price_max']:,.0f}"
+        prev_str = f"${g['prev_min']:,.0f}" if g['prev_min'] == g['prev_max'] else f"${g['prev_min']:,.0f}-${g['prev_max']:,.0f}"
+        lines.append(f"  {g['region']}: back under ${threshold} ({price_str}, was {prev_str}) from {span} NEM time")
 
     message = "\n".join(lines)
     print(message)
