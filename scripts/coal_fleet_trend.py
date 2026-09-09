@@ -104,14 +104,19 @@ def main() -> None:
 
     registry = nw.load_registry()
     fuel_filtered = False
+    total_capacity_mw = None
     if registry.fuel_info is not None:
         fcol = fuel_column(registry.fuel_info)
         if fcol:
-            coal_duids = set(registry.fuel_info.loc[
-                registry.fuel_info[fcol].str.lower().isin(COAL_FUELS), "DUID"
-            ])
+            coal_rows = registry.fuel_info[registry.fuel_info[fcol].str.lower().isin(COAL_FUELS)]
+            coal_duids = set(coal_rows["DUID"])
             df = df[df["DUID"].isin(coal_duids)]
             fuel_filtered = True
+            # Static registered nameplate capacity (doesn't change day to day) - the raw
+            # available-MW figure alone doesn't say whether that's most of the fleet or a
+            # small fraction of it, per your request for that context.
+            if "CAPACITY" in coal_rows.columns:
+                total_capacity_mw = pd.to_numeric(coal_rows["CAPACITY"], errors="coerce").sum()
 
     if not fuel_filtered:
         print("[coal_fleet_trend] NOTE: no fuel registry supplied - reporting ALL-DUID aggregate "
@@ -136,7 +141,12 @@ def main() -> None:
     append_history({"date": today_str, "avg_available_mw": f"{avg_available_mw:.1f}", "fuel_filtered": fuel_filtered})
 
     label = "Coal" if fuel_filtered else "All-fleet (unfiltered)"
-    lines = [f"{label} aggregate declared availability, {FORWARD_WINDOW_DAYS}-day forward avg: {avg_available_mw:,.0f}MW"]
+    if total_capacity_mw:
+        pct_of_capacity = avg_available_mw / total_capacity_mw * 100
+        lines = [f"{label} aggregate declared availability, {FORWARD_WINDOW_DAYS}-day forward avg: "
+                 f"{avg_available_mw:,.0f}MW of {total_capacity_mw:,.0f}MW registered capacity ({pct_of_capacity:.0f}%)"]
+    else:
+        lines = [f"{label} aggregate declared availability, {FORWARD_WINDOW_DAYS}-day forward avg: {avg_available_mw:,.0f}MW"]
 
     for period_name, days_ago in (("week-ago", 7), ("month-ago", 30), ("year-ago", 365)):
         ref = closest_entry(history, now - timedelta(days=days_ago), fuel_filtered)
