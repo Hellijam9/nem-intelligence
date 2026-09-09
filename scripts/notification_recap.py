@@ -960,6 +960,17 @@ def main() -> None:
         print("[notification_recap] Weekend - no recap.")
         return
 
+    # This workflow has two independent triggers (repository_dispatch + a schedule: fallback)
+    # that can both genuinely fire the same morning - confirmed live, 2026-09-10 sent two real
+    # pushes ~2h apart (07:34 via dispatch, 09:26 via the fallback schedule). Unlike the
+    # higher-frequency workflows, a once-a-day job has no natural gap between the two triggers
+    # that would make a double-fire rare, so the script itself has to refuse a second run today.
+    prior_state = nw.read_state(STATE_FILE, default={})
+    last_recap_at = prior_state.get("last_recap_at")
+    if last_recap_at and datetime.fromisoformat(last_recap_at).astimezone(SYDNEY_TZ).date() == now.date():
+        print(f"[notification_recap] Already sent today's recap at {last_recap_at} - skipping duplicate run.")
+        return
+
     log_entries = nw.read_notification_log(since=now - timedelta(days=10))
     message = build_recap(now, log_entries)
     print(message)
