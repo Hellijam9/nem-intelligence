@@ -7,9 +7,17 @@ name: Spot spike
 # scheduled trigger fires, which is one real, fixable contributing factor - though the
 # evidence (gaps as low as 22 min even when it did fire) points mostly to GitHub Actions'
 # own scheduler deprioritizing high-frequency crons, which this alone may not fully fix.
+# 2026-09-09: added repository_dispatch as the primary trigger - confirmed live that
+# GitHub's own `schedule:` events get queued/delayed (this workflow averaged 180min between
+# runs instead of 5, worst gap 5.4h) while dispatch-triggered runs start with zero measured
+# delay (created_at == run_started_at on every manual trigger tested). An external scheduler
+# (cron-job.org) now pings GitHub's repository_dispatch API on the real 5-min cadence instead.
+# `schedule:` is kept as a low-frequency fallback in case the external pinger itself goes down.
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "*/15 * * * *"
+  repository_dispatch:
+    types: [tick-5min]
   workflow_dispatch: {}
 
 concurrency:

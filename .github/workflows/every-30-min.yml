@@ -1,8 +1,13 @@
 name: Every 30 minutes
 
+# 2026-09-09: repository_dispatch is now the primary trigger (external pinger via
+# cron-job.org) - see spot-spike.yml for the measured evidence on why. `schedule:` kept as
+# a low-frequency fallback only.
 on:
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "0 * * * *"
+  repository_dispatch:
+    types: [tick-30min]
   workflow_dispatch: {}
 
 concurrency:

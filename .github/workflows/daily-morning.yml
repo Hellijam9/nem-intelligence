@@ -5,9 +5,15 @@ name: Daily morning batch
 # slightly different times a few minutes apart (05:02-06:10 NEM) on Windows Task
 # Scheduler; grouped into one run here so there's only one state commit instead of
 # seven near-simultaneous ones racing to push.
+# 2026-09-09: repository_dispatch is now the primary trigger (external pinger via
+# cron-job.org) - see spot-spike.yml for the measured evidence on why (this workflow's own
+# schedule: runs were also landing hours late, e.g. 10:26am/3:05pm instead of 7am). `schedule:`
+# kept as a fallback only.
 on:
   schedule:
     - cron: "0 19 * * *"
+  repository_dispatch:
+    types: [tick-daily]
   workflow_dispatch: {}
 
 concurrency:
