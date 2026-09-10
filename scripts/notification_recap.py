@@ -1039,12 +1039,14 @@ def format_cap_section(now: datetime) -> list[str]:
     return lines
 
 
-def _coal_fleet_month_change_live() -> float | None:
+def _coal_fleet_live_full() -> dict:
     """
     Read-only live coal-fleet check, reusing coal_fleet_trend.py's own logic - fetches fresh
     MTPASA data but does NOT append to coal_fleet_history.csv (that script's own daily run
     already does; a recap-triggered append would just duplicate/pollute the trend history).
-    Returns the % change vs a month ago, or None if there's not enough history yet.
+    Returns the full picture (current MW/capacity/label plus week/month/year-ago deltas), not
+    just the month-ago figure - shared by the DAY AHEAD coal section and the QED commentary's
+    threshold check so both come from a single fetch instead of two.
     """
     files = nw.get_latest_files(cft.PASA_URL, cft.PASA_PATTERN, n=1)
     df = nw.get_table(nw.parse_mms_zip(nw.download_bytes(files[-1])), "MTPASA_DUIDAVAILABILITY")
@@ -1053,34 +1055,65 @@ def _coal_fleet_month_change_live() -> float | None:
 
     registry = nw.load_registry()
     fuel_filtered = False
+    total_capacity_mw = None
     if registry.fuel_info is not None:
         fcol = cft.fuel_column(registry.fuel_info)
         if fcol:
-            coal_duids = set(registry.fuel_info[registry.fuel_info[fcol].str.lower().isin(cft.COAL_FUELS)]["DUID"])
+            coal_rows = registry.fuel_info[registry.fuel_info[fcol].str.lower().isin(cft.COAL_FUELS)]
+            coal_duids = set(coal_rows["DUID"])
             df = df[df["DUID"].isin(coal_duids)]
             fuel_filtered = True
+            if "CAPACITY" in coal_rows.columns:
+                total_capacity_mw = pd.to_numeric(coal_rows["CAPACITY"], errors="coerce").sum()
 
     now_naive = datetime.now(cft.NEM_TZ).replace(tzinfo=None)
     window_end = now_naive + timedelta(days=cft.FORWARD_WINDOW_DAYS)
     window = df[(df["_day_dt"] >= now_naive) & (df["_day_dt"] <= window_end)]
     if window.empty:
-        return None
+        return {"avg_available_mw": None}
     avg_available_mw = window.groupby(window["_day_dt"].dt.date)["PASAAVAILABILITY"].sum().mean()
 
     history = cft.read_history()
-    ref = cft.closest_entry(history, now_naive - timedelta(days=30), fuel_filtered)
-    if ref is None:
-        return None
-    ref_val = float(ref["avg_available_mw"])
-    if ref_val == 0:
-        return None
-    return (avg_available_mw - ref_val) / ref_val * 100
+    deltas = {}
+    for period_name, days_ago in (("week-ago", 7), ("month-ago", 30), ("year-ago", 365)):
+        ref = cft.closest_entry(history, now_naive - timedelta(days=days_ago), fuel_filtered)
+        if ref is None:
+            deltas[period_name] = None
+            continue
+        ref_val = float(ref["avg_available_mw"])
+        delta = avg_available_mw - ref_val
+        pct = (delta / ref_val * 100) if ref_val else None
+        deltas[period_name] = {"date": ref["date"], "delta_mw": delta, "pct": pct}
+
+    return {
+        "avg_available_mw": avg_available_mw,
+        "total_capacity_mw": total_capacity_mw,
+        "fuel_filtered": fuel_filtered,
+        "label": "Coal" if fuel_filtered else "All-fleet (unfiltered)",
+        "deltas": deltas,
+    }
+
+
+def format_coal_fleet_section(latest: dict | None) -> list[str]:
+    """
+    Straight log-replay of coal_fleet_trend's own push - you asked for it exactly as it
+    appears in the individual ntfy push, same treatment as gas_spread's section. Shows the
+    full message, not body_lines() (which drops the first line) - coal_fleet_trend's first
+    line IS the headline figure, not a throwaway category label like gas_spread's "Domestic
+    east-coast gas hub prices ($/GJ):" line.
+    """
+    if latest is None:
+        return ["\ncoal_fleet_trend: no data available."]
+    lines = ["\ncoal_fleet_trend:"]
+    lines.extend(f"  {ln.strip()}" for ln in latest.get("message", "").splitlines() if ln.strip())
+    return lines
 
 
 def _negative_pricing_live() -> dict[str, float]:
     """Read-only live negative-pricing check, reusing negative_pricing_tracker.py's own logic -
     fetches the trailing week fresh but does NOT append to negative_pricing_history.csv (same
-    reasoning as _coal_fleet_month_change_live)."""
+    reasoning as _coal_fleet_live_full). Stays QED-commentary-only per your call - not its own
+    DAY AHEAD section."""
     cfg = nw.CONFIG
     regions = cfg.get("nem_regions", ["NSW1", "QLD1", "VIC1", "SA1", "TAS1"])
     now_naive = datetime.now(npt.NEM_TZ).replace(tzinfo=None)
@@ -1184,7 +1217,9 @@ def format_qed_commentary(now: datetime, by_source: dict[str, list[dict]]) -> li
 
     # 4. Coal fleet decline - live (own script is change-gated, log-replay could be stale).
     try:
-        coal_pct = _coal_fleet_month_change_live()
+        coal_full = _coal_fleet_live_full()
+        month_ago = coal_full.get("deltas", {}).get("month-ago")
+        coal_pct = month_ago["pct"] if month_ago else None
     except Exception as exc:
         coal_pct = None
         print(f"[notification_recap] WARNING: coal fleet live check failed: {exc}")
@@ -1301,6 +1336,13 @@ def build_recap(now: datetime, log_entries: list[dict]) -> str:
     lines.append("\n\n=== DAY AHEAD - what's coming ===")
     lines.extend(format_cap_section(now))
     lines.extend(format_predispatch_forecast_section(now))
+
+    latest_coal = None
+    for e in log_entries:
+        if e["source"] == "coal_fleet_trend" and (latest_coal is None or e["ts"] > latest_coal["ts"]):
+            latest_coal = e
+    lines.extend(format_coal_fleet_section(latest_coal))
+
     lines.extend(format_price_outlook_section(now))
     lines.extend(format_reserve_outlook_section(now))
     lines.extend(format_units_out_today(now))
