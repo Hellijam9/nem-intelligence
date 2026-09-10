@@ -1,0 +1,17 @@
+# These files are append-only logs shared across every workflow (every-5-min, every-30-min,
+# every-3-hours, daily-morning, recap, spot-spike all write to state/ on independent
+# schedules) - every writer only ever adds new lines, never edits or removes existing ones.
+# Without this, a plain git rebase can hit a genuine content conflict when two workflow runs
+# commit close together (confirmed live, 2026-09-10: 3 of 5 predispatch_tracker runs in one
+# afternoon hit "CONFLICT (content): Merge conflict in state/notification_log.jsonl" and had
+# their entire state commit silently discarded - not just the log line, but that run's own
+# state update too, since git rebase fails the whole commit if any file in it conflicts).
+# The "union" merge driver is git's built-in strategy for exactly this shape of file: on a
+# conflict, keep both sides' added lines instead of asking for manual resolution - which is
+# the semantically correct outcome for an append-only log where order doesn't matter (every
+# reader already sorts/filters by each entry's own timestamp field, not file position).
+state/notification_log.jsonl merge=union
+state/scada_drops.csv merge=union
+state/coal_fleet_history.csv merge=union
+state/coal_price_history.csv merge=union
+state/negative_pricing_history.csv merge=union
