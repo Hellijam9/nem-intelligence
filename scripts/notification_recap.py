@@ -69,6 +69,7 @@ import requests
 
 import cap_dayahead as cd
 import coal_fleet_trend as cft
+import coal_price_tracker as cpt
 import negative_pricing_tracker as npt
 import reserve_outlook as ro
 import nemweb_common as nw
@@ -715,6 +716,18 @@ def format_gas_section(latest: dict | None) -> list[str]:
     return lines
 
 
+def format_coal_price_section(latest: dict | None) -> list[str]:
+    """
+    Straight log-replay of coal_price_tracker's own push - same treatment as gas_spread's
+    section. Reports daily unconditionally (no threshold gate), so never meaningfully stale.
+    """
+    if latest is None:
+        return ["\ncoal_price_tracker: no data available."]
+    lines = ["\ncoal_price_tracker:"]
+    lines.extend(f"  {ln.strip()}" for ln in body_lines(latest) if ln.strip())
+    return lines
+
+
 
 PERIOD_SPAN_RE = re.compile(r"from (\d{2}:\d{2}) to (\d{2}:\d{2}) NEM time")
 # Pre-pooling log format ("NSW1: $308/MWh forecast for 20:00 NEM time" / "back under $300
@@ -1342,6 +1355,29 @@ def format_qed_commentary(now: datetime, by_source: dict[str, list[dict]]) -> li
             f"+67% YoY)."
         )
 
+    # 9. Black-coal capacity withholding rising alongside an elevated international coal
+    # benchmark - reads coal_price_tracker's own state file (log-replay could be a day stale,
+    # same reasoning as gas_spread's watch-level check reusing gas_spread_state.json).
+    coal_price_state = nw.read_state("coal_price_state.json", default={})
+    withholding_pct = coal_price_state.get("domestic_pct_above_300")
+    intl_coal_price = coal_price_state.get("international_usd_tonne")
+    coal_history = cpt.read_history() if withholding_pct is not None else []
+    withholding_rising = False
+    if withholding_pct is not None and coal_history:
+        month_ago = cpt.closest_entry(
+            coal_history, now.replace(tzinfo=None) - timedelta(days=30), "domestic_pct_above_300"
+        )
+        if month_ago and (withholding_pct - float(month_ago["domestic_pct_above_300"])) >= WITHHOLDING_MONTHOVERMONTH_WATCH_PP:
+            withholding_rising = True
+    if withholding_rising and intl_coal_price is not None:
+        patterns.append(
+            f"Black-coal capacity withholding up >={WITHHOLDING_MONTHOVERMONTH_WATCH_PP:.0f}pp vs a month ago "
+            f"({withholding_pct:.1f}% of capacity now bid above ${cpt.WITHHOLDING_PRICE_THRESHOLD:.0f}/MWh) "
+            f"alongside an international Newcastle benchmark of ${intl_coal_price:,.0f}/tonne - QED ties "
+            f"exactly this mechanism (generators withdrawing capacity into extreme price bands) to the Q2 "
+            f"2022 LOR events and the first-ever NEM spot market suspension."
+        )
+
     lines = ["\n=== QED COMMENTARY ==="]
     if not patterns:
         lines.append("\nNo QED-flagged patterns matched overnight/today.")
@@ -1428,6 +1464,12 @@ def build_recap(now: datetime, log_entries: list[dict]) -> str:
         if e["source"] == "gas_spread_tracker" and (latest_gas is None or e["ts"] > latest_gas["ts"]):
             latest_gas = e
     lines.extend(format_gas_section(latest_gas))
+
+    latest_coal_price = None
+    for e in log_entries:
+        if e["source"] == "coal_price_tracker" and (latest_coal_price is None or e["ts"] > latest_coal_price["ts"]):
+            latest_coal_price = e
+    lines.extend(format_coal_price_section(latest_coal_price))
 
     latest_weather = None
     for e in log_entries:

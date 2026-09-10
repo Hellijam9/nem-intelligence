@@ -30,5 +30,10 @@
     "international_lng_jkm_usd_mmbtu": 12.50,
     "audusd_fx_rate": 0.66,
     "last_updated": "2026-07-28"
+  },
+  "_coal_benchmark_note": "international_newcastle_usd_tonne (scraped live from tradingeconomics.com, a CFD-tracked proxy, not an official settlement price) is fetched automatically each run by coal_price_tracker.py. The value below is only a fallback used if the live fetch ever fails - update it occasionally so the fallback stays roughly sane.",
+  "coal_benchmark": {
+    "international_newcastle_usd_tonne": 140.00,
+    "last_updated": "2026-09-10"
   }
 }
