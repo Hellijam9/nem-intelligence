@@ -418,9 +418,17 @@ def format_network_outage_changes_overnight(now: datetime) -> list[str]:
                 kind_bits.append(f"{new_count} new")
             if changed_count:
                 kind_bits.append(f"{changed_count} changed")
-            starts = sorted(r[3] for r in rows if r[3])
-            finishes = sorted(r[4] for r in rows if r[4] and r[4] != "?")
-            span = f", {starts[0]} to {finishes[-1]}" if starts and finishes else ""
+            # Parse as real dates before sorting - DD/MM/YYYY sorts wrong as a plain string
+            # (confirmed live: "15/06/2027" sorted before "27/10/2026" lexicographically,
+            # showing a span with the start AFTER the finish).
+            def parse_hio_date(s: str) -> datetime | None:
+                try:
+                    return datetime.strptime(s, "%d/%m/%Y %H:%M")
+                except (ValueError, TypeError):
+                    return None
+            starts = sorted((d for d in (parse_hio_date(r[3]) for r in rows) if d))
+            finishes = sorted((d for d in (parse_hio_date(r[4]) for r in rows if r[4] != "?") if d))
+            span = f", {starts[0].strftime('%d/%m/%Y %H:%M')} to {finishes[-1].strftime('%d/%m/%Y %H:%M')}" if starts and finishes else ""
             lines.append(f"  {asset} [{region}]: {', '.join(kind_bits)}{span}")
     return lines
 
