@@ -65,6 +65,7 @@ from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 import pandas as pd
+import requests
 
 import cap_dayahead as cd
 import coal_fleet_trend as cft
@@ -638,13 +639,18 @@ def format_weather_today_section(latest: dict | None) -> list[str]:
 
 
 def format_price_outlook_section(now: datetime) -> list[str]:
-    """Live check: today's remaining forecast price range per region, from the same Predispatch
-    run cap_dayahead/predispatch use - "what prices are expected to do" for the rest of today,
-    which nothing else in this report actually states plainly."""
+    """Live check: forecast price range per region, from the same Predispatch run
+    cap_dayahead/predispatch use - "what prices are expected to do" for the rest of today and
+    all of tomorrow, which nothing else in this report actually states plainly. Predispatch is
+    the ceiling of what's genuinely forecastable here - it only extends to the end of the
+    following trading day; anything further out has no AEMO price forecast at all (PASA covers
+    reserve/availability weeks-months ahead, but carries no $ figures), so this section stops
+    at tomorrow rather than presenting something further out as real."""
     cfg = nw.CONFIG
     regions = cfg.get("nem_regions", ["NSW1", "QLD1", "VIC1", "SA1", "TAS1"])
     now_naive = now.replace(tzinfo=None)
     midnight_tonight = datetime(now_naive.year, now_naive.month, now_naive.day) + timedelta(days=1)
+    midnight_day_after = midnight_tonight + timedelta(days=1)
 
     lines = ["\nPrice outlook (rest of today, live forecast):"]
     try:
@@ -663,6 +669,15 @@ def format_price_outlook_section(now: datetime) -> list[str]:
             lines.append(f"  {region}: no forecast data available")
             continue
         lines.append(f"  {region}: ${remaining.min():,.0f}-${remaining.max():,.0f}/MWh (avg ${remaining.mean():,.0f})")
+
+    lines.append("\nPrice outlook (tomorrow, live forecast):")
+    for region in regions:
+        region_pd = pd_df[pd_df["REGIONID"] == region]
+        tomorrow = cd.windowed_prices(region_pd, midnight_tonight, midnight_day_after) if not region_pd.empty else pd.Series(dtype=float)
+        if tomorrow.empty:
+            lines.append(f"  {region}: no forecast data available")
+            continue
+        lines.append(f"  {region}: ${tomorrow.min():,.0f}-${tomorrow.max():,.0f}/MWh (avg ${tomorrow.mean():,.0f})")
     return lines
 
 
@@ -1124,6 +1139,69 @@ def _overlaps_peak_season(start_date, end_date) -> bool:
     return False
 
 
+NORTH_SOUTH_DIVERGENCE_THRESHOLD = 40.0  # $/MWh gap between north (NSW1+QLD1) and south (VIC1+SA1+TAS1) avg
+
+
+def _north_south_divergence_live() -> dict | None:
+    """
+    Live check: today's remaining forecast avg price, north (NSW1+QLD1) vs south
+    (VIC1+SA1+TAS1) - refetches Predispatch independently rather than threading the DataFrame
+    from format_price_outlook_section through (same pattern as _coal_fleet_live_full /
+    _negative_pricing_live: a second small live fetch, not a shared cache). QED names this its
+    own recurring named regime, not a one-off event - "north-south split" (Q1 2018),
+    "regional divergence begins" (Q4 2020), "north-south divide widens" (Q1 2024, Q4 2024):
+    coal-heavy north pulling away from VRE-heavy south.
+    """
+    now_naive = datetime.now(SYDNEY_TZ).replace(tzinfo=None)
+    midnight_tonight = datetime(now_naive.year, now_naive.month, now_naive.day) + timedelta(days=1)
+    files = nw.get_latest_files(cd.PREDISPATCH_URL, cd.PREDISPATCH_PATTERN, n=1)
+    pd_df = nw.get_table(nw.parse_mms_zip(nw.download_bytes(files[-1])), "PDREGION")
+    pd_df["RRP"] = pd.to_numeric(pd_df["RRP"], errors="coerce")
+    pd_df["_period_dt"] = pd_df["PERIODID"].apply(cd.parse_price_datetime)
+
+    def region_avg(region: str):
+        region_pd = pd_df[pd_df["REGIONID"] == region]
+        remaining = cd.windowed_prices(region_pd, now_naive, midnight_tonight) if not region_pd.empty else pd.Series(dtype=float)
+        return remaining.mean() if not remaining.empty else None
+
+    north_vals = [v for v in (region_avg("NSW1"), region_avg("QLD1")) if v is not None]
+    south_vals = [v for v in (region_avg("VIC1"), region_avg("SA1"), region_avg("TAS1")) if v is not None]
+    if not north_vals or not south_vals:
+        return None
+    north_avg = sum(north_vals) / len(north_vals)
+    south_avg = sum(south_vals) / len(south_vals)
+    return {"north": north_avg, "south": south_avg, "gap": north_avg - south_avg}
+
+
+ONI_URL = "https://www.cpc.ncep.noaa.gov/data/indices/oni.ascii.txt"
+ENSO_ANOMALY_THRESHOLD = 0.5  # NOAA's own El Nino/La Nina cutoff on the 3-month running ONI anomaly
+
+
+def _enso_status_live() -> dict | None:
+    """
+    Live NOAA ONI (Oceanic Nino Index) check - the same public feed used to officially declare
+    El Nino/La Nina, updated monthly as a plain ASCII table (season, year, running 3-month SST
+    anomaly). Not a NEM-internal signal like the other 7 patterns; QED explicitly ties ENSO
+    phase to hydro/wind output swings - La Nina wet weather boosted hydro+VRE (Q4 2021, Q4
+    2022); El Nino declared Q3 2023; dry-season hydro repricing followed (TAS +104% YoY Q2
+    2024, TAS +67% YoY Q1 2025 on hydro conservation).
+    """
+    resp = requests.get(ONI_URL, timeout=nw.CONFIG.get("request_timeout_seconds", 30))
+    resp.raise_for_status()
+    data_lines = [ln for ln in resp.text.splitlines() if ln.strip() and not ln.strip().startswith("SEAS")]
+    if not data_lines:
+        return None
+    season, year, _total, anom = data_lines[-1].split()
+    anom = float(anom)
+    if anom >= ENSO_ANOMALY_THRESHOLD:
+        phase = "El Nino"
+    elif anom <= -ENSO_ANOMALY_THRESHOLD:
+        phase = "La Nina"
+    else:
+        phase = "Neutral"
+    return {"season": season, "year": year, "anomaly": anom, "phase": phase}
+
+
 def format_qed_commentary(now: datetime, by_source: dict[str, list[dict]]) -> list[str]:
     """
     QED-grounded pattern commentary - revives causal_rules.py's logic, orphaned since
@@ -1230,6 +1308,38 @@ def format_qed_commentary(now: datetime, by_source: dict[str, list[dict]]) -> li
         patterns.append(
             f"{peak_count} declared outage window(s) fall within peak-demand season (Dec-Feb/Jun-Aug) - "
             f"QED history shows outages rarely move price alone, but coinciding with a demand peak does."
+        )
+
+    # 7. North-south regional price divergence - live (same reason as coal/negative pricing:
+    # its own script would need to exist and doesn't, so this checks fresh every run).
+    try:
+        divergence = _north_south_divergence_live()
+    except Exception as exc:
+        divergence = None
+        print(f"[notification_recap] WARNING: north-south divergence live check failed: {exc}")
+    if divergence and abs(divergence["gap"]) >= NORTH_SOUTH_DIVERGENCE_THRESHOLD:
+        higher = "north (NSW1/QLD1)" if divergence["gap"] > 0 else "south (VIC1/SA1/TAS1)"
+        patterns.append(
+            f"North-south price split: north avg ${divergence['north']:.0f}/MWh vs south avg "
+            f"${divergence['south']:.0f}/MWh (gap ${abs(divergence['gap']):.0f}/MWh, {higher} higher) - "
+            f"QED names this its own recurring regime (coal-heavy north vs VRE-heavy south), not a "
+            f"one-off event; it has widened structurally since 2020 (Q1 2018 'north-south split', Q4 "
+            f"2020 'regional divergence begins', Q1/Q4 2024 'divide widens')."
+        )
+
+    # 8. ENSO phase (El Nino / La Nina) - the only pattern here sourced from outside NEM data
+    # entirely (NOAA), because QED itself repeatedly ties this to hydro/wind swings.
+    try:
+        enso = _enso_status_live()
+    except Exception as exc:
+        enso = None
+        print(f"[notification_recap] WARNING: ENSO live check failed: {exc}")
+    if enso and enso["phase"] != "Neutral":
+        patterns.append(
+            f"{enso['phase']} active (NOAA ONI {enso['anomaly']:+.2f}, {enso['season']} {enso['year']}) - "
+            f"QED ties La Nina wet weather to hydro/wind output boosts (Q4 2021, Q4 2022) and El Nino/"
+            f"dry conditions to hydro repricing (declared Q3 2023; TAS hydro Q2 2024 +104% YoY, Q1 2025 "
+            f"+67% YoY)."
         )
 
     lines = ["\n=== QED COMMENTARY ==="]
