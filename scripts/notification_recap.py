@@ -82,11 +82,11 @@ SYDNEY_TZ = ZoneInfo("Australia/Sydney")
 # covering all transmission assets (confirmed live: a 29-line dump, a strict subset of the
 # broader section - keeping both was pure duplication).
 ASIS_DISCRETE_SOURCES = ["rebid_reconciler", "pasa_monitor"]
-# Pooled across the whole overnight window into one summary line per DUID instead - both
-# scripts check each 5-min interval independently with NO debounce, confirmed live (neither
-# has any state suppressing a repeat push), so a genuinely volatile night could otherwise
-# produce dozens of separate near-identical blocks, one per push.
-POOLED_DISCRETE_SOURCES = ["customer_watcher", "scada_drop_monitor"]
+# customer_watcher + scada_drop_monitor are merged into one per-unit section instead
+# (format_unit_events_overnight) - both scripts check each 5-min interval independently with
+# NO debounce (a volatile night could otherwise produce dozens of near-identical blocks), and
+# scada_drop_monitor's own coverage is a strict subset of customer_watcher's (same fuel types,
+# drops only), so showing them separately was pure duplication of the same real events.
 # Net-effect filtering (skip a trigger that cleared within the window) only applies to
 # sources that actually push an explicit "cleared" line - everything else, including any
 # source added later that doesn't emit one, defaults to DISCRETE (always show) so nothing
@@ -158,6 +158,46 @@ def net_effect_lines(entries: list[dict]) -> list[tuple[str, str]]:
     return sorted(active.values(), key=lambda t: t[0])
 
 
+DROP_REASON_RE = re.compile(r"^ {4}\[(\w+)/(\w+)\] (.+)$")
+DUID_DROP_RE = re.compile(r"^ {2}(\S.*?) - drop\(s\) at")
+
+
+def format_drop_reasons_overnight(entries: list[dict]) -> list[str]:
+    """
+    For every drop rebid_reconciler actually reconciled, states plainly whether it was a
+    genuine trip or something else - you asked directly "was it a trip or not", which the raw
+    [TAG/TYPE] shorthand buried in the full rebid_reconciler block doesn't answer at a glance.
+    Uses rebid_reconciler's own keyword-tagged classification: FORCED (its explanation text
+    matched forced/trip/fault/failure/unplanned/breaker/boiler/loss of/tube leak/emergency/
+    protection) becomes "TRIPPED"; ECONOMIC or OTHER becomes "not a trip" plus the real reason.
+    """
+    reasons = []
+    for e in entries:
+        owner = None
+        duid_label = None
+        for line in e.get("message", "").splitlines():
+            if not line.strip():
+                continue
+            if not line.startswith(" "):
+                owner = line.strip().rstrip(":")
+                continue
+            m = DUID_DROP_RE.match(line)
+            if m:
+                duid_label = m.group(1)
+                continue
+            m = DROP_REASON_RE.match(line)
+            if m and duid_label:
+                tag, _entrytype, explanation = m.groups()
+                verdict = "TRIPPED" if tag == "FORCED" else "not a trip"
+                reasons.append(f"  {duid_label} [{owner or 'UNKNOWN'}]: {verdict} - {explanation}")
+
+    if not reasons:
+        return []
+    lines = ["\nDrop reasons overnight (tripped or not):"]
+    lines.extend(reasons)
+    return lines
+
+
 def format_discrete_section(source: str, entries: list[dict]) -> list[str]:
     lines = [f"\n{source}:"]
     for e in entries:
@@ -178,19 +218,25 @@ INDIVIDUAL_MOVE_RE = re.compile(r"^\s*(.+?) \[([^,\]]+)(?:, ([^\]]+))?\]: ([\d.,
 AGGREGATE_MOVE_RE = re.compile(r"^\s*(Wind|Solar|Battery): net ([+-]?[\d.,]+)MW this interval \((\d+) unit\(s\)\)")
 
 
-def pool_discrete_moves(entries: list[dict]) -> list[str]:
+def format_unit_events_overnight(customer_entries: list[dict], scada_entries: list[dict]) -> list[str]:
     """
-    Pools individual-DUID move/drop lines across every push in the overnight window into one
-    summary line per DUID (first prev value seen -> last curr value seen, net change, how many
-    times it moved) - customer_watcher.py and scada_drop_monitor.py both check each 5-min
-    interval independently with no debounce, so this is what stands between a volatile night
-    and dozens of near-identical blocks. Also pools customer_watcher's aggregate
-    wind/solar/battery lines into one cumulative net-movement line per fuel type.
+    Merges customer_watcher + scada_drop_monitor into one per-unit section - what actually
+    happened, not net/cumulative/worst statistics (you flagged those as giving a wrong
+    picture: "if it fell and recovered it still fell"). Each unit gets one line listing every
+    distinct move it made overnight, in order. scada_drop_monitor only ever logs falls (a
+    subset of the same fuel types customer_watcher already tracks in both directions), so the
+    same real event showing up in both sources is deduplicated by (DUID, prev, curr), not
+    shown twice. This only changes how the recap summarises these two sources - the live
+    per-interval ntfy pushes from customer_watcher.py/scada_drop_monitor.py are unchanged.
     """
-    individual: dict[str, dict] = {}
+    if not customer_entries and not scada_entries:
+        return []
+    all_entries = sorted(customer_entries + scada_entries, key=lambda x: x["ts"])
+    events: dict[str, dict] = {}
+    seen: set[tuple] = set()
     aggregate: dict[str, dict] = {}
 
-    for e in sorted(entries, key=lambda x: x["ts"]):
+    for e in all_entries:
         for line in e.get("message", "").splitlines():
             m = INDIVIDUAL_MOVE_RE.match(line)
             if m:
@@ -200,18 +246,14 @@ def pool_discrete_moves(entries: list[dict]) -> list[str]:
                     curr_v = float(curr_s.replace(",", ""))
                 except ValueError:
                     continue
-                key = label.strip()
-                d = individual.setdefault(key, {"region": region.strip(), "fuel": (fuel or "?").strip(),
-                                                  "first_prev": prev_v, "min_val": prev_v, "max_val": prev_v,
-                                                  "cumulative": 0.0, "worst": 0.0, "count": 0})
-                delta = curr_v - prev_v
-                d["last_curr"] = curr_v
-                d["min_val"] = min(d["min_val"], curr_v)
-                d["max_val"] = max(d["max_val"], curr_v)
-                d["cumulative"] += delta
-                if abs(delta) > abs(d["worst"]):
-                    d["worst"] = delta
-                d["count"] += 1
+                label = label.strip()
+                dedup_key = (label, round(prev_v, 1), round(curr_v, 1))
+                if dedup_key in seen:
+                    continue
+                seen.add(dedup_key)
+                ts_str = datetime.fromisoformat(e["ts"]).strftime("%H:%M")
+                d = events.setdefault(label, {"region": region.strip(), "fuel": (fuel or "?").strip(), "moves": []})
+                d["moves"].append((ts_str, prev_v, curr_v))
                 continue
             m2 = AGGREGATE_MOVE_RE.match(line)
             if m2:
@@ -226,40 +268,26 @@ def pool_discrete_moves(entries: list[dict]) -> list[str]:
 
     def fmt_signed(v: float) -> str:
         if v == 0:
-            v = 0.0  # kills float's negative-zero sign bit - confirmed live, produced "net +-0MW"
+            v = 0.0  # kills float's negative-zero sign bit - confirmed live, produced "+-0MW"
         return f"{'+' if v >= 0 else ''}{v:.0f}"
 
-    lines: list[str] = []
-    for label in sorted(individual, key=lambda k: -abs(individual[k]["last_curr"] - individual[k]["first_prev"])):
-        d = individual[label]
-        net = d["last_curr"] - d["first_prev"]
+    lines = ["\nUnit activity overnight (customer_watcher + scada_drop_monitor, merged):"]
+    if not events and not aggregate:
+        lines.append("  None.")
+        return lines
+
+    for label in sorted(events, key=lambda k: events[k]["moves"][0][0]):
+        d = events[label]
+        moves = sorted(d["moves"], key=lambda t: t[0])
         bracket = f"{d['region']}, {d['fuel']}" if d["fuel"] != "?" else d["region"]
-        if d["count"] > 1:
-            # Net alone can hide real volatility (e.g. a hard drop that partially recovered) -
-            # you flagged this live: "if it fell and recovered it still fell, net doesn't help".
-            # Cumulative (sum of every individual logged move) and worst (the single biggest
-            # one) show that even when net looks calm.
-            lines.append(
-                f"  {label} [{bracket}]: {d['count']} move(s), {d['first_prev']:.0f} -> {d['last_curr']:.0f}MW "
-                f"(net {fmt_signed(net)}MW, cumulative {fmt_signed(d['cumulative'])}MW, worst single move {fmt_signed(d['worst'])}MW)"
-            )
-        else:
-            lines.append(f"  {label} [{bracket}]: {d['first_prev']:.0f} -> {d['last_curr']:.0f}MW (net {fmt_signed(net)}MW)")
+        move_strs = [f"{t} {p:.0f}->{c:.0f}MW" for t, p, c in moves]
+        lines.append(f"  {label} [{bracket}]: " + ", ".join(move_strs))
 
     if aggregate:
         for fuel in sorted(aggregate):
             d = aggregate[fuel]
-            lines.append(f"  {fuel}: {d['count']} interval(s), cumulative net {fmt_signed(d['net_sum'])}MW")
+            lines.append(f"  {fuel}: {d['count']} interval(s), net {fmt_signed(d['net_sum'])}MW")
 
-    return lines
-
-
-def format_pooled_discrete_section(source: str, entries: list[dict]) -> list[str]:
-    if not entries:
-        return []
-    lines = [f"\n{source} ({len(entries)} interval(s) overnight):"]
-    pooled = pool_discrete_moves(entries)
-    lines.extend(pooled if pooled else ["  (no parseable moves)"])
     return lines
 
 
@@ -995,16 +1023,18 @@ def build_recap(now: datetime, log_entries: list[dict]) -> str:
     # whether anything else fired overnight.
     lines.extend(format_cap_overnight_section(now, since))
     lines.extend(format_predispatch_eventuated_section(now, log_entries))
+    lines.extend(format_drop_reasons_overnight(by_source.get("rebid_reconciler", [])))
 
     overnight_had_content = False
     for source in ASIS_DISCRETE_SOURCES:
         if source in by_source:
             overnight_had_content = True
             lines.extend(format_discrete_section(source, by_source[source]))
-    for source in POOLED_DISCRETE_SOURCES:
-        if source in by_source:
-            overnight_had_content = True
-            lines.extend(format_pooled_discrete_section(source, by_source[source]))
+    if "customer_watcher" in by_source or "scada_drop_monitor" in by_source:
+        overnight_had_content = True
+        lines.extend(format_unit_events_overnight(
+            by_source.get("customer_watcher", []), by_source.get("scada_drop_monitor", [])
+        ))
     if "interconnector_monitor" in by_source:
         overnight_had_content = True
         lines.extend(format_pooled_interconnector_section(by_source["interconnector_monitor"]))
