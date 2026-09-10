@@ -202,8 +202,15 @@ def pool_discrete_moves(entries: list[dict]) -> list[str]:
                     continue
                 key = label.strip()
                 d = individual.setdefault(key, {"region": region.strip(), "fuel": (fuel or "?").strip(),
-                                                  "first_prev": prev_v, "count": 0})
+                                                  "first_prev": prev_v, "min_val": prev_v, "max_val": prev_v,
+                                                  "cumulative": 0.0, "worst": 0.0, "count": 0})
+                delta = curr_v - prev_v
                 d["last_curr"] = curr_v
+                d["min_val"] = min(d["min_val"], curr_v)
+                d["max_val"] = max(d["max_val"], curr_v)
+                d["cumulative"] += delta
+                if abs(delta) > abs(d["worst"]):
+                    d["worst"] = delta
                 d["count"] += 1
                 continue
             m2 = AGGREGATE_MOVE_RE.match(line)
@@ -217,23 +224,32 @@ def pool_discrete_moves(entries: list[dict]) -> list[str]:
                 d["net_sum"] += net_v
                 d["count"] += 1
 
+    def fmt_signed(v: float) -> str:
+        if v == 0:
+            v = 0.0  # kills float's negative-zero sign bit - confirmed live, produced "net +-0MW"
+        return f"{'+' if v >= 0 else ''}{v:.0f}"
+
     lines: list[str] = []
     for label in sorted(individual, key=lambda k: -abs(individual[k]["last_curr"] - individual[k]["first_prev"])):
         d = individual[label]
         net = d["last_curr"] - d["first_prev"]
-        if net == 0:
-            net = 0.0  # kills float's negative-zero sign bit - confirmed live, produced "net +-0MW"
-        sign = "+" if net >= 0 else ""
-        move_str = f"{d['count']} move(s), " if d["count"] > 1 else ""
         bracket = f"{d['region']}, {d['fuel']}" if d["fuel"] != "?" else d["region"]
-        lines.append(f"  {label} [{bracket}]: {move_str}{d['first_prev']:.0f} -> {d['last_curr']:.0f}MW (net {sign}{net:.0f}MW)")
+        if d["count"] > 1:
+            # Net alone can hide real volatility (e.g. a hard drop that partially recovered) -
+            # you flagged this live: "if it fell and recovered it still fell, net doesn't help".
+            # Cumulative (sum of every individual logged move) and worst (the single biggest
+            # one) show that even when net looks calm.
+            lines.append(
+                f"  {label} [{bracket}]: {d['count']} move(s), {d['first_prev']:.0f} -> {d['last_curr']:.0f}MW "
+                f"(net {fmt_signed(net)}MW, cumulative {fmt_signed(d['cumulative'])}MW, worst single move {fmt_signed(d['worst'])}MW)"
+            )
+        else:
+            lines.append(f"  {label} [{bracket}]: {d['first_prev']:.0f} -> {d['last_curr']:.0f}MW (net {fmt_signed(net)}MW)")
 
     if aggregate:
         for fuel in sorted(aggregate):
             d = aggregate[fuel]
-            net_sum = d["net_sum"] if d["net_sum"] != 0 else 0.0
-            sign = "+" if net_sum >= 0 else ""
-            lines.append(f"  {fuel}: {d['count']} interval(s), cumulative net {sign}{net_sum:.0f}MW")
+            lines.append(f"  {fuel}: {d['count']} interval(s), cumulative net {fmt_signed(d['net_sum'])}MW")
 
     return lines
 
@@ -749,15 +765,21 @@ def format_cap_overnight_section(now: datetime, since: datetime) -> list[str]:
         lines.append(f"  Could not fetch actuals ({exc}).")
         return lines
 
+    avg_lines = []
     payouts = []
     for region in regions:
         prices = actuals.loc[actuals["REGIONID"] == region, "RRP"] if not actuals.empty else []
         if len(prices) == 0:
             continue
+        avg_lines.append(f"  {region}: ${prices.mean():,.0f}/MWh")
         _, payout_full = nw.cap_settlement(prices, strike, interval_hours=5 / 60)
         payout = payout_full / 24
         if payout > 0:
             payouts.append(f"  {region}: ${payout:,.2f}")
+
+    if avg_lines:
+        lines.append("  Average spot price overnight:")
+        lines.extend(avg_lines)
 
     if payouts:
         lines.append("  PAID OUT:")
@@ -957,6 +979,12 @@ def build_recap(now: datetime, log_entries: list[dict]) -> str:
     lines = [f"Morning Recap: {span_desc} ({since.strftime('%a %d-%b %H:%M')} to {now.strftime('%a %d-%b %H:%M')} NEM time)"]
 
     lines.append("\n=== OVERNIGHT - what happened ===")
+    # Cap payouts and predispatch forecast-vs-actual lead the section - always print something
+    # (a payout/eventuate check or "none"), so they're the first thing you see regardless of
+    # whether anything else fired overnight.
+    lines.extend(format_cap_overnight_section(now, since))
+    lines.extend(format_predispatch_eventuated_section(now, log_entries))
+
     overnight_had_content = False
     for source in ASIS_DISCRETE_SOURCES:
         if source in by_source:
@@ -975,10 +1003,8 @@ def build_recap(now: datetime, log_entries: list[dict]) -> str:
             overnight_had_content = True
             lines.extend(section)
     if not overnight_had_content:
-        lines.append("\nQuiet - nothing to report.")
-    lines.extend(format_cap_overnight_section(now, since))
+        lines.append("\nQuiet - no other alerts overnight.")
     lines.extend(format_network_outage_changes_overnight(now))
-    lines.extend(format_predispatch_eventuated_section(now, log_entries))
 
     lines.append("\n\n=== DAY AHEAD - what's coming ===")
     lines.extend(format_cap_section(now))
