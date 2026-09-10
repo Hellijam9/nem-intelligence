@@ -9098,5 +9098,45 @@
     "start": "2026-09-13",
     "end": "2026-09-17",
     "found_at": "2026-09-09T10:55:16.589840"
+  },
+  {
+    "duid": "SWAN_E",
+    "station": "Swanbank E",
+    "owner": "CleanCo Queensland Limited",
+    "region": "QLD1",
+    "delta": -375,
+    "start": "2026-10-23",
+    "end": "2026-10-29",
+    "found_at": "2026-09-10T03:36:20.496730"
+  },
+  {
+    "duid": "SWAN_E",
+    "station": "Swanbank E",
+    "owner": "CleanCo Queensland Limited",
+    "region": "QLD1",
+    "delta": 375,
+    "start": "2026-10-09",
+    "end": "2026-10-15",
+    "found_at": "2026-09-10T03:36:20.496730"
+  },
+  {
+    "duid": "SNB01",
+    "station": NaN,
+    "owner": "Supernode Operations Pty Ltd as the trustee for Supernode BESS 1 Project Trust",
+    "region": "QLD1",
+    "delta": -260,
+    "start": "2026-09-15",
+    "end": "2026-09-15",
+    "found_at": "2026-09-10T03:36:20.496730"
+  },
+  {
+    "duid": "TARONG#4",
+    "station": "Tarong",
+    "owner": "Stanwell Corporation Limited",
+    "region": "QLD1",
+    "delta": -170,
+    "start": "2026-09-13",
+    "end": "2026-09-13",
+    "found_at": "2026-09-10T03:36:20.496730"
   }
 ]
