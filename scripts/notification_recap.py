@@ -164,42 +164,6 @@ DROP_REASON_RE = re.compile(r"^ {4}\[(\w+)/(\w+)\] (.+)$")
 DUID_DROP_RE = re.compile(r"^ {2}(\S.*?) - drop\(s\) at")
 
 
-def format_drop_reasons_overnight(entries: list[dict]) -> list[str]:
-    """
-    For every drop rebid_reconciler actually reconciled, states plainly whether it was a
-    genuine trip or something else - you asked directly "was it a trip or not", which the raw
-    [TAG/TYPE] shorthand buried in the full rebid_reconciler block doesn't answer at a glance.
-    Uses rebid_reconciler's own keyword-tagged classification: FORCED (its explanation text
-    matched forced/trip/fault/failure/unplanned/breaker/boiler/loss of/tube leak/emergency/
-    protection) becomes "TRIPPED"; ECONOMIC or OTHER becomes "not a trip" plus the real reason.
-    """
-    reasons = []
-    for e in entries:
-        owner = None
-        duid_label = None
-        for line in e.get("message", "").splitlines():
-            if not line.strip():
-                continue
-            if not line.startswith(" "):
-                owner = line.strip().rstrip(":")
-                continue
-            m = DUID_DROP_RE.match(line)
-            if m:
-                duid_label = m.group(1)
-                continue
-            m = DROP_REASON_RE.match(line)
-            if m and duid_label:
-                tag, _entrytype, explanation = m.groups()
-                verdict = "TRIPPED" if tag == "FORCED" else "not a trip"
-                reasons.append(f"  {duid_label} [{owner or 'UNKNOWN'}]: {verdict} - {explanation}")
-
-    if not reasons:
-        return []
-    lines = ["\nDrop reasons overnight (tripped or not):"]
-    lines.extend(reasons)
-    return lines
-
-
 def format_discrete_section(source: str, entries: list[dict]) -> list[str]:
     lines = [f"\n{source}:"]
     for e in entries:
@@ -222,8 +186,8 @@ AGGREGATE_MOVE_RE = re.compile(r"^\s*(Wind|Solar|Battery): net ([+-]?[\d.,]+)MW 
 
 def build_trip_verdict_lookup(rebid_entries: list[dict]) -> dict[str, str]:
     """DUID code -> 'TRIPPED: <reason>' / 'not a trip: <reason>', from rebid_reconciler's own
-    FORCED/ECONOMIC/OTHER classification. Shared by format_drop_reasons_overnight (its own
-    section) and format_unit_events_overnight (inline annotation on the matching unit line)."""
+    FORCED/ECONOMIC/OTHER classification. Used by format_unit_events_overnight for the inline
+    trip-verdict annotation on the matching unit line."""
     verdicts: dict[str, str] = {}
     for e in rebid_entries:
         duid_label = None
@@ -257,10 +221,10 @@ def format_unit_events_overnight(customer_entries: list[dict], scada_entries: li
 
     If rebid_entries is given, any unit rebid_reconciler already has a trip verdict for gets
     it appended inline - you asked "surely that can be flagged as a trip" rather than needing
-    to cross-check the separate "Drop reasons overnight" section. Only covers units whose drop
-    falls on a calendar day rebid_reconciler has actually reconciled (yesterday, not today -
-    see format_drop_reasons_overnight); a unit with no match here either hasn't been
-    reconciled yet or its move was never big/relevant enough to reach rebid_reconciler at all.
+    to cross-check the rebid_reconciler block yourself. Only covers units whose drop falls on
+    a calendar day rebid_reconciler has actually reconciled (yesterday, not today); a unit with
+    no match here either hasn't been reconciled yet or its move was never big/relevant enough
+    to reach rebid_reconciler at all.
     """
     if not customer_entries and not scada_entries:
         return []
@@ -1308,7 +1272,6 @@ def build_recap(now: datetime, log_entries: list[dict]) -> str:
     # whether anything else fired overnight.
     lines.extend(format_cap_overnight_section(now, since))
     lines.extend(format_predispatch_eventuated_section(now, log_entries))
-    lines.extend(format_drop_reasons_overnight(by_source.get("rebid_reconciler", [])))
 
     overnight_had_content = False
     for source in ASIS_DISCRETE_SOURCES:
