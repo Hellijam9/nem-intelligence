@@ -218,7 +218,31 @@ INDIVIDUAL_MOVE_RE = re.compile(r"^\s*(.+?) \[([^,\]]+)(?:, ([^\]]+))?\]: ([\d.,
 AGGREGATE_MOVE_RE = re.compile(r"^\s*(Wind|Solar|Battery): net ([+-]?[\d.,]+)MW this interval \((\d+) unit\(s\)\)")
 
 
-def format_unit_events_overnight(customer_entries: list[dict], scada_entries: list[dict]) -> list[str]:
+def build_trip_verdict_lookup(rebid_entries: list[dict]) -> dict[str, str]:
+    """DUID code -> 'TRIPPED: <reason>' / 'not a trip: <reason>', from rebid_reconciler's own
+    FORCED/ECONOMIC/OTHER classification. Shared by format_drop_reasons_overnight (its own
+    section) and format_unit_events_overnight (inline annotation on the matching unit line)."""
+    verdicts: dict[str, str] = {}
+    for e in rebid_entries:
+        duid_label = None
+        for line in e.get("message", "").splitlines():
+            if not line.strip() or not line.startswith(" "):
+                continue
+            m = DUID_DROP_RE.match(line)
+            if m:
+                duid_label = m.group(1)
+                continue
+            m = DROP_REASON_RE.match(line)
+            if m and duid_label:
+                tag, _entrytype, explanation = m.groups()
+                verdict = "TRIPPED" if tag == "FORCED" else "not a trip"
+                duid_code = duid_label.split(" (")[0].strip()
+                verdicts[duid_code] = f"{verdict}: {explanation}"
+    return verdicts
+
+
+def format_unit_events_overnight(customer_entries: list[dict], scada_entries: list[dict],
+                                  rebid_entries: list[dict] | None = None) -> list[str]:
     """
     Merges customer_watcher + scada_drop_monitor into one per-unit section - what actually
     happened, not net/cumulative/worst statistics (you flagged those as giving a wrong
@@ -228,9 +252,17 @@ def format_unit_events_overnight(customer_entries: list[dict], scada_entries: li
     same real event showing up in both sources is deduplicated by (DUID, prev, curr), not
     shown twice. This only changes how the recap summarises these two sources - the live
     per-interval ntfy pushes from customer_watcher.py/scada_drop_monitor.py are unchanged.
+
+    If rebid_entries is given, any unit rebid_reconciler already has a trip verdict for gets
+    it appended inline - you asked "surely that can be flagged as a trip" rather than needing
+    to cross-check the separate "Drop reasons overnight" section. Only covers units whose drop
+    falls on a calendar day rebid_reconciler has actually reconciled (yesterday, not today -
+    see format_drop_reasons_overnight); a unit with no match here either hasn't been
+    reconciled yet or its move was never big/relevant enough to reach rebid_reconciler at all.
     """
     if not customer_entries and not scada_entries:
         return []
+    verdicts = build_trip_verdict_lookup(rebid_entries or [])
     all_entries = sorted(customer_entries + scada_entries, key=lambda x: x["ts"])
     events: dict[str, dict] = {}
     seen: set[tuple] = set()
@@ -281,7 +313,11 @@ def format_unit_events_overnight(customer_entries: list[dict], scada_entries: li
         moves = sorted(d["moves"], key=lambda t: t[0])
         bracket = f"{d['region']}, {d['fuel']}" if d["fuel"] != "?" else d["region"]
         move_strs = [f"{t} {p:.0f}->{c:.0f}MW" for t, p, c in moves]
-        lines.append(f"  {label} [{bracket}]: " + ", ".join(move_strs))
+        # events is keyed by the full label (may include station name, e.g. "TUMUT3
+        # (Tumut3)") but verdicts is keyed by the bare DUID code - match on that instead.
+        duid_code = label.split(" (")[0].strip()
+        verdict_note = f" -- {verdicts[duid_code]}" if duid_code in verdicts else ""
+        lines.append(f"  {label} [{bracket}]: " + ", ".join(move_strs) + verdict_note)
 
     if aggregate:
         for fuel in sorted(aggregate):
@@ -1033,7 +1069,8 @@ def build_recap(now: datetime, log_entries: list[dict]) -> str:
     if "customer_watcher" in by_source or "scada_drop_monitor" in by_source:
         overnight_had_content = True
         lines.extend(format_unit_events_overnight(
-            by_source.get("customer_watcher", []), by_source.get("scada_drop_monitor", [])
+            by_source.get("customer_watcher", []), by_source.get("scada_drop_monitor", []),
+            by_source.get("rebid_reconciler", [])
         ))
     if "interconnector_monitor" in by_source:
         overnight_had_content = True
