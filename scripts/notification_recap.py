@@ -766,10 +766,14 @@ def format_cap_overnight_section(now: datetime, since: datetime) -> list[str]:
     since_naive = since.replace(tzinfo=None) if since.tzinfo else since
     now_naive = now.replace(tzinfo=None) if now.tzinfo else now
 
-    lines = ["\nCap payouts overnight:"]
+    # Two separate sections (not one nested under the other) - fetched once here since the
+    # actuals download is the expensive part (~2min), shared between both.
+    lines = ["\nAverage spot price overnight:"]
     try:
         actuals = fetch_actual_prices_for_ranges([{"start": since_naive, "end": now_naive}])
     except Exception as exc:
+        lines.append(f"  Could not fetch actuals ({exc}).")
+        lines.append("\nCap payouts overnight:")
         lines.append(f"  Could not fetch actuals ({exc}).")
         return lines
 
@@ -785,10 +789,9 @@ def format_cap_overnight_section(now: datetime, since: datetime) -> list[str]:
         if payout > 0:
             payouts.append(f"  {region}: ${payout:,.2f}")
 
-    if avg_lines:
-        lines.append("  Average spot price overnight:")
-        lines.extend(avg_lines)
+    lines.extend(avg_lines if avg_lines else ["  No data available."])
 
+    lines.append("\nCap payouts overnight:")
     if payouts:
         lines.append("  PAID OUT:")
         lines.extend(payouts)
