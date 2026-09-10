@@ -1297,6 +1297,7 @@ def build_recap(now: datetime, log_entries: list[dict]) -> str:
     lines.extend(format_network_outage_changes_overnight(now))
 
     lines.append("\n\n=== DAY AHEAD - what's coming ===")
+    lines.extend(format_price_outlook_section(now))
     lines.extend(format_cap_section(now))
     lines.extend(format_predispatch_forecast_section(now))
 
@@ -1306,7 +1307,6 @@ def build_recap(now: datetime, log_entries: list[dict]) -> str:
             latest_coal = e
     lines.extend(format_coal_fleet_section(latest_coal))
 
-    lines.extend(format_price_outlook_section(now))
     lines.extend(format_reserve_outlook_section(now))
     lines.extend(format_units_out_today(now))
     lines.extend(format_large_outages_upcoming(now))
