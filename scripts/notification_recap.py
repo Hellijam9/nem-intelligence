@@ -67,6 +67,8 @@ from zoneinfo import ZoneInfo
 import pandas as pd
 
 import cap_dayahead as cd
+import coal_fleet_trend as cft
+import negative_pricing_tracker as npt
 import reserve_outlook as ro
 import nemweb_common as nw
 
@@ -1037,6 +1039,218 @@ def format_cap_section(now: datetime) -> list[str]:
     return lines
 
 
+def _coal_fleet_month_change_live() -> float | None:
+    """
+    Read-only live coal-fleet check, reusing coal_fleet_trend.py's own logic - fetches fresh
+    MTPASA data but does NOT append to coal_fleet_history.csv (that script's own daily run
+    already does; a recap-triggered append would just duplicate/pollute the trend history).
+    Returns the % change vs a month ago, or None if there's not enough history yet.
+    """
+    files = nw.get_latest_files(cft.PASA_URL, cft.PASA_PATTERN, n=1)
+    df = nw.get_table(nw.parse_mms_zip(nw.download_bytes(files[-1])), "MTPASA_DUIDAVAILABILITY")
+    df["PASAAVAILABILITY"] = pd.to_numeric(df["PASAAVAILABILITY"], errors="coerce")
+    df["_day_dt"] = df["DAY"].apply(lambda s: datetime.strptime(s.strip(), "%Y/%m/%d %H:%M:%S"))
+
+    registry = nw.load_registry()
+    fuel_filtered = False
+    if registry.fuel_info is not None:
+        fcol = cft.fuel_column(registry.fuel_info)
+        if fcol:
+            coal_duids = set(registry.fuel_info[registry.fuel_info[fcol].str.lower().isin(cft.COAL_FUELS)]["DUID"])
+            df = df[df["DUID"].isin(coal_duids)]
+            fuel_filtered = True
+
+    now_naive = datetime.now(cft.NEM_TZ).replace(tzinfo=None)
+    window_end = now_naive + timedelta(days=cft.FORWARD_WINDOW_DAYS)
+    window = df[(df["_day_dt"] >= now_naive) & (df["_day_dt"] <= window_end)]
+    if window.empty:
+        return None
+    avg_available_mw = window.groupby(window["_day_dt"].dt.date)["PASAAVAILABILITY"].sum().mean()
+
+    history = cft.read_history()
+    ref = cft.closest_entry(history, now_naive - timedelta(days=30), fuel_filtered)
+    if ref is None:
+        return None
+    ref_val = float(ref["avg_available_mw"])
+    if ref_val == 0:
+        return None
+    return (avg_available_mw - ref_val) / ref_val * 100
+
+
+def _negative_pricing_live() -> dict[str, float]:
+    """Read-only live negative-pricing check, reusing negative_pricing_tracker.py's own logic -
+    fetches the trailing week fresh but does NOT append to negative_pricing_history.csv (same
+    reasoning as _coal_fleet_month_change_live)."""
+    cfg = nw.CONFIG
+    regions = cfg.get("nem_regions", ["NSW1", "QLD1", "VIC1", "SA1", "TAS1"])
+    now_naive = datetime.now(npt.NEM_TZ).replace(tzinfo=None)
+
+    all_rows = []
+    for days_ago in range(1, npt.DAYS_TO_AGGREGATE + 1):
+        day = now_naive - timedelta(days=days_ago)
+        compact = day.strftime("%Y%m%d")
+        try:
+            files = nw.list_nemweb_files(npt.PUBLIC_PRICES_URL, rf"^PUBLIC_PRICES_{compact}0000_\d+\.zip$")
+        except Exception:
+            continue
+        if not files:
+            continue
+        try:
+            df = nw.get_table(nw.parse_mms_zip(nw.download_bytes(files[-1])), "DREGION")
+        except Exception:
+            continue
+        df["RRP"] = pd.to_numeric(df["RRP"], errors="coerce")
+        df = df.drop_duplicates(subset=["SETTLEMENTDATE", "REGIONID"])
+        all_rows.append(df)
+
+    if not all_rows:
+        return {}
+    combined = pd.concat(all_rows, ignore_index=True)
+    result: dict[str, float] = {}
+    for region in regions:
+        region_df = combined[combined["REGIONID"] == region]
+        if region_df.empty:
+            continue
+        result[region] = (region_df["RRP"] <= 0).mean() * 100
+    return result
+
+
+PEAK_DEMAND_MONTHS = {12, 1, 2, 6, 7, 8}  # Australian summer (cooling) + winter (heating) demand peaks
+
+
+def _overlaps_peak_season(start_date, end_date) -> bool:
+    d = start_date.replace(day=1)
+    while d <= end_date:
+        if d.month in PEAK_DEMAND_MONTHS:
+            return True
+        d = (d.replace(day=28) + timedelta(days=4)).replace(day=1)
+    return False
+
+
+def format_qed_commentary(now: datetime, by_source: dict[str, list[dict]]) -> list[str]:
+    """
+    QED-grounded pattern commentary - revives causal_rules.py's logic, orphaned since
+    market_read.py (its only caller) was deleted this session; only its gas-spread rule had
+    been manually ported into this recap so far (format_gas_section's watch level). Same terse
+    citation style as that line, not causal_rules.py's original verbose Finding/precedent
+    paragraphs. One combined block at the end of the recap, not threaded through every section.
+    Reuses data already gathered elsewhere in this run wherever possible (drops, spikes,
+    interconnector flags, gas spread, PASA cache); coal_fleet_trend and negative_pricing_tracker
+    get their own live read-only check since both are change-gated at the source (same
+    staleness risk that drove cap/predispatch/reserve to go live earlier).
+    """
+    patterns: list[str] = []
+
+    # 1. Drop coincides with an active price spike in the same region - "the single most
+    # repeated mechanism in the QED dataset" (Callide 2021, the 2022 crisis, Nov 2024 NSW/QLD).
+    drop_regions: set[str] = set()
+    for e in by_source.get("customer_watcher", []) + by_source.get("scada_drop_monitor", []):
+        for line in e.get("message", "").splitlines():
+            m = INDIVIDUAL_MOVE_RE.match(line)
+            if m:
+                drop_regions.add(m.group(2).strip())
+    spike_regions = {region_key(line) for _, line in net_effect_lines(by_source.get("spot_spike", []))}
+    spike_regions.discard(None)
+    coincide = drop_regions & spike_regions
+    if coincide:
+        patterns.append(
+            f"Drop + active price spike in the same region ({', '.join(sorted(coincide))}) - the single "
+            f"most repeated mechanism in the QED dataset (Callide 2021, the 2022 crisis, Nov 2024 NSW/QLD)."
+        )
+
+    # 2. Heywood/Murraylink bound + SA price elevated - the most repeated SA divergence pattern.
+    ic_flagged: set[str] = set()
+    for e in by_source.get("interconnector_monitor", []):
+        for line in e.get("message", "").splitlines():
+            m = INTERCONNECTOR_CONSTRAINT_RE.match(line)
+            if m:
+                ic_flagged.add(m.group(1).strip())
+    sa_bound = any("Heywood" in n or "Murraylink" in n for n in ic_flagged)
+    if sa_bound and "SA1" in spike_regions:
+        patterns.append(
+            "Heywood/Murraylink at/near limit while SA1 has an active price spike - the most repeated "
+            "cause of SA price divergence in the QED history (recurred 2023, 2024, 2025, Jan 2026)."
+        )
+
+    # 3. Gas spread - reuse the same state file the dedicated gas section already reads.
+    gas_state = nw.read_state("gas_spread_state.json", default={})
+    gas_spread = gas_state.get("spread_aud_gj")
+    if gas_spread is not None and abs(gas_spread) >= GAS_SPREAD_WATCH_THRESHOLD:
+        patterns.append(
+            f"Gas spread ${gas_spread:+.2f}/GJ - the leading indicator for domestic gas (and VIC/SA spot "
+            f"price floor) repricing; preceded the 2018 tightening, 2021 Callide-quarter spike, and the "
+            f"2022 crisis by weeks to months."
+        )
+
+    # 4. Coal fleet decline - live (own script is change-gated, log-replay could be stale).
+    try:
+        coal_pct = _coal_fleet_month_change_live()
+    except Exception as exc:
+        coal_pct = None
+        print(f"[notification_recap] WARNING: coal fleet live check failed: {exc}")
+    if coal_pct is not None and coal_pct <= -5:
+        patterns.append(
+            f"Coal fleet availability down {abs(coal_pct):.1f}% vs a month ago - QED history shows "
+            f"structural coal decline (not single outages) has been the dominant multi-quarter price "
+            f"driver since 2023."
+        )
+
+    # 5. Negative pricing trend - live (same reason as coal fleet).
+    try:
+        neg_regions = _negative_pricing_live()
+    except Exception as exc:
+        neg_regions = {}
+        print(f"[notification_recap] WARNING: negative pricing live check failed: {exc}")
+    high_neg = {r: p for r, p in neg_regions.items() if p >= 15}
+    if high_neg:
+        bits = ", ".join(f"{r} {p:.1f}%" for r, p in sorted(high_neg.items()))
+        patterns.append(
+            f"Negative/zero pricing >=15% of intervals this week ({bits}) - QED history shows this "
+            f"climbing almost monotonically (3.6% Q2 2020 -> 31.0% Q4 2025) as solar growth outpaces "
+            f"midday demand; expected structural trend, not a fault, unless paired with curtailment."
+        )
+
+    # 6. Upcoming outages in peak-demand season - individual outages rarely move price alone,
+    # but coinciding with a demand peak (summer/winter) does.
+    cache = nw.read_state("pasa_recent_windows.json", default=[])
+    today = now.date()
+    peak_count = 0
+    for w in cache:
+        if w.get("delta", 0) >= 0:
+            continue
+        try:
+            start_d = datetime.strptime(w["start"], "%Y-%m-%d").date()
+            end_d = datetime.strptime(w["end"], "%Y-%m-%d").date()
+        except (ValueError, KeyError, TypeError):
+            continue
+        if end_d < today:
+            continue
+        if _overlaps_peak_season(start_d, end_d):
+            peak_count += 1
+    if peak_count:
+        patterns.append(
+            f"{peak_count} declared outage window(s) fall within peak-demand season (Dec-Feb/Jun-Aug) - "
+            f"QED history shows outages rarely move price alone, but coinciding with a demand peak does."
+        )
+
+    lines = ["\n=== QED COMMENTARY ==="]
+    if not patterns:
+        lines.append("\nNo QED-flagged patterns matched overnight/today.")
+        return lines
+
+    if len(patterns) >= 2:
+        lines.append(
+            f"\n{len(patterns)} independent QED-validated precursor patterns active at once - real "
+            f"documented crises (2022 in particular: gas + coal + cold snap together) rarely came from "
+            f"one signal alone."
+        )
+    else:
+        lines.append("")
+    for p in patterns:
+        lines.append(f"  - {p}")
+    return lines
+
+
 def build_recap(now: datetime, log_entries: list[dict]) -> str:
     since = overnight_window(now)
     is_monday = now.weekday() == 0
@@ -1105,6 +1319,8 @@ def build_recap(now: datetime, log_entries: list[dict]) -> str:
         if e["source"] == "weather_outlook" and (latest_weather is None or e["ts"] > latest_weather["ts"]):
             latest_weather = e
     lines.extend(format_weather_today_section(latest_weather))
+
+    lines.extend(format_qed_commentary(now, by_source))
 
     return "\n".join(lines)
 
