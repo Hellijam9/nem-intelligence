@@ -9148,5 +9148,15 @@
     "start": "2026-09-29",
     "end": "2026-09-29",
     "found_at": "2026-09-10T10:51:28.319647"
+  },
+  {
+    "duid": "VP6",
+    "station": "Vales Pt",
+    "owner": "Delta Electricity",
+    "region": "NSW1",
+    "delta": -140,
+    "start": "2026-09-13",
+    "end": "2026-09-13",
+    "found_at": "2026-09-11T08:00:58.750550"
   }
 ]
