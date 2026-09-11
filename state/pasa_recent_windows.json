@@ -9158,5 +9158,25 @@
     "start": "2026-09-13",
     "end": "2026-09-13",
     "found_at": "2026-09-11T08:00:58.750550"
+  },
+  {
+    "duid": "MLB01",
+    "station": "",
+    "owner": "",
+    "region": "VIC1",
+    "delta": -300,
+    "start": "2026-09-13",
+    "end": "2026-09-21",
+    "found_at": "2026-09-11T10:48:07.146816"
+  },
+  {
+    "duid": "GSTONE4",
+    "station": "Gladstone",
+    "owner": "Gladstone Power Station Participants",
+    "region": "QLD1",
+    "delta": 280,
+    "start": "2026-09-14",
+    "end": "2026-09-17",
+    "found_at": "2026-09-11T10:48:07.146816"
   }
 ]
