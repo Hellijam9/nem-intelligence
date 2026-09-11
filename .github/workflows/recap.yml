@@ -71,6 +71,23 @@ jobs:
           done
           echo "[recap] WARNING: daily-morning batch never confirmed complete after 10 minutes - proceeding anyway with whatever data is available."
 
+      - name: Buffer against every-5-min/spot-spike/every-30-min ticks landing at the same minute
+        run: |
+          # These fire on fixed clock marks (every-5-min at :00/:05/:10..., every-30-min at
+          # :00/:30) that land on the exact same minute as this workflow's own 7:30 trigger by
+          # construction, not by chance - unlike the daily-morning case, there's no single
+          # "done for today" marker to wait for (they run continuously all day), so instead
+          # this just gives whichever one fired at the same moment enough time to finish its
+          # own checkout+script+commit cycle (observed ~15-45s in practice) before the final
+          # pull. Lower stakes than the daily-morning fix - these scripts already push live,
+          # standalone alerts independent of the recap, so missing the last minute here just
+          # means the recap's bundle doesn't ALSO mention it until tomorrow, not that the alert
+          # never reached you.
+          echo "[recap] Waiting 75s for any same-minute every-5-min/every-30-min tick to finish committing..."
+          sleep 75
+          git fetch origin main -q
+          git reset --hard origin/main -q
+
       - run: python scripts/notification_recap.py
 
       - name: Commit and push state changes
