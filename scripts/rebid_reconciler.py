@@ -5,7 +5,12 @@ Reads yesterday's MW-drop events (logged by scada_drop_monitor.py into
 state/scada_drops.csv) and matches each triggered DUID against its
 BIDDAYOFFER_D rebid explanation text for that day, grouped by company.
 
-Run once daily, ~5am NEM time (after Bidmove_Complete publishes, ~4am).
+Run once daily via daily-morning.yml, 05:30 NEM time. Confirmed live against the real
+NEMWEB directory listing (2026-09-11): Bidmove_Complete actually publishes anywhere from
+04:59 to 05:21 NEM, not a flat ~4am as this comment used to claim - the old 05:00 run slot
+was landing before the file existed on most days and silently finding nothing (this script
+exits quietly if the file isn't there yet, so that failure mode is invisible unless you go
+looking for it). 05:30 gives real margin past the latest observed publish time.
 
 Tagging: BIDTYPE is filtered to ENERGY (the FCAS bid types have their own
 noisy rebid chatter that isn't relevant to an MW-output drop). Each

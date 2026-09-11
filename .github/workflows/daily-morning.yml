@@ -1,17 +1,33 @@
 name: Daily morning batch
 
-# 19:00 UTC = 05:00 NEM time (Australia/Brisbane, fixed UTC+10, no daylight saving -
-# see NEM_TZ in nemweb_common.py). These 7 scripts previously ran at their own
-# slightly different times a few minutes apart (05:02-06:10 NEM) on Windows Task
-# Scheduler; grouped into one run here so there's only one state commit instead of
-# seven near-simultaneous ones racing to push.
+# 19:30 UTC = 05:30 NEM time (Australia/Brisbane, fixed UTC+10, no daylight saving -
+# see NEM_TZ in nemweb_common.py). Originally 05:00 - moved to 05:30 on 2026-09-11 after
+# finding rebid_reconciler.py's Bidmove_Complete dependency actually publishes anywhere from
+# 04:59 to 05:21 NEM (confirmed live against the real NEMWEB directory listing), so the old
+# 05:00 slot was landing before the file existed on most days and silently finding nothing -
+# not a bug in rebid_reconciler itself, just not enough buffer against AEMO's real publish
+# timing. 05:30 gives a real margin past the latest observed publish time. The external
+# cron-job.org "tick-daily" ping (the primary trigger) needs updating to match - GitHub's own
+# schedule: below is only the fallback, changing it alone doesn't move the primary trigger.
+# These 7 scripts previously ran at their own slightly different times a few minutes apart
+# (05:02-06:10 NEM) on Windows Task Scheduler; grouped into one run here so there's only one
+# state commit instead of seven near-simultaneous ones racing to push.
 # 2026-09-09: repository_dispatch is now the primary trigger (external pinger via
 # cron-job.org) - see spot-spike.yml for the measured evidence on why (this workflow's own
 # schedule: runs were also landing hours late, e.g. 10:26am/3:05pm instead of 7am). `schedule:`
 # kept as a fallback only.
+# 2026-09-11: that late-firing schedule: fallback caused a real problem, not just noise - it
+# fired a genuine second full run at 07:29 NEM (2.5h after the normal 05:00 slot), landing 72
+# seconds before recap.yml's own 07:30 run. recap.yml's checkout won the race against this
+# run's much-slower checkout+setup+9-scripts+commit sequence, so that morning's recap was
+# built and sent from a stale checkout that didn't yet have this run's fresh rebid_reconciler
+# output - not a recap bug, a cross-workflow timing collision. Added a same-day guard (same
+# pattern notification_recap.py already uses via recap_state.json) so a second same-day
+# firing - from either trigger - exits immediately instead of redoing (and re-racing) the
+# whole batch.
 on:
   schedule:
-    - cron: "0 19 * * *"
+    - cron: "30 19 * * *"
   repository_dispatch:
     types: [tick-daily]
   workflow_dispatch: {}
@@ -39,15 +55,25 @@ jobs:
 
       - run: pip install -r requirements.txt
 
-      - run: python scripts/rebid_reconciler.py
-      - run: python scripts/coal_price_tracker.py
-      - run: python scripts/cap_quarter_to_date.py
-      - run: python scripts/gas_spread_tracker.py
-      - run: python scripts/closure_watcher.py
-      - run: python scripts/negative_pricing_tracker.py
-      - run: python scripts/coal_fleet_trend.py
-      - run: python scripts/reserve_outlook.py
-      - run: python scripts/weather_outlook.py
+      - name: Run daily scripts (skip if already run today)
+        run: |
+          TODAY=$(date -u -d '+10 hours' +%Y-%m-%d)
+          LAST=$(python -c "import json,pathlib; p=pathlib.Path('state/daily_morning_state.json'); print(json.load(p.open()).get('last_run_date','') if p.exists() else '')")
+          if [ "$LAST" = "$TODAY" ]; then
+            echo "[daily-morning] Already ran today ($TODAY) - skipping duplicate run."
+            exit 0
+          fi
+          python scripts/rebid_reconciler.py
+          python scripts/coal_price_tracker.py
+          python scripts/cap_quarter_to_date.py
+          python scripts/gas_spread_tracker.py
+          python scripts/closure_watcher.py
+          python scripts/negative_pricing_tracker.py
+          python scripts/coal_fleet_trend.py
+          python scripts/reserve_outlook.py
+          python scripts/weather_outlook.py
+          mkdir -p state
+          python -c "import json; json.dump({'last_run_date': '$TODAY'}, open('state/daily_morning_state.json', 'w'))"
 
       - name: Commit and push state changes
         run: |
