@@ -12,9 +12,19 @@ name: Morning recap
 # the NEXT calendar day in Sydney (UTC+10/11 ahead) - so to land on Sydney Mon-Fri the cron
 # needs UTC Sun-Thu (0-4), not Mon-Fri (1-5).
 #
-# repository_dispatch (tick-recap) needs its own new cron-job.org job pointed at this event
-# type, timed for actual Sydney-local 7:30am on weekdays - not yet set up (same manual step
-# every other tick-* event needed).
+# repository_dispatch (tick-recap) has its own cron-job.org job now (set up 2026-09-09).
+#
+# 2026-09-11: found a real case where this recap ran before daily-morning.yml's own state
+# commit for the day had landed - rebid_reconciler genuinely produced its result at 07:29:45,
+# but daily-morning.yml (checkout+setup+9 scripts+commit) didn't finish pushing it to main
+# until 21:30:46.2365729Z UTC, and this workflow's own checkout started at 21:30:46.1437098Z -
+# 93 MILLISECONDS earlier. A same-day guard was added to daily-morning.yml so it can't fire
+# twice and re-race like this, but that alone doesn't cover every case - if daily-morning's
+# single daily run itself ever lands late (its own schedule: fallback has been measured
+# landing hours late before), this workflow could still race it the same way. So this workflow
+# now explicitly waits for daily-morning.yml's own completion marker
+# (state/daily_morning_state.json's last_run_date) to show today's date before building the
+# recap, re-pulling fresh each attempt - see the "Wait for daily-morning batch" step below.
 on:
   schedule:
     - cron: "30 21 * * 0-4"
@@ -44,6 +54,22 @@ jobs:
           python-version: "3.12"
 
       - run: pip install -r requirements.txt
+
+      - name: Wait for daily-morning batch to complete
+        run: |
+          TODAY=$(date -u -d '+10 hours' +%Y-%m-%d)
+          for i in $(seq 1 20); do
+            LAST=$(python -c "import json,pathlib; p=pathlib.Path('state/daily_morning_state.json'); print(json.load(p.open()).get('last_run_date','') if p.exists() else '')")
+            if [ "$LAST" = "$TODAY" ]; then
+              echo "[recap] daily-morning batch confirmed complete for $TODAY (attempt $i)."
+              exit 0
+            fi
+            echo "[recap] daily-morning batch not yet marked complete for $TODAY (attempt $i/20) - waiting 30s..."
+            sleep 30
+            git fetch origin main -q
+            git reset --hard origin/main -q
+          done
+          echo "[recap] WARNING: daily-morning batch never confirmed complete after 10 minutes - proceeding anyway with whatever data is available."
 
       - run: python scripts/notification_recap.py
 
