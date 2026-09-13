@@ -1,16 +1,16 @@
 {
-  "checked_at": "2026-09-12T19:31:15.787173",
+  "checked_at": "2026-09-13T19:31:25.693947",
   "domestic_prices": {
-    "Adelaide": 10.88,
-    "Brisbane": 10.75,
-    "Sydney": 10.78,
+    "Adelaide": 10.8448,
+    "Brisbane": 11.6,
+    "Sydney": 10.8,
     "Wallumbilla": 10.8
   },
-  "domestic_avg": 10.8025,
+  "domestic_avg": 11.0112,
   "jkm_usd_mmbtu": 24.885,
   "audusd_fx_rate": 0.71728,
   "jkm_aud_gj": 32.88489533392606,
-  "spread_aud_gj": 22.08239533392606,
+  "spread_aud_gj": 21.873695333926058,
   "jkm_is_live": true,
   "fx_is_live": true,
   "benchmark_last_updated": "2026-07-28"
