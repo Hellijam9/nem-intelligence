@@ -1,0 +1,34 @@
+name: Morning macro news
+
+# Primary trigger is repository_dispatch (external cron-job.org pinger set to 6:30am Sydney
+# time, same pattern as this repo's other workflows - see spot-spike.yml for why `schedule:`
+# alone is unreliable on GitHub's own scheduler). `schedule:` below is a low-frequency fallback
+# only, fixed at 20:30 UTC (6:30am AEST) - it will drift an hour during AEDT since GitHub cron
+# doesn't follow daylight saving; the cron-job.org ping is what keeps the real time correct.
+on:
+  schedule:
+    - cron: "30 20 * * *"
+  repository_dispatch:
+    types: [morning-macro-news]
+  workflow_dispatch: {}
+
+concurrency:
+  group: morning-macro-news
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    env:
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+      NTFY_TOPIC_MACRO_NEWS: ${{ secrets.NTFY_TOPIC_MACRO_NEWS }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install requests
+
+      - run: python scripts/morning_macro_news.py
