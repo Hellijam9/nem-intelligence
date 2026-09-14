@@ -11808,5 +11808,15 @@
     "start": "2029-09-10",
     "end": "2029-09-16",
     "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BW02",
+    "station": "Bayswater",
+    "owner": "AGL Macquarie Pty Limited",
+    "region": "NSW1",
+    "delta": -685,
+    "start": "2026-09-20",
+    "end": "2026-09-22",
+    "found_at": "2026-09-14T11:01:06.325760"
   }
 ]
