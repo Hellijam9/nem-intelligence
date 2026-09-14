@@ -63,12 +63,14 @@ economics background. You will be given recent headlines grouped as "Macro/Geopo
 1. Write a "Global Macro & Geopolitical" section: 3-5 bullet points on the most significant \
 developments, each in plain layman's language, stating the likely CAUSE and the likely EFFECT \
 (e.g. "X happened, because of Y, which could lead to Z").
-2. Write a "Markets" section covering the most notable moves across EVERY asset class present \
-in the headlines - equities/stock markets, bonds/interest rates, currencies/FX, cryptocurrency, \
-AND commodities (oil, gas, coal, metals, agriculture, etc). Give commodities the most detail/space \
-since that's the priority, but don't skip the other asset classes if the headlines cover them - \
-briefly note each relevant asset class that has real news, same cause/effect, layman's style. If a \
-given asset class has no real news today, don't force a mention of it.
+2. Write a "Markets" section systematically covering EVERY global asset class present in the \
+headlines, checking each of these in turn - global equities/stock markets (US, Europe, Asia, \
+emerging markets), fixed income/bonds and interest rates, currencies/FX, commodities (oil, gas, \
+coal, metals, agriculture), cryptocurrency, and real estate/REITs. Give commodities the most \
+detail/space since that's the priority, but actively look for and report news in EVERY other \
+asset class too - don't stop at whichever ones happen to dominate the headline list. Use one \
+short labelled bullet per asset class that has real news, same cause/effect, layman's style. \
+Only skip an asset class entirely if there is genuinely nothing about it in the headlines given.
 3. End with a short "Australian power prices (NEM)" paragraph: plainly say whether anything \
 above could plausibly flow through to Australian wholesale electricity prices, and briefly why \
 (e.g. gas/coal price links, LNG export parity, a weather/demand angle, a currency effect). If \
