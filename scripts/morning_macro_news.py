@@ -28,10 +28,6 @@ NTFY_BASE_URL = "https://ntfy.sh"
 REQUEST_TIMEOUT_SECONDS = 30
 USER_AGENT = "nem-intelligence-system/1.0"
 
-# ntfy silently converts a push into an unreadable file attachment past ~4096 bytes
-# (confirmed in nemweb_common.py) - stay well under it for UTF-8 headroom.
-NTFY_MAX_MESSAGE_BYTES = 3900
-
 GROQ_MODEL = "openai/gpt-oss-120b"
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 
@@ -143,7 +139,7 @@ def summarize_with_groq(headline_block: str, api_key: str) -> str:
                 {"role": "user", "content": headline_block},
             ],
             "temperature": 0.4,
-            "max_tokens": 900,
+            "max_tokens": 2000,
         },
         timeout=REQUEST_TIMEOUT_SECONDS,
     )
@@ -151,26 +147,43 @@ def summarize_with_groq(headline_block: str, api_key: str) -> str:
     return resp.json()["choices"][0]["message"]["content"].strip()
 
 
-def push_ntfy(topic: str, message: str, title: str) -> None:
-    body = message.encode("utf-8")
-    if len(body) > NTFY_MAX_MESSAGE_BYTES:
-        marker = f"\n...(truncated - {len(body)} bytes total)"
-        keep = body[:NTFY_MAX_MESSAGE_BYTES - len(marker.encode("utf-8"))]
-        while keep:
-            try:
-                keep.decode("utf-8")
-                break
-            except UnicodeDecodeError:
-                keep = keep[:-1]
-        body = keep + marker.encode("utf-8")
-        print(f"[morning_macro_news] WARNING: message was {len(message.encode('utf-8'))} bytes, truncated.")
-
+def push_ntfy_attachment(topic: str, filename: str, html_content: str, short_message: str, title: str) -> None:
+    """
+    Pushes the full briefing as a downloadable .html attachment rather than the notification
+    body text. The ntfy Android app has a known bug (github.com/binwiederhier/ntfy issue #1515)
+    that crops/truncates long notification body text in its own in-app message view, even
+    though the server and web app both handle the full ~4096-byte body fine - an attachment
+    that opens in the phone's browser sidesteps that bug entirely instead of trying to out-guess
+    whatever length actually triggers it. `short_message` is the one-line text people see
+    before opening the attachment.
+    """
     url = f"{NTFY_BASE_URL.rstrip('/')}/{topic}"
-    headers = {"User-Agent": USER_AGENT, "Title": title, "Priority": "3", "Tags": "newspaper"}
+    headers = {
+        "User-Agent": USER_AGENT,
+        "Title": title,
+        "Priority": "3",
+        "Tags": "newspaper",
+        "Filename": filename,
+        "Message": short_message,
+    }
     try:
-        requests.post(url, data=body, headers=headers, timeout=REQUEST_TIMEOUT_SECONDS)
+        requests.post(url, data=html_content.encode("utf-8"), headers=headers, timeout=REQUEST_TIMEOUT_SECONDS)
     except requests.RequestException as exc:
-        print(f"[morning_macro_news] WARNING: ntfy push failed: {exc}")
+        print(f"[morning_macro_news] WARNING: ntfy attachment push failed: {exc}")
+
+
+def summary_to_html(summary: str, title: str) -> str:
+    import html
+    escaped = html.escape(summary)
+    return f"""<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{html.escape(title)}</title>
+<style>
+body {{ font-family: -apple-system, system-ui, sans-serif; line-height: 1.5; max-width: 700px;
+        margin: 24px auto; padding: 0 16px; white-space: pre-wrap; }}
+h1 {{ font-size: 1.2rem; }}
+</style></head>
+<body><h1>{html.escape(title)}</h1>{escaped}</body></html>"""
 
 
 def main() -> int:
@@ -193,7 +206,13 @@ def main() -> int:
         return 1
 
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    push_ntfy(ntfy_topic, summary, title=f"Morning Macro Briefing - {today}")
+    title = f"Morning Macro Briefing - {today}"
+    html_content = summary_to_html(summary, title)
+    push_ntfy_attachment(
+        ntfy_topic, filename=f"morning-briefing-{today}.html", html_content=html_content,
+        short_message="Tap to read today's macro/geopolitical/commodities briefing",
+        title=title,
+    )
     print("[morning_macro_news] Briefing sent.")
     print(summary.encode(sys.stdout.encoding or "utf-8", errors="replace").decode(sys.stdout.encoding or "utf-8"))
     return 0
