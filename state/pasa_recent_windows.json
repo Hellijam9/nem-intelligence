@@ -9178,5 +9178,2635 @@
     "start": "2026-09-14",
     "end": "2026-09-17",
     "found_at": "2026-09-11T10:48:07.146816"
+  },
+  {
+    "duid": "TUMUT3",
+    "station": "Tumut3",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": -1800,
+    "start": "2026-09-17",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "TUMUT3",
+    "station": "Tumut3",
+    "owner": "Snowy Hydro Ltd",
+    "region": NaN,
+    "delta": 1800,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "TUMUT3",
+    "station": "Tumut3",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": -1500,
+    "start": "2026-09-13",
+    "end": "2026-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MURRAY",
+    "station": "Murray",
+    "owner": "Snowy Hydro Ltd",
+    "region": NaN,
+    "delta": 1399,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MURRAY",
+    "station": "Murray",
+    "owner": "Snowy Hydro Ltd",
+    "region": "VIC1",
+    "delta": -1135,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "KPP_1",
+    "station": "Kogan Creek",
+    "owner": "Kogan Creek Power Station Pty Ltd",
+    "region": NaN,
+    "delta": 744,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MP1",
+    "station": "Mt Piper",
+    "owner": "EnergyAustralia NSW Pty Ltd",
+    "region": "NSW1",
+    "delta": -730,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MP1",
+    "station": "Mt Piper",
+    "owner": "EnergyAustralia NSW Pty Ltd",
+    "region": NaN,
+    "delta": 730,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "ER02",
+    "station": "Eraring",
+    "owner": "Origin Energy Eraring Pty Ltd",
+    "region": "NSW1",
+    "delta": -700,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "ER03",
+    "station": "Eraring",
+    "owner": "Origin Energy Eraring Pty Ltd",
+    "region": "NSW1",
+    "delta": -700,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "ER04",
+    "station": "Eraring",
+    "owner": "Origin Energy Eraring Pty Ltd",
+    "region": "NSW1",
+    "delta": -700,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BW02",
+    "station": "Bayswater",
+    "owner": "AGL Macquarie Pty Limited",
+    "region": "NSW1",
+    "delta": -685,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BW02",
+    "station": "Bayswater",
+    "owner": "AGL Macquarie Pty Limited",
+    "region": NaN,
+    "delta": 685,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BW03",
+    "station": "Bayswater",
+    "owner": "AGL Macquarie Pty Limited",
+    "region": NaN,
+    "delta": 685,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BW04",
+    "station": "Bayswater",
+    "owner": "AGL Macquarie Pty Limited",
+    "region": "NSW1",
+    "delta": -685,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BW04",
+    "station": "Bayswater",
+    "owner": "AGL Macquarie Pty Limited",
+    "region": NaN,
+    "delta": 685,
+    "start": "2029-09-10",
+    "end": "2029-09-11",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BW01",
+    "station": "Bayswater",
+    "owner": "AGL Macquarie Pty Limited",
+    "region": "NSW1",
+    "delta": -660,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BW01",
+    "station": "Bayswater",
+    "owner": "AGL Macquarie Pty Limited",
+    "region": NaN,
+    "delta": 660,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "VP5",
+    "station": "Vales Pt",
+    "owner": "Delta Electricity",
+    "region": "NSW1",
+    "delta": -660,
+    "start": "2026-09-13",
+    "end": "2026-09-13",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "VP5",
+    "station": "Vales Pt",
+    "owner": "Delta Electricity",
+    "region": NaN,
+    "delta": 660,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "VP6",
+    "station": "Vales Pt",
+    "owner": "Delta Electricity",
+    "region": "NSW1",
+    "delta": -660,
+    "start": "2026-09-14",
+    "end": "2026-09-14",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "VP6",
+    "station": "Vales Pt",
+    "owner": "Delta Electricity",
+    "region": NaN,
+    "delta": 660,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "UPPTUMUT",
+    "station": "Upper Tumut",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": -655,
+    "start": "2026-09-13",
+    "end": "2026-09-13",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "UPPTUMUT",
+    "station": "Upper Tumut",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": -655,
+    "start": "2026-09-19",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "VP5",
+    "station": "Vales Pt",
+    "owner": "Delta Electricity",
+    "region": "NSW1",
+    "delta": -630,
+    "start": "2026-09-14",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "VP6",
+    "station": "Vales Pt",
+    "owner": "Delta Electricity",
+    "region": "NSW1",
+    "delta": -630,
+    "start": "2026-09-15",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "DDPS1",
+    "station": "Darling Downs",
+    "owner": "Origin Energy Power Limited",
+    "region": "QLD1",
+    "delta": -615,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "DDPS1",
+    "station": "Darling Downs",
+    "owner": "Origin Energy Power Limited",
+    "region": NaN,
+    "delta": 615,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "LOYYB1",
+    "station": "Loy Yang B",
+    "owner": "Gippsland Power Pty Ltd / LYB Ventures Australia Pty Ltd / Traralgon Power Pty Ltd / Latrobe Power Pty Ltd / LYB Australia Limited",
+    "region": "VIC1",
+    "delta": -580,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "LOYYB1",
+    "station": "Loy Yang B",
+    "owner": "Gippsland Power Pty Ltd / LYB Ventures Australia Pty Ltd / Traralgon Power Pty Ltd / Latrobe Power Pty Ltd / LYB Australia Limited",
+    "region": NaN,
+    "delta": 580,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "LOYYB2",
+    "station": "Loy Yang B",
+    "owner": "Gippsland Power Pty Ltd / LYB Ventures Australia Pty Ltd / Traralgon Power Pty Ltd / Latrobe Power Pty Ltd / LYB Australia Limited",
+    "region": "VIC1",
+    "delta": -580,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "LOYYB2",
+    "station": "Loy Yang B",
+    "owner": "Gippsland Power Pty Ltd / LYB Ventures Australia Pty Ltd / Traralgon Power Pty Ltd / Latrobe Power Pty Ltd / LYB Australia Limited",
+    "region": NaN,
+    "delta": 580,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "UPPTUMUT",
+    "station": "Upper Tumut",
+    "owner": "Snowy Hydro Ltd",
+    "region": NaN,
+    "delta": 563,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "LYA1",
+    "station": "Loy Yang A",
+    "owner": "AGL Loy Yang Marketing Pty Ltd",
+    "region": NaN,
+    "delta": 560,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "LYA3",
+    "station": "Loy Yang A",
+    "owner": "AGL Loy Yang Marketing Pty Ltd",
+    "region": "VIC1",
+    "delta": -560,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "LYA3",
+    "station": "Loy Yang A",
+    "owner": "AGL Loy Yang Marketing Pty Ltd",
+    "region": NaN,
+    "delta": 560,
+    "start": "2029-09-10",
+    "end": "2029-09-13",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "LYA4",
+    "station": "Loy Yang A",
+    "owner": "AGL Loy Yang Marketing Pty Ltd",
+    "region": "VIC1",
+    "delta": -560,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "LYA4",
+    "station": "Loy Yang A",
+    "owner": "AGL Loy Yang Marketing Pty Ltd",
+    "region": NaN,
+    "delta": 560,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "LYA2",
+    "station": "Loy Yang A",
+    "owner": "AGL Loy Yang Marketing Pty Ltd",
+    "region": "VIC1",
+    "delta": -530,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "LYA2",
+    "station": "Loy Yang A",
+    "owner": "AGL Loy Yang Marketing Pty Ltd",
+    "region": NaN,
+    "delta": 530,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "VP6",
+    "station": "Vales Pt",
+    "owner": "Delta Electricity",
+    "region": "NSW1",
+    "delta": -520,
+    "start": "2026-09-13",
+    "end": "2026-09-13",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "NPS",
+    "station": "Newport",
+    "owner": "EnergyAustralia Ecogen Pty Ltd",
+    "region": "VIC1",
+    "delta": -510,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "NPS",
+    "station": "Newport",
+    "owner": "EnergyAustralia Ecogen Pty Ltd",
+    "region": NaN,
+    "delta": 510,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "LDBESS1",
+    "station": "",
+    "owner": "",
+    "region": "NSW1",
+    "delta": -500,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "LDBESS1",
+    "station": "",
+    "owner": "",
+    "region": NaN,
+    "delta": 500,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "WTAHB1",
+    "station": "Waratah Super Battery",
+    "owner": "Munmorah Battery ProjectCo Pty Ltd",
+    "region": "NSW1",
+    "delta": -500,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "PPCCGT",
+    "station": "Pelican Point",
+    "owner": "Pelican Point Power Limited",
+    "region": "SA1",
+    "delta": -497,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "PPCCGT",
+    "station": "Pelican Point",
+    "owner": "Pelican Point Power Limited",
+    "region": NaN,
+    "delta": 497,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "UPPTUMUT",
+    "station": "Upper Tumut",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": -471,
+    "start": "2026-09-14",
+    "end": "2026-09-18",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "CPP_3",
+    "station": "Callide C",
+    "owner": "Joint Venture; Callide Energy Pty Ltd and IG Power (Callide) Ltd.",
+    "region": NaN,
+    "delta": 466,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "CPP_4",
+    "station": "Callide C",
+    "owner": "Joint Venture; Callide Energy Pty Ltd and IG Power (Callide) Ltd.",
+    "region": "QLD1",
+    "delta": -466,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "CPP_4",
+    "station": "Callide C",
+    "owner": "Joint Venture; Callide Energy Pty Ltd and IG Power (Callide) Ltd.",
+    "region": NaN,
+    "delta": 466,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "ERB01",
+    "station": "Eraring Battery Energy Storage System",
+    "owner": "Origin Energy Electricity Limited",
+    "region": "NSW1",
+    "delta": -460,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "ERB01",
+    "station": "Eraring Battery Energy Storage System",
+    "owner": "Origin Energy Electricity Limited",
+    "region": NaN,
+    "delta": 460,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "TNPS1",
+    "station": "Tarong North",
+    "owner": "Stanwell Corporation Limited",
+    "region": NaN,
+    "delta": 443,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MPP_2",
+    "station": "Millmerran",
+    "owner": "Millmerran Power Partners",
+    "region": "QLD1",
+    "delta": -435,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MPP_2",
+    "station": "Millmerran",
+    "owner": "Millmerran Power Partners",
+    "region": NaN,
+    "delta": 435,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "TALWA1",
+    "station": "Tallawarra",
+    "owner": "EnergyAustralia Tallawarra Pty Ltd",
+    "region": "NSW1",
+    "delta": -435,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "TALWA1",
+    "station": "Tallawarra",
+    "owner": "EnergyAustralia Tallawarra Pty Ltd",
+    "region": NaN,
+    "delta": 435,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "CPP_3",
+    "station": "Callide C",
+    "owner": "Joint Venture; Callide Energy Pty Ltd and IG Power (Callide) Ltd.",
+    "region": "QLD1",
+    "delta": -424,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "ORABESS1",
+    "station": "",
+    "owner": "",
+    "region": "NSW1",
+    "delta": -415,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "ORABESS1",
+    "station": "",
+    "owner": "",
+    "region": NaN,
+    "delta": 415,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "TNPS1",
+    "station": "Tarong North",
+    "owner": "Stanwell Corporation Limited",
+    "region": "QLD1",
+    "delta": -400,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "SWAN_E",
+    "station": "Swanbank E",
+    "owner": "CleanCo Queensland Limited",
+    "region": "QLD1",
+    "delta": -385,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "SWAN_E",
+    "station": "Swanbank E",
+    "owner": "CleanCo Queensland Limited",
+    "region": NaN,
+    "delta": 385,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "YWPS4",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": -370,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "STAN-1",
+    "station": "Stanwell",
+    "owner": "Stanwell Corporation Limited",
+    "region": "QLD1",
+    "delta": -365,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "STAN-1",
+    "station": "Stanwell",
+    "owner": "Stanwell Corporation Limited",
+    "region": NaN,
+    "delta": 365,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "STAN-2",
+    "station": "Stanwell",
+    "owner": "Stanwell Corporation Limited",
+    "region": "QLD1",
+    "delta": -365,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "STAN-2",
+    "station": "Stanwell",
+    "owner": "Stanwell Corporation Limited",
+    "region": NaN,
+    "delta": 365,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "STAN-3",
+    "station": "Stanwell",
+    "owner": "Stanwell Corporation Limited",
+    "region": "QLD1",
+    "delta": -365,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "STAN-3",
+    "station": "Stanwell",
+    "owner": "Stanwell Corporation Limited",
+    "region": NaN,
+    "delta": 365,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "STAN-4",
+    "station": "Stanwell",
+    "owner": "Stanwell Corporation Limited",
+    "region": "QLD1",
+    "delta": -365,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "STAN-4",
+    "station": "Stanwell",
+    "owner": "Stanwell Corporation Limited",
+    "region": NaN,
+    "delta": 365,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "CALL_B_1",
+    "station": "Callide B",
+    "owner": "CS Energy",
+    "region": "QLD1",
+    "delta": -350,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "CALL_B_1",
+    "station": "Callide B",
+    "owner": "CS Energy",
+    "region": NaN,
+    "delta": 350,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "CALL_B_2",
+    "station": "Callide B",
+    "owner": "CS Energy",
+    "region": NaN,
+    "delta": 350,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "TARONG#1",
+    "station": "Tarong",
+    "owner": "Stanwell Corporation Limited",
+    "region": "QLD1",
+    "delta": -350,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "TARONG#2",
+    "station": "Tarong",
+    "owner": "Stanwell Corporation Limited",
+    "region": "QLD1",
+    "delta": -350,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "TARONG#2",
+    "station": "Tarong",
+    "owner": "Stanwell Corporation Limited",
+    "region": NaN,
+    "delta": 350,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "TARONG#3",
+    "station": "Tarong",
+    "owner": "Stanwell Corporation Limited",
+    "region": NaN,
+    "delta": 350,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "TARONG#4",
+    "station": "Tarong",
+    "owner": "Stanwell Corporation Limited",
+    "region": "QLD1",
+    "delta": -350,
+    "start": "2026-09-14",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "TARONG#4",
+    "station": "Tarong",
+    "owner": "Stanwell Corporation Limited",
+    "region": NaN,
+    "delta": 350,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "CALL_B_2",
+    "station": "Callide B",
+    "owner": "CS Energy",
+    "region": "QLD1",
+    "delta": -340,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "HUNTER1",
+    "station": "Hunter Power Station",
+    "owner": "Snowy Hydro Limited",
+    "region": NaN,
+    "delta": 330,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "HUNTER2",
+    "station": "Hunter Power Station",
+    "owner": "Snowy Hydro Limited",
+    "region": NaN,
+    "delta": 330,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "YWPS1",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": -330,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "YWPS2",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": -320,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "TALWB1",
+    "station": "Tallawarra",
+    "owner": "EnergyAustralia Tallawarra Pty Ltd",
+    "region": "NSW1",
+    "delta": -315,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "TALWB1",
+    "station": "Tallawarra",
+    "owner": "EnergyAustralia Tallawarra Pty Ltd",
+    "region": NaN,
+    "delta": 315,
+    "start": "2029-09-15",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MCKAY1",
+    "station": "Bogong_Mackay",
+    "owner": "AGL Hydro Partnership",
+    "region": "VIC1",
+    "delta": -300,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MCKAY1",
+    "station": "Bogong_Mackay",
+    "owner": "AGL Hydro Partnership",
+    "region": NaN,
+    "delta": 300,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MLB01",
+    "station": "",
+    "owner": "",
+    "region": NaN,
+    "delta": 300,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "STABESS1",
+    "station": "",
+    "owner": "",
+    "region": NaN,
+    "delta": 300,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "TARBESS1",
+    "station": "Tarong BESS",
+    "owner": "Stanwell Corporation Limited",
+    "region": "QLD1",
+    "delta": -300,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "TARBESS1",
+    "station": "Tarong BESS",
+    "owner": "Stanwell Corporation Limited",
+    "region": NaN,
+    "delta": 300,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "GORDON",
+    "station": "Gordon",
+    "owner": "Hydro-Electric Corporation",
+    "region": "TAS1",
+    "delta": -288,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "GORDON",
+    "station": "Gordon",
+    "owner": "Hydro-Electric Corporation",
+    "region": NaN,
+    "delta": 288,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "W/HOE#1",
+    "station": "Wivenhoe",
+    "owner": "CleanCo Queensland Limited",
+    "region": NaN,
+    "delta": 285,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "W/HOE#2",
+    "station": "Wivenhoe",
+    "owner": "CleanCo Queensland Limited",
+    "region": "QLD1",
+    "delta": -285,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "W/HOE#2",
+    "station": "Wivenhoe",
+    "owner": "CleanCo Queensland Limited",
+    "region": NaN,
+    "delta": 285,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "GSTONE2",
+    "station": "Gladstone",
+    "owner": "Gladstone Power Station Participants",
+    "region": "QLD1",
+    "delta": -280,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "GSTONE4",
+    "station": "Gladstone",
+    "owner": "Gladstone Power Station Participants",
+    "region": "QLD1",
+    "delta": -280,
+    "start": "2026-09-14",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "GSTONE5",
+    "station": "Gladstone",
+    "owner": "Gladstone Power Station Participants",
+    "region": "QLD1",
+    "delta": -280,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "GSTONE6",
+    "station": "Gladstone",
+    "owner": "Gladstone Power Station Participants",
+    "region": "QLD1",
+    "delta": -280,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MORTLK11",
+    "station": "Mortlake",
+    "owner": "Origin Energy Power Limited",
+    "region": "VIC1",
+    "delta": -275,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MORTLK11",
+    "station": "Mortlake",
+    "owner": "Origin Energy Power Limited",
+    "region": NaN,
+    "delta": 275,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MORTLK12",
+    "station": "Mortlake",
+    "owner": "Origin Energy Power Limited",
+    "region": "VIC1",
+    "delta": -275,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MORTLK12",
+    "station": "Mortlake",
+    "owner": "Origin Energy Power Limited",
+    "region": NaN,
+    "delta": 275,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "GSTONE3",
+    "station": "Gladstone",
+    "owner": "Gladstone Power Station Participants",
+    "region": "QLD1",
+    "delta": -270,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "GSTONE1",
+    "station": "Gladstone",
+    "owner": "Gladstone Power Station Participants",
+    "region": "QLD1",
+    "delta": -260,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "SNB01",
+    "station": NaN,
+    "owner": "Supernode Operations Pty Ltd as the trustee for Supernode BESS 1 Project Trust",
+    "region": "QLD1",
+    "delta": -260,
+    "start": "2026-09-13",
+    "end": "2026-09-14",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "SNB01",
+    "station": NaN,
+    "owner": "Supernode Operations Pty Ltd as the trustee for Supernode BESS 1 Project Trust",
+    "region": "QLD1",
+    "delta": -260,
+    "start": "2026-09-16",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "SNB01",
+    "station": NaN,
+    "owner": "Supernode Operations Pty Ltd as the trustee for Supernode BESS 1 Project Trust",
+    "region": NaN,
+    "delta": 260,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "SNB02",
+    "station": NaN,
+    "owner": "Supernode Operations Pty Ltd as the trustee for Supernode BESS 1 Project Trust",
+    "region": "QLD1",
+    "delta": -260,
+    "start": "2026-09-19",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "SNB02",
+    "station": NaN,
+    "owner": "Supernode Operations Pty Ltd as the trustee for Supernode BESS 1 Project Trust",
+    "region": NaN,
+    "delta": 260,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "WDBESS1",
+    "station": "Western Downs Battery Energy Storage System",
+    "owner": "Western Downs BESS Pty Ltd as trustee for Western Downs BESS Trust",
+    "region": "QLD1",
+    "delta": -255,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "WDBESS1",
+    "station": "Western Downs Battery Energy Storage System",
+    "owner": "Western Downs BESS Pty Ltd as trustee for Western Downs BESS Trust",
+    "region": NaN,
+    "delta": 255,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "WDBESS2",
+    "station": "",
+    "owner": "",
+    "region": "QLD1",
+    "delta": -255,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "WDBESS2",
+    "station": "",
+    "owner": "",
+    "region": NaN,
+    "delta": 255,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "SNB02",
+    "station": NaN,
+    "owner": "Supernode Operations Pty Ltd as the trustee for Supernode BESS 1 Project Trust",
+    "region": "QLD1",
+    "delta": -253,
+    "start": "2026-09-13",
+    "end": "2026-09-18",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "PLBESS1",
+    "station": "",
+    "owner": "",
+    "region": NaN,
+    "delta": 250,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "SWANBBF1",
+    "station": "",
+    "owner": "",
+    "region": "QLD1",
+    "delta": -250,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "SWANBBF1",
+    "station": "",
+    "owner": "",
+    "region": NaN,
+    "delta": 250,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "TIB1",
+    "station": "Torrens Island BESS",
+    "owner": "TIPSCO",
+    "region": "SA1",
+    "delta": -250,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "TIB1",
+    "station": "Torrens Island BESS",
+    "owner": "TIPSCO",
+    "region": NaN,
+    "delta": 250,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "WILLBES1",
+    "station": "",
+    "owner": "",
+    "region": NaN,
+    "delta": 250,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "ERB02",
+    "station": "",
+    "owner": "",
+    "region": NaN,
+    "delta": 240,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MRNBESS1",
+    "station": "",
+    "owner": "",
+    "region": "VIC1",
+    "delta": -240,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MRNBESS1",
+    "station": "",
+    "owner": "",
+    "region": NaN,
+    "delta": 240,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "SHGEN",
+    "station": "Shoalhaven",
+    "owner": "Origin Energy Eraring Pty Ltd",
+    "region": NaN,
+    "delta": 240,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "VBB1",
+    "station": "Victorian Big Battery",
+    "owner": "Victorian Big Battery Pty Ltd",
+    "region": "VIC1",
+    "delta": -240,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "VBB1",
+    "station": "Victorian Big Battery",
+    "owner": "Victorian Big Battery Pty Ltd",
+    "region": NaN,
+    "delta": 240,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "WOOLES1",
+    "station": "",
+    "owner": "",
+    "region": "QLD1",
+    "delta": -236,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "AGLHAL",
+    "station": "Hallett",
+    "owner": "EnergyAustralia Hallett Pty Ltd",
+    "region": NaN,
+    "delta": 234,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "POAT220",
+    "station": "Poatina",
+    "owner": "Hydro-Electric Corporation",
+    "region": NaN,
+    "delta": 234,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "WOOLES1",
+    "station": "",
+    "owner": "",
+    "region": NaN,
+    "delta": 222,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "AGLHAL",
+    "station": "Hallett",
+    "owner": "EnergyAustralia Hallett Pty Ltd",
+    "region": "SA1",
+    "delta": -213,
+    "start": "2026-09-13",
+    "end": "2026-09-15",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "TVCC201",
+    "station": "Tamar Valley Combined Cycle",
+    "owner": "AETV Pty Ltd",
+    "region": "TAS1",
+    "delta": -208,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BRNDBES1",
+    "station": "",
+    "owner": "",
+    "region": "QLD1",
+    "delta": -205,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BRNDBES1",
+    "station": "",
+    "owner": "",
+    "region": NaN,
+    "delta": 205,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BLYTHB1",
+    "station": "Blyth Battery Energy Storage System",
+    "owner": "Blyth Battery P/L as trustee for Blyth Battery Trust",
+    "region": "SA1",
+    "delta": -200,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BLYTHB1",
+    "station": "Blyth Battery Energy Storage System",
+    "owner": "Blyth Battery P/L as trustee for Blyth Battery Trust",
+    "region": NaN,
+    "delta": 200,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "GREENB1",
+    "station": "Greenbank BESS",
+    "owner": "CSE BESS Pty Ltd",
+    "region": "QLD1",
+    "delta": -200,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "GREENB1",
+    "station": "Greenbank BESS",
+    "owner": "CSE BESS Pty Ltd",
+    "region": NaN,
+    "delta": 200,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MREHA1",
+    "station": "Melbourne Renewable Energy Hub Connection A1",
+    "owner": NaN,
+    "region": "VIC1",
+    "delta": -200,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MREHA1",
+    "station": "Melbourne Renewable Energy Hub Connection A1",
+    "owner": NaN,
+    "region": NaN,
+    "delta": 200,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MREHA2",
+    "station": "Melbourne Renewable Energy Hub Connection A2",
+    "owner": NaN,
+    "region": "VIC1",
+    "delta": -200,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MREHA2",
+    "station": "Melbourne Renewable Energy Hub Connection A2",
+    "owner": NaN,
+    "region": NaN,
+    "delta": 200,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MREHA3",
+    "station": "",
+    "owner": "",
+    "region": "VIC1",
+    "delta": -200,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MREHA3",
+    "station": "",
+    "owner": "",
+    "region": NaN,
+    "delta": 200,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "RANGEB1",
+    "station": "Rangebank BESS",
+    "owner": "Cranbourne BESS Project Co Pty Ltd",
+    "region": "VIC1",
+    "delta": -200,
+    "start": "2026-09-14",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "RANGEB1",
+    "station": "Rangebank BESS",
+    "owner": "Cranbourne BESS Project Co Pty Ltd",
+    "region": NaN,
+    "delta": 200,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "WILLBES1",
+    "station": "",
+    "owner": "",
+    "region": "NSW1",
+    "delta": -200,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BARKIPS1",
+    "station": "Barker Inlet",
+    "owner": "AGL Barker Inlet Pty Ltd",
+    "region": "SA1",
+    "delta": -193,
+    "start": "2026-09-14",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BARKIPS1",
+    "station": "Barker Inlet",
+    "owner": "AGL Barker Inlet Pty Ltd",
+    "region": NaN,
+    "delta": 193,
+    "start": "2029-09-15",
+    "end": "2029-09-15",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "KESSB1",
+    "station": "Koorangie Energy Storage System",
+    "owner": "Edify Energy",
+    "region": "VIC1",
+    "delta": -185,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "KESSB1",
+    "station": "Koorangie Energy Storage System",
+    "owner": "Edify Energy",
+    "region": NaN,
+    "delta": 185,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "OSB-AG",
+    "station": "Osborne",
+    "owner": "Osborne Cogeneration Pty Ltd",
+    "region": "SA1",
+    "delta": -185,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "LI_WY_CA",
+    "station": "Liapootah_Wayatinah_Catagunya",
+    "owner": "Hydro-Electric Corporation",
+    "region": "TAS1",
+    "delta": -182,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "LI_WY_CA",
+    "station": "Liapootah_Wayatinah_Catagunya",
+    "owner": "Hydro-Electric Corporation",
+    "region": NaN,
+    "delta": 182,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "AGLHAL",
+    "station": "Hallett",
+    "owner": "EnergyAustralia Hallett Pty Ltd",
+    "region": "SA1",
+    "delta": -181,
+    "start": "2026-09-16",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BRAEMAR1",
+    "station": "Braemar Power",
+    "owner": "Braemar Power Project Pty Ltd",
+    "region": "QLD1",
+    "delta": -181,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BRAEMAR1",
+    "station": "Braemar Power",
+    "owner": "Braemar Power Project Pty Ltd",
+    "region": NaN,
+    "delta": 181,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BRAEMAR2",
+    "station": "Braemar Power",
+    "owner": "Braemar Power Project Pty Ltd",
+    "region": "QLD1",
+    "delta": -181,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BRAEMAR2",
+    "station": "Braemar Power",
+    "owner": "Braemar Power Project Pty Ltd",
+    "region": NaN,
+    "delta": 181,
+    "start": "2029-09-16",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BRAEMAR3",
+    "station": "Braemar Power",
+    "owner": "Braemar Power Project Pty Ltd",
+    "region": "QLD1",
+    "delta": -181,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BRAEMAR3",
+    "station": "Braemar Power",
+    "owner": "Braemar Power Project Pty Ltd",
+    "region": NaN,
+    "delta": 181,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BRDDBES1",
+    "station": "",
+    "owner": "",
+    "region": "QLD1",
+    "delta": -180,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BRDDBES1",
+    "station": "",
+    "owner": "",
+    "region": NaN,
+    "delta": 180,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "TARONG#4",
+    "station": "Tarong",
+    "owner": "Stanwell Corporation Limited",
+    "region": "QLD1",
+    "delta": -180,
+    "start": "2026-09-13",
+    "end": "2026-09-13",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BARKIPS1",
+    "station": "Barker Inlet",
+    "owner": "AGL Barker Inlet Pty Ltd",
+    "region": "SA1",
+    "delta": -176,
+    "start": "2026-09-13",
+    "end": "2026-09-13",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BARKIPS1",
+    "station": "Barker Inlet",
+    "owner": "AGL Barker Inlet Pty Ltd",
+    "region": NaN,
+    "delta": 176,
+    "start": "2029-09-16",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "YABULU",
+    "station": "Townsville Gas Turbine",
+    "owner": "RATCH-Australia",
+    "region": "QLD1",
+    "delta": -174,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "YABULU",
+    "station": "Townsville Gas Turbine",
+    "owner": "RATCH-Australia",
+    "region": NaN,
+    "delta": 174,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BRAEMAR5",
+    "station": "Braemar 2 Power",
+    "owner": "NewGen Braemar 2 Partnership comprising Arrow Braemar 2 Pty Ltd and Arrow Southern Generation Pty Ltd",
+    "region": NaN,
+    "delta": 173,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BRAEMAR6",
+    "station": "Braemar 2 Power",
+    "owner": "NewGen Braemar 2 Partnership comprising Arrow Braemar 2 Pty Ltd and Arrow Southern Generation Pty Ltd",
+    "region": "QLD1",
+    "delta": -173,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BRAEMAR6",
+    "station": "Braemar 2 Power",
+    "owner": "NewGen Braemar 2 Partnership comprising Arrow Braemar 2 Pty Ltd and Arrow Southern Generation Pty Ltd",
+    "region": NaN,
+    "delta": 173,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BRAEMAR7",
+    "station": "Braemar 2 Power",
+    "owner": "NewGen Braemar 2 Partnership comprising Arrow Braemar 2 Pty Ltd and Arrow Southern Generation Pty Ltd",
+    "region": "QLD1",
+    "delta": -173,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BRAEMAR7",
+    "station": "Braemar 2 Power",
+    "owner": "NewGen Braemar 2 Partnership comprising Arrow Braemar 2 Pty Ltd and Arrow Southern Generation Pty Ltd",
+    "region": NaN,
+    "delta": 173,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "URANQ11",
+    "station": "Uranquinty",
+    "owner": "Origin Energy Uranquinty Power Pty Ltd",
+    "region": "NSW1",
+    "delta": -173,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "URANQ11",
+    "station": "Uranquinty",
+    "owner": "Origin Energy Uranquinty Power Pty Ltd",
+    "region": NaN,
+    "delta": 173,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "URANQ12",
+    "station": "Uranquinty",
+    "owner": "Origin Energy Uranquinty Power Pty Ltd",
+    "region": "NSW1",
+    "delta": -173,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "URANQ12",
+    "station": "Uranquinty",
+    "owner": "Origin Energy Uranquinty Power Pty Ltd",
+    "region": NaN,
+    "delta": 173,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "URANQ13",
+    "station": "Uranquinty",
+    "owner": "Origin Energy Uranquinty Power Pty Ltd",
+    "region": "NSW1",
+    "delta": -173,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "URANQ14",
+    "station": "Uranquinty",
+    "owner": "Origin Energy Uranquinty Power Pty Ltd",
+    "region": "NSW1",
+    "delta": -173,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "URANQ14",
+    "station": "Uranquinty",
+    "owner": "Origin Energy Uranquinty Power Pty Ltd",
+    "region": NaN,
+    "delta": 173,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "CG1",
+    "station": "Colongra",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": -171,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "CG1",
+    "station": "Colongra",
+    "owner": "Snowy Hydro Ltd",
+    "region": NaN,
+    "delta": 171,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "CG2",
+    "station": "Colongra",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": -171,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "CG2",
+    "station": "Colongra",
+    "owner": "Snowy Hydro Ltd",
+    "region": NaN,
+    "delta": 171,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "CG3",
+    "station": "Colongra",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": -171,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "CG3",
+    "station": "Colongra",
+    "owner": "Snowy Hydro Ltd",
+    "region": NaN,
+    "delta": 171,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "CG4",
+    "station": "Colongra",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": -171,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "CG4",
+    "station": "Colongra",
+    "owner": "Snowy Hydro Ltd",
+    "region": NaN,
+    "delta": 171,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "AGLSOM",
+    "station": "Somerton",
+    "owner": "AGL Hydro partnership",
+    "region": "VIC1",
+    "delta": -170,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "AGLSOM",
+    "station": "Somerton",
+    "owner": "AGL Hydro partnership",
+    "region": NaN,
+    "delta": 170,
+    "start": "2029-09-14",
+    "end": "2029-09-15",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "OAKEY1",
+    "station": "Oakey",
+    "owner": "Oakey Power Holdings Pty Ltd",
+    "region": "QLD1",
+    "delta": -167,
+    "start": "2026-09-13",
+    "end": "2026-09-13",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "OAKEY1",
+    "station": "Oakey",
+    "owner": "Oakey Power Holdings Pty Ltd",
+    "region": NaN,
+    "delta": 167,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "OAKEY2",
+    "station": "Oakey",
+    "owner": "Oakey Power Holdings Pty Ltd",
+    "region": "QLD1",
+    "delta": -167,
+    "start": "2026-09-13",
+    "end": "2026-09-13",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "OAKEY2",
+    "station": "Oakey",
+    "owner": "Oakey Power Holdings Pty Ltd",
+    "region": NaN,
+    "delta": 167,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "LNGS1",
+    "station": "Laverton North",
+    "owner": "Snowy Hydro Ltd",
+    "region": "VIC1",
+    "delta": -162,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "LNGS1",
+    "station": "Laverton North",
+    "owner": "Snowy Hydro Ltd",
+    "region": NaN,
+    "delta": 162,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "LNGS2",
+    "station": "Laverton North",
+    "owner": "Snowy Hydro Ltd",
+    "region": "VIC1",
+    "delta": -162,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "LNGS2",
+    "station": "Laverton North",
+    "owner": "Snowy Hydro Ltd",
+    "region": NaN,
+    "delta": 162,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "DARTM1",
+    "station": "Dartmouth",
+    "owner": "AGL Hydro Partnership",
+    "region": "VIC1",
+    "delta": -158,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "ULPBESS1",
+    "station": "Ulinda Park BESS",
+    "owner": NaN,
+    "region": "QLD1",
+    "delta": -155,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "ULPBESS1",
+    "station": "Ulinda Park BESS",
+    "owner": NaN,
+    "region": NaN,
+    "delta": 155,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BUNGAMB1",
+    "station": "",
+    "owner": "",
+    "region": "SA1",
+    "delta": -150,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BUNGAMB1",
+    "station": "",
+    "owner": "",
+    "region": NaN,
+    "delta": 150,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "HBESS1",
+    "station": "Hazelwood Battery Energy Storage System",
+    "owner": "Hazelwood BESS Project Co Pty Ltd as trustee for the HBESS Asset Trust",
+    "region": "VIC1",
+    "delta": -150,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "HBESS1",
+    "station": "Hazelwood Battery Energy Storage System",
+    "owner": "Hazelwood BESS Project Co Pty Ltd as trustee for the HBESS Asset Trust",
+    "region": NaN,
+    "delta": 150,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "SNAPPER1",
+    "station": "Snapper Point",
+    "owner": "Port Adelaide Energy Pty Ltd",
+    "region": "SA1",
+    "delta": -150,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "SNAPPER1",
+    "station": "Snapper Point",
+    "owner": "Port Adelaide Energy Pty Ltd",
+    "region": NaN,
+    "delta": 150,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "WTAHB1",
+    "station": "Waratah Super Battery",
+    "owner": "Munmorah Battery ProjectCo Pty Ltd",
+    "region": NaN,
+    "delta": 150,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "JBUTTERS",
+    "station": "John Butters",
+    "owner": "Hydro-Electric Corporation",
+    "region": "TAS1",
+    "delta": -144,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "JBUTTERS",
+    "station": "John Butters",
+    "owner": "Hydro-Electric Corporation",
+    "region": NaN,
+    "delta": 144,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "TORRB4",
+    "station": "Torrens Island B",
+    "owner": "AGL SA Generation Pty Limited",
+    "region": "SA1",
+    "delta": -140,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "TUNGATIN",
+    "station": "Tungatinah",
+    "owner": "Hydro-Electric Corporation",
+    "region": NaN,
+    "delta": 139,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MSTUART1",
+    "station": "Mt Stuart",
+    "owner": "Origin Energy Mt Stuart",
+    "region": "QLD1",
+    "delta": -138,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MSTUART1",
+    "station": "Mt Stuart",
+    "owner": "Origin Energy Mt Stuart",
+    "region": NaN,
+    "delta": 138,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MSTUART2",
+    "station": "Mt Stuart",
+    "owner": "Origin Energy Mt Stuart",
+    "region": "QLD1",
+    "delta": -138,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MSTUART2",
+    "station": "Mt Stuart",
+    "owner": "Origin Energy Mt Stuart",
+    "region": NaN,
+    "delta": 138,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MSTUART3",
+    "station": "Mt Stuart",
+    "owner": "Origin Energy Mt Stuart",
+    "region": "QLD1",
+    "delta": -132,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MSTUART3",
+    "station": "Mt Stuart",
+    "owner": "Origin Energy Mt Stuart",
+    "region": NaN,
+    "delta": 132,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BOLIVPS1",
+    "station": "Bolivar",
+    "owner": "Iberdrola Australia Energy Markets Pty Limited",
+    "region": "SA1",
+    "delta": -127,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "BOLIVPS1",
+    "station": "Bolivar",
+    "owner": "Iberdrola Australia Energy Markets Pty Limited",
+    "region": NaN,
+    "delta": 127,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "AGLSOM",
+    "station": "Somerton",
+    "owner": "AGL Hydro partnership",
+    "region": NaN,
+    "delta": 126,
+    "start": "2029-09-10",
+    "end": "2029-09-13",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "AGLSOM",
+    "station": "Somerton",
+    "owner": "AGL Hydro partnership",
+    "region": NaN,
+    "delta": 126,
+    "start": "2029-09-16",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "KIDSPHG1",
+    "station": "",
+    "owner": "",
+    "region": NaN,
+    "delta": 125,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "KIDSPHG2",
+    "station": "",
+    "owner": "",
+    "region": NaN,
+    "delta": 125,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "QPS5",
+    "station": "Quarantine",
+    "owner": "Origin Energy Power Limited",
+    "region": "SA1",
+    "delta": -125,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "QPS5",
+    "station": "Quarantine",
+    "owner": "Origin Energy Power Limited",
+    "region": NaN,
+    "delta": 125,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "SITHE01",
+    "station": "Smithfield Energy Facility",
+    "owner": "Smithfield Power Generation Pty Ltd",
+    "region": "NSW1",
+    "delta": -125,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "SITHE01",
+    "station": "Smithfield Energy Facility",
+    "owner": "Smithfield Power Generation Pty Ltd",
+    "region": NaN,
+    "delta": 125,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "SMFBESS1",
+    "station": "",
+    "owner": "",
+    "region": NaN,
+    "delta": 120,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "SMFBESS2",
+    "station": "",
+    "owner": "",
+    "region": NaN,
+    "delta": 120,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "REECE1",
+    "station": "Reece",
+    "owner": "Hydro-Electric Corporation",
+    "region": "TAS1",
+    "delta": -119,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "REECE1",
+    "station": "Reece",
+    "owner": "Hydro-Electric Corporation",
+    "region": NaN,
+    "delta": 119,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "REECE2",
+    "station": "Reece",
+    "owner": "Hydro-Electric Corporation",
+    "region": NaN,
+    "delta": 119,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "POAT110",
+    "station": "Poatina",
+    "owner": "Hydro-Electric Corporation",
+    "region": NaN,
+    "delta": 117,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "TEMPB1",
+    "station": "Templers Battery Energy Storage System",
+    "owner": NaN,
+    "region": NaN,
+    "delta": 111,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "DARTM1",
+    "station": "Dartmouth",
+    "owner": "AGL Hydro Partnership",
+    "region": NaN,
+    "delta": 110,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "REECE2",
+    "station": "Reece",
+    "owner": "Hydro-Electric Corporation",
+    "region": "TAS1",
+    "delta": -105,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "CAPBES1",
+    "station": "Capital Battery",
+    "owner": "Capital Battery Pty Ltd",
+    "region": "NSW1",
+    "delta": -100,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "CAPBES1",
+    "station": "Capital Battery",
+    "owner": "Capital Battery Pty Ltd",
+    "region": NaN,
+    "delta": 100,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "CETHANA",
+    "station": "Cethana",
+    "owner": "Hydro-Electric Corporation",
+    "region": "TAS1",
+    "delta": -100,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "CETHANA",
+    "station": "Cethana",
+    "owner": "Hydro-Electric Corporation",
+    "region": NaN,
+    "delta": 100,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "CHBESS1",
+    "station": "Chinchilla BESS",
+    "owner": "CSE BESS Pty Ltd",
+    "region": "QLD1",
+    "delta": -100,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "CHBESS1",
+    "station": "Chinchilla BESS",
+    "owner": "CSE BESS Pty Ltd",
+    "region": NaN,
+    "delta": 100,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "LVES1",
+    "station": "Latrobe Valley BESS",
+    "owner": "Tilt Renewables Australia Pty Ltd",
+    "region": "VIC1",
+    "delta": -100,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "LVES1",
+    "station": "Latrobe Valley BESS",
+    "owner": "Tilt Renewables Australia Pty Ltd",
+    "region": NaN,
+    "delta": 100,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MANNUMB1",
+    "station": "Mannum Battery Energy Storage System",
+    "owner": NaN,
+    "region": "SA1",
+    "delta": -100,
+    "start": "2026-09-13",
+    "end": "2026-09-14",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MANNUMB1",
+    "station": "Mannum Battery Energy Storage System",
+    "owner": NaN,
+    "region": "SA1",
+    "delta": -100,
+    "start": "2026-09-18",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "MANNUMB1",
+    "station": "Mannum Battery Energy Storage System",
+    "owner": NaN,
+    "region": NaN,
+    "delta": 100,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "NESBESS1",
+    "station": "",
+    "owner": "",
+    "region": "NSW1",
+    "delta": -100,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "NESBESS1",
+    "station": "",
+    "owner": "",
+    "region": NaN,
+    "delta": 100,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "NESBESS2",
+    "station": "",
+    "owner": "",
+    "region": "NSW1",
+    "delta": -100,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "NESBESS2",
+    "station": "",
+    "owner": "",
+    "region": NaN,
+    "delta": 100,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "TRGBESS1",
+    "station": "",
+    "owner": "",
+    "region": "VIC1",
+    "delta": -100,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "TRGBESS1",
+    "station": "",
+    "owner": "",
+    "region": NaN,
+    "delta": 100,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "WANDB1",
+    "station": "Wandoan BESS",
+    "owner": "Vena Evergy",
+    "region": "QLD1",
+    "delta": -100,
+    "start": "2026-09-13",
+    "end": "2026-09-19",
+    "found_at": "2026-09-14T02:01:02.016460"
+  },
+  {
+    "duid": "WANDB1",
+    "station": "Wandoan BESS",
+    "owner": "Vena Evergy",
+    "region": NaN,
+    "delta": 100,
+    "start": "2029-09-10",
+    "end": "2029-09-16",
+    "found_at": "2026-09-14T02:01:02.016460"
   }
 ]
