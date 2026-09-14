@@ -152,9 +152,15 @@ def push_ntfy_attachment(topic: str, filename: str, html_content: str, short_mes
     Pushes the full briefing as a downloadable .html attachment rather than the notification
     body text. The ntfy Android app has a known bug (github.com/binwiederhier/ntfy issue #1515)
     that crops/truncates long notification body text in its own in-app message view, even
-    though the server and web app both handle the full ~4096-byte body fine - an attachment
-    that opens in the phone's browser sidesteps that bug entirely instead of trying to out-guess
-    whatever length actually triggers it. `short_message` is the one-line text people see
+    though the server and web app both handle the full ~4096-byte body fine.
+
+    Also sets a "Click" URL pointing at the topic's own ntfy.sh web view. Some ntfy Android
+    versions fail to open a downloaded attachment locally ("no installed app can open the
+    file") even though the exact same file opens fine when the URL is pasted into a browser
+    directly - confirmed live on 2026-09-14. Click uses ntfy's normal "open this URL in the
+    browser" tap action instead of its local-file-open code path, so tapping the notification
+    itself (not the attachment chip) reliably opens the message - including the attachment -
+    in the browser regardless of that bug. `short_message` is the one-line text people see
     before opening the attachment.
     """
     url = f"{NTFY_BASE_URL.rstrip('/')}/{topic}"
@@ -165,6 +171,7 @@ def push_ntfy_attachment(topic: str, filename: str, html_content: str, short_mes
         "Tags": "newspaper",
         "Filename": filename,
         "Message": short_message,
+        "Click": f"{NTFY_BASE_URL.rstrip('/')}/{topic}",
     }
     try:
         requests.post(url, data=html_content.encode("utf-8"), headers=headers, timeout=REQUEST_TIMEOUT_SECONDS)
