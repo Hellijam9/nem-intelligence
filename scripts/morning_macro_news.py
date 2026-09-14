@@ -47,28 +47,34 @@ MACRO_GEO_FEEDS = [
     ("US Federal Reserve", "https://www.federalreserve.gov/feeds/press_all.xml"),
 ]
 
-COMMODITY_FEEDS = [
+MARKETS_FEEDS = [
     ("OilPrice.com", "https://oilprice.com/rss/main"),
     ("MarketWatch Top Stories", "https://www.marketwatch.com/rss/topstories"),
     ("MarketWatch Market Pulse", "https://www.marketwatch.com/rss/marketpulse"),
+    ("CNBC Markets", "https://www.cnbc.com/id/100003114/device/rss/rss.html"),
+    ("FXStreet", "https://www.fxstreet.com/rss"),
+    ("CoinDesk", "https://www.coindesk.com/arc/outboundfeeds/rss/"),
 ]
 
 SYSTEM_PROMPT = """You write a short daily morning briefing for a reader with no finance or \
 economics background. You will be given recent headlines grouped as "Macro/Geopolitical" and \
-"Commodities". Using ONLY these headlines (don't invent facts beyond what's implied by them):
+"Markets". Using ONLY these headlines (don't invent facts beyond what's implied by them):
 
 1. Write a "Global Macro & Geopolitical" section: 3-5 bullet points on the most significant \
 developments, each in plain layman's language, stating the likely CAUSE and the likely EFFECT \
 (e.g. "X happened, because of Y, which could lead to Z").
-2. Write a "Commodities" section covering the most notable moves across asset classes \
-(oil, gas, coal, metals, agriculture, etc. - whatever the headlines actually cover), same \
-cause/effect, layman's style.
+2. Write a "Markets" section covering the most notable moves across EVERY asset class present \
+in the headlines - equities/stock markets, bonds/interest rates, currencies/FX, cryptocurrency, \
+AND commodities (oil, gas, coal, metals, agriculture, etc). Give commodities the most detail/space \
+since that's the priority, but don't skip the other asset classes if the headlines cover them - \
+briefly note each relevant asset class that has real news, same cause/effect, layman's style. If a \
+given asset class has no real news today, don't force a mention of it.
 3. End with a short "Australian power prices (NEM)" paragraph: plainly say whether anything \
 above could plausibly flow through to Australian wholesale electricity prices, and briefly why \
 (e.g. gas/coal price links, LNG export parity, a weather/demand angle, a currency effect). If \
 nothing above is plausibly relevant, say so directly in one line rather than forcing a connection.
 
-Keep the whole thing under 350 words, no preamble, no markdown headers with #, just plain text \
+Keep the whole thing under 400 words, no preamble, no markdown headers with #, just plain text \
 with short section titles in capitals and dashes for bullets. This is going straight into a \
 push notification, so be concise."""
 
@@ -111,7 +117,7 @@ def build_headline_block() -> tuple[str, int]:
     """Returns the combined prompt text and how many headlines were actually collected."""
     sections = []
     total = 0
-    for label, feeds in (("Macro/Geopolitical", MACRO_GEO_FEEDS), ("Commodities", COMMODITY_FEEDS)):
+    for label, feeds in (("Macro/Geopolitical", MACRO_GEO_FEEDS), ("Markets", MARKETS_FEEDS)):
         block_lines = []
         for name, url in feeds:
             items = fetch_feed_items(name, url)
