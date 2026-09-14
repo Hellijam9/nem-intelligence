@@ -32,7 +32,7 @@ USER_AGENT = "nem-intelligence-system/1.0"
 # (confirmed in nemweb_common.py) - stay well under it for UTF-8 headroom.
 NTFY_MAX_MESSAGE_BYTES = 3900
 
-GROQ_MODEL = "llama-3.3-70b-versatile"
+GROQ_MODEL = "openai/gpt-oss-120b"
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 # Only headlines newer than this are included, so a stalled/slow-updating feed
@@ -187,7 +187,7 @@ def main() -> int:
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     push_ntfy(ntfy_topic, summary, title=f"Morning Macro Briefing - {today}")
     print("[morning_macro_news] Briefing sent.")
-    print(summary)
+    print(summary.encode(sys.stdout.encoding or "utf-8", errors="replace").decode(sys.stdout.encoding or "utf-8"))
     return 0
 
 
