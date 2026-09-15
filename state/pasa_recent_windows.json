@@ -11818,5 +11818,75 @@
     "start": "2026-09-20",
     "end": "2026-09-22",
     "found_at": "2026-09-14T11:01:06.325760"
+  },
+  {
+    "duid": "BW02",
+    "station": "Bayswater",
+    "owner": "AGL Macquarie Pty Limited",
+    "region": "NSW1",
+    "delta": 685,
+    "start": "2026-09-21",
+    "end": "2026-09-22",
+    "found_at": "2026-09-15T03:53:58.812717"
+  },
+  {
+    "duid": "YWPS4",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": -370,
+    "start": "2026-09-20",
+    "end": "2026-09-20",
+    "found_at": "2026-09-15T03:53:58.812717"
+  },
+  {
+    "duid": "TVCC201",
+    "station": "Tamar Valley Combined Cycle",
+    "owner": "AETV Pty Ltd",
+    "region": "TAS1",
+    "delta": 208,
+    "start": "2027-05-04",
+    "end": "2027-05-06",
+    "found_at": "2026-09-15T03:53:58.812717"
+  },
+  {
+    "duid": "TVCC201",
+    "station": "Tamar Valley Combined Cycle",
+    "owner": "AETV Pty Ltd",
+    "region": "TAS1",
+    "delta": 208,
+    "start": "2027-05-29",
+    "end": "2027-06-01",
+    "found_at": "2026-09-15T03:53:58.812717"
+  },
+  {
+    "duid": "TVCC201",
+    "station": "Tamar Valley Combined Cycle",
+    "owner": "AETV Pty Ltd",
+    "region": "TAS1",
+    "delta": 208,
+    "start": "2027-06-24",
+    "end": "2027-06-27",
+    "found_at": "2026-09-15T03:53:58.812717"
+  },
+  {
+    "duid": "TVCC201",
+    "station": "Tamar Valley Combined Cycle",
+    "owner": "AETV Pty Ltd",
+    "region": "TAS1",
+    "delta": 208,
+    "start": "2027-07-20",
+    "end": "2027-07-23",
+    "found_at": "2026-09-15T03:53:58.812717"
+  },
+  {
+    "duid": "TVCC201",
+    "station": "Tamar Valley Combined Cycle",
+    "owner": "AETV Pty Ltd",
+    "region": "TAS1",
+    "delta": 208,
+    "start": "2027-08-15",
+    "end": "2027-08-18",
+    "found_at": "2026-09-15T03:53:58.812717"
   }
 ]
