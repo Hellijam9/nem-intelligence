@@ -11988,5 +11988,25 @@
     "start": "2026-11-09",
     "end": "2026-11-10",
     "found_at": "2026-09-16T03:51:18.927941"
+  },
+  {
+    "duid": "BW02",
+    "station": "Bayswater",
+    "owner": "AGL Macquarie Pty Limited",
+    "region": "NSW1",
+    "delta": -685,
+    "start": "2026-09-21",
+    "end": "2026-09-22",
+    "found_at": "2026-09-16T08:00:59.793256"
+  },
+  {
+    "duid": "TVCC201",
+    "station": "Tamar Valley Combined Cycle",
+    "owner": "AETV Pty Ltd",
+    "region": "TAS1",
+    "delta": -208,
+    "start": "2027-09-06",
+    "end": "2029-09-16",
+    "found_at": "2026-09-16T08:00:59.793256"
   }
 ]
