@@ -21,6 +21,7 @@ cron-job.org pinger, `schedule:` cron as a low-frequency fallback).
 
 import json
 import os
+import re
 import sys
 from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
@@ -31,6 +32,27 @@ import requests
 NTFY_BASE_URL = "https://ntfy.sh"
 REQUEST_TIMEOUT_SECONDS = 30
 USER_AGENT = "nem-intelligence-system/1.0"
+
+# Same live-scrape mechanism this repo already uses for coal/gas benchmarks
+# (coal_price_tracker.py, gas_spread_tracker.py) - tradingeconomics.com's public overview
+# pages render a plain HTML table (name -> price -> % change cells) per instrument, so a
+# regex extraction per name is enough; no API key, same CFD-proxy caveat as those trackers.
+TE_BROWSER_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36"
+# (tradingeconomics.com display name, our label, price prefix, price suffix, decimal places)
+TE_PRICE_PAGES = {
+    "https://tradingeconomics.com/crypto": [
+        ("Bitcoin", "Bitcoin", "$", "", 0),
+    ],
+    "https://tradingeconomics.com/commodities": [
+        ("Crude Oil", "WTI Crude Oil", "$", "/bbl", 2),
+        ("Brent", "Brent Crude Oil", "$", "/bbl", 2),
+        ("Gold", "Gold", "$", "/oz", 2),
+        ("Silver", "Silver", "$", "/oz", 2),
+    ],
+    "https://tradingeconomics.com/currencies": [
+        ("AUDUSD", "AUD/USD", "", "", 4),
+    ],
+}
 
 GROQ_MODEL = "openai/gpt-oss-120b"
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
@@ -102,6 +124,49 @@ nothing above is plausibly relevant, say so directly in one line rather than for
 Keep the whole thing under 400 words, no preamble, no markdown headers with #, just plain text \
 with short section titles in capitals and dashes for bullets. This is going straight into a \
 push notification, so be concise."""
+
+
+def extract_te_price(html: str, name: str) -> tuple[str, str] | None:
+    """Pulls (price, pct_change) for one instrument out of a tradingeconomics.com overview
+    page's HTML table. Returns None if that name isn't found or the table layout changed."""
+    idx = html.find(f">{name}</b>")
+    if idx == -1:
+        return None
+    window = html[idx:idx + 1500]
+    price_match = re.search(r'id="p"[^>]*>\s*([\-\d,.]+)\s*</td>', window)
+    pct_match = re.search(r'id="pch"[^>]*data-value="(-?[\d.]+)"', window)
+    if not price_match:
+        return None
+    price = price_match.group(1)
+    pct = f"{pct_match.group(1)}%" if pct_match else "?"
+    return price, pct
+
+
+def fetch_price_snapshot() -> list[str]:
+    """Live price snapshot (Bitcoin, oil, gold, silver, AUD/USD) scraped from
+    tradingeconomics.com - same mechanism as coal_price_tracker.py/gas_spread_tracker.py.
+    Never raises; a failed page just means those lines are missing from the snapshot, not a
+    dead briefing."""
+    lines = []
+    for url, instruments in TE_PRICE_PAGES.items():
+        try:
+            resp = requests.get(url, headers={"User-Agent": TE_BROWSER_USER_AGENT}, timeout=REQUEST_TIMEOUT_SECONDS)
+            resp.raise_for_status()
+        except requests.RequestException as exc:
+            print(f"[morning_macro_news] WARNING: price snapshot fetch failed for {url}: {exc}")
+            continue
+        for te_name, label, prefix, suffix, decimals in instruments:
+            result = extract_te_price(resp.text, te_name)
+            if result is None:
+                print(f"[morning_macro_news] WARNING: could not find {te_name!r} on {url}")
+                continue
+            price_str, pct = result
+            try:
+                price_fmt = f"{float(price_str.replace(',', '')):,.{decimals}f}"
+            except ValueError:
+                price_fmt = price_str
+            lines.append(f"{label}: {prefix}{price_fmt}{suffix} ({pct})")
+    return lines
 
 
 def fetch_feed_items(name: str, url: str, cutoff: datetime) -> list[str]:
@@ -243,6 +308,11 @@ def main() -> int:
     except requests.RequestException as exc:
         print(f"[morning_macro_news] ERROR: Groq summarization failed: {exc}")
         return 1
+
+    price_lines = fetch_price_snapshot()
+    print(f"[morning_macro_news] Fetched {len(price_lines)} live prices.")
+    if price_lines:
+        summary = "CURRENT LEVELS\n" + "\n".join(f"- {line}" for line in price_lines) + "\n\n" + summary
 
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     title = f"Morning Macro Briefing - {today}"
