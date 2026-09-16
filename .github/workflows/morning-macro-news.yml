@@ -16,6 +16,9 @@ concurrency:
   group: morning-macro-news
   cancel-in-progress: false
 
+permissions:
+  contents: write
+
 jobs:
   run:
     runs-on: ubuntu-latest
@@ -24,6 +27,8 @@ jobs:
       NTFY_TOPIC_MACRO_NEWS: ${{ secrets.NTFY_TOPIC_MACRO_NEWS }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -32,3 +37,20 @@ jobs:
       - run: pip install requests
 
       - run: python scripts/morning_macro_news.py
+
+      - name: Commit and push state changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add state/morning_macro_news_state.json
+          if git diff --cached --quiet; then
+            echo "No state changes to commit."
+          else
+            git commit -m "Update morning macro news state [skip ci]"
+            for i in 1 2 3; do
+              git pull --rebase origin main && git push && break
+              echo "Push attempt $i failed, retrying..."
+              git rebase --abort 2>/dev/null || true
+              sleep 5
+            done
+          fi

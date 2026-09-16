@@ -1,10 +1,13 @@
 """
 Daily morning macro/geopolitical/commodities news briefing, pushed to ntfy.
 
-Pipeline: free RSS feeds -> Groq's free LLM API (Llama 3.3 70B) writes a
-layman's-terms summary with likely causes/effects, plus a closing note on
-whether anything could plausibly affect Australian (NEM) power prices ->
-push to ntfy.
+Pipeline: free RSS feeds -> Groq's free LLM API writes a layman's-terms summary
+with likely causes/effects, plus a closing note on whether anything could
+plausibly affect Australian (NEM) power prices -> push to ntfy.
+
+Headlines are pulled since the last successful run (state/morning_macro_news_state.json),
+not a fixed lookback window - so a missed run (a dead cron ping, a failed workflow) doesn't
+silently lose that day's news once the next run only looks back a fixed number of hours.
 
 Runs entirely on free tiers - no paid API key required:
 - RSS feeds are public and free.
@@ -16,6 +19,7 @@ other scheduled scripts (repository_dispatch primary trigger via an external
 cron-job.org pinger, `schedule:` cron as a low-frequency fallback).
 """
 
+import json
 import os
 import sys
 from datetime import datetime, timedelta, timezone
@@ -31,10 +35,35 @@ USER_AGENT = "nem-intelligence-system/1.0"
 GROQ_MODEL = "openai/gpt-oss-120b"
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 
-# Only headlines newer than this are included, so a stalled/slow-updating feed
-# doesn't quietly re-feed yesterday's items into today's briefing.
-MAX_HEADLINE_AGE_HOURS = 30
+STATE_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                           "state", "morning_macro_news_state.json")
+
+# Fallback lookback used only when there's no record of a previous run (first-ever run, or
+# the state file is somehow missing) - normally the cutoff is "since the last successful run"
+# instead, so a missed run doesn't quietly lose a day's news once the next run only looks back
+# a fixed window. Capped at 96h so a very long outage doesn't dump days of stale headlines at once.
+DEFAULT_LOOKBACK_HOURS = 30
+MAX_LOOKBACK_HOURS = 96
 MAX_ITEMS_PER_FEED = 8
+
+
+def load_last_run_at() -> datetime:
+    try:
+        with open(STATE_PATH, "r", encoding="utf-8") as f:
+            state = json.load(f)
+        last_run_at = datetime.fromisoformat(state["last_run_at"])
+        if last_run_at.tzinfo is None:
+            last_run_at = last_run_at.replace(tzinfo=timezone.utc)
+    except (FileNotFoundError, KeyError, ValueError, json.JSONDecodeError):
+        return datetime.now(timezone.utc) - timedelta(hours=DEFAULT_LOOKBACK_HOURS)
+    earliest_allowed = datetime.now(timezone.utc) - timedelta(hours=MAX_LOOKBACK_HOURS)
+    return max(last_run_at, earliest_allowed)
+
+
+def save_last_run_at(when: datetime) -> None:
+    os.makedirs(os.path.dirname(STATE_PATH), exist_ok=True)
+    with open(STATE_PATH, "w", encoding="utf-8") as f:
+        json.dump({"last_run_at": when.isoformat()}, f, indent=2)
 
 MACRO_GEO_FEEDS = [
     ("BBC World", "http://feeds.bbci.co.uk/news/world/rss.xml"),
@@ -45,8 +74,6 @@ MACRO_GEO_FEEDS = [
 
 MARKETS_FEEDS = [
     ("OilPrice.com", "https://oilprice.com/rss/main"),
-    ("MarketWatch Top Stories", "https://www.marketwatch.com/rss/topstories"),
-    ("MarketWatch Market Pulse", "https://www.marketwatch.com/rss/marketpulse"),
     ("CNBC Markets", "https://www.cnbc.com/id/100003114/device/rss/rss.html"),
     ("FXStreet", "https://www.fxstreet.com/rss"),
     ("CoinDesk", "https://www.coindesk.com/arc/outboundfeeds/rss/"),
@@ -77,10 +104,9 @@ with short section titles in capitals and dashes for bullets. This is going stra
 push notification, so be concise."""
 
 
-def fetch_feed_items(name: str, url: str) -> list[str]:
-    """Fetch and parse one RSS feed, returning recent headline+summary lines. Never raises -
-    one dead feed shouldn't take down the whole briefing."""
-    cutoff = datetime.now(timezone.utc) - timedelta(hours=MAX_HEADLINE_AGE_HOURS)
+def fetch_feed_items(name: str, url: str, cutoff: datetime) -> list[str]:
+    """Fetch and parse one RSS feed, returning headline lines published since `cutoff`. Never
+    raises - one dead feed shouldn't take down the whole briefing."""
     lines = []
     try:
         resp = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=REQUEST_TIMEOUT_SECONDS)
@@ -111,14 +137,14 @@ def fetch_feed_items(name: str, url: str) -> list[str]:
     return lines
 
 
-def build_headline_block() -> tuple[str, int]:
+def build_headline_block(cutoff: datetime) -> tuple[str, int]:
     """Returns the combined prompt text and how many headlines were actually collected."""
     sections = []
     total = 0
     for label, feeds in (("Macro/Geopolitical", MACRO_GEO_FEEDS), ("Markets", MARKETS_FEEDS)):
         block_lines = []
         for name, url in feeds:
-            items = fetch_feed_items(name, url)
+            items = fetch_feed_items(name, url, cutoff)
             total += len(items)
             if items:
                 block_lines.append(f"{name}:")
@@ -200,10 +226,16 @@ def main() -> int:
         print("[morning_macro_news] ERROR: GROQ_API_KEY and NTFY_TOPIC_MACRO_NEWS must both be set.")
         return 1
 
-    headline_block, total_headlines = build_headline_block()
+    run_started_at = datetime.now(timezone.utc)
+    cutoff = load_last_run_at()
+    print(f"[morning_macro_news] Pulling headlines since {cutoff.isoformat()} "
+          f"({(run_started_at - cutoff).total_seconds() / 3600:.1f}h ago).")
+
+    headline_block, total_headlines = build_headline_block(cutoff)
     print(f"[morning_macro_news] Collected {total_headlines} fresh headlines.")
     if total_headlines == 0:
         print("[morning_macro_news] No fresh headlines from any feed - skipping today's briefing.")
+        save_last_run_at(run_started_at)
         return 0
 
     try:
@@ -222,6 +254,7 @@ def main() -> int:
     )
     print("[morning_macro_news] Briefing sent.")
     print(summary.encode(sys.stdout.encoding or "utf-8", errors="replace").decode(sys.stdout.encoding or "utf-8"))
+    save_last_run_at(run_started_at)
     return 0
 
 
