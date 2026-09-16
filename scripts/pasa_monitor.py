@@ -173,14 +173,22 @@ def main() -> None:
     for df in (prev_df, curr_df):
         df["PASAAVAILABILITY"] = pd.to_numeric(df["PASAAVAILABILITY"], errors="coerce")
 
+    # Inner join, deliberately not outer - MTPASA's horizon is a rolling ~3-year window, so
+    # every run a new day enters at the far edge and an old (now-past) day drops off the near
+    # edge. An outer join + fillna(0) treated "day not present in the other snapshot" as "the
+    # generator declared 0MW that day", fabricating a fake 0-to-full-capacity jump purely
+    # because a day entered/left the visible window - not a real declared change. Confirmed
+    # live (2026-09-14): TUMUT3 et al. showed a fake "+1800MW" change on a day 3 years out
+    # (newly entered the horizon) and a fake "-730MW" change on a day that had already passed
+    # (dropped off the horizon, correctly flagged by duration_label as "in the past"). An inner
+    # join only ever compares days genuinely present in both snapshots, so neither edge effect
+    # can produce a spurious change.
     merged = prev_df[["DUID", "DAY", "REGIONID", "PASAAVAILABILITY"]].merge(
         curr_df[["DUID", "DAY", "PASAAVAILABILITY"]],
         on=["DUID", "DAY"],
-        how="outer",
+        how="inner",
         suffixes=("_prev", "_curr"),
     )
-    merged["PASAAVAILABILITY_prev"] = merged["PASAAVAILABILITY_prev"].fillna(0)
-    merged["PASAAVAILABILITY_curr"] = merged["PASAAVAILABILITY_curr"].fillna(0)
     merged["delta"] = merged["PASAAVAILABILITY_curr"] - merged["PASAAVAILABILITY_prev"]
 
     changes = merged[merged["delta"].abs() >= THRESHOLD_MW].copy()
