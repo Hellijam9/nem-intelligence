@@ -2088,5 +2088,45 @@
     "start": "2027-09-06",
     "end": "2029-09-16",
     "found_at": "2026-09-16T08:00:59.793256"
+  },
+  {
+    "duid": "MORTLK11",
+    "station": "Mortlake",
+    "owner": "Origin Energy Power Limited",
+    "region": "VIC1",
+    "delta": -275,
+    "start": "2027-04-17",
+    "end": "2027-04-18",
+    "found_at": "2026-09-16T11:01:04.844619"
+  },
+  {
+    "duid": "MORTLK12",
+    "station": "Mortlake",
+    "owner": "Origin Energy Power Limited",
+    "region": "VIC1",
+    "delta": -272,
+    "start": "2027-04-04",
+    "end": "2027-04-10",
+    "found_at": "2026-09-16T11:01:04.844619"
+  },
+  {
+    "duid": "MORTLK12",
+    "station": "Mortlake",
+    "owner": "Origin Energy Power Limited",
+    "region": "VIC1",
+    "delta": 272,
+    "start": "2027-04-19",
+    "end": "2027-04-23",
+    "found_at": "2026-09-16T11:01:04.844619"
+  },
+  {
+    "duid": "WOOLES1",
+    "station": "",
+    "owner": "",
+    "region": "QLD1",
+    "delta": -125,
+    "start": "2026-09-20",
+    "end": "2026-09-22",
+    "found_at": "2026-09-16T11:01:04.844619"
   }
 ]
