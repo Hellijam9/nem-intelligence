@@ -2178,5 +2178,55 @@
     "start": "2026-09-20",
     "end": "2026-09-22",
     "found_at": "2026-09-17T08:01:01.719889"
+  },
+  {
+    "duid": "HUNTER1",
+    "station": "Hunter Power Station",
+    "owner": "Snowy Hydro Limited",
+    "region": "NSW1",
+    "delta": -330,
+    "start": "2027-03-01",
+    "end": "2027-03-22",
+    "found_at": "2026-09-17T11:01:00.632577"
+  },
+  {
+    "duid": "OAKEY1",
+    "station": "Oakey",
+    "owner": "Oakey Power Holdings Pty Ltd",
+    "region": "QLD1",
+    "delta": 167,
+    "start": "2026-09-20",
+    "end": "2026-10-09",
+    "found_at": "2026-09-17T11:01:00.632577"
+  },
+  {
+    "duid": "OAKEY2",
+    "station": "Oakey",
+    "owner": "Oakey Power Holdings Pty Ltd",
+    "region": "QLD1",
+    "delta": 167,
+    "start": "2026-09-20",
+    "end": "2026-10-09",
+    "found_at": "2026-09-17T11:01:00.632577"
+  },
+  {
+    "duid": "OAKEY2",
+    "station": "Oakey",
+    "owner": "Oakey Power Holdings Pty Ltd",
+    "region": "QLD1",
+    "delta": 167,
+    "start": "2026-10-19",
+    "end": "2026-10-31",
+    "found_at": "2026-09-17T11:01:00.632577"
+  },
+  {
+    "duid": "OAKEY2",
+    "station": "Oakey",
+    "owner": "Oakey Power Holdings Pty Ltd",
+    "region": "QLD1",
+    "delta": 143,
+    "start": "2026-11-01",
+    "end": "2026-11-13",
+    "found_at": "2026-09-17T11:01:00.632577"
   }
 ]
