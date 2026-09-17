@@ -465,6 +465,96 @@ def format_network_outage_changes_overnight(now: datetime) -> list[str]:
     return lines
 
 
+PRICE_MOVING_FUELS = {"black coal", "brown coal", "gas", "hydro"}
+
+
+def _price_moving_duids() -> set[str] | None:
+    """
+    DUIDs whose fuel type is one AEMO's own QED reports have ever actually named as
+    price-moving (coal/gas/hydro - never a single wind/solar/battery unit, confirmed by
+    reading the QED history). Used to filter units-out-today/large-outages down to units whose
+    absence is a real candidate price driver, not a battery cycling its declared availability
+    as normal operation (which isn't really "out" the way a coal/gas/hydro unit on maintenance
+    is) - confirmed live this was most of what made units-out-today "huge" (2026-09-17): of
+    128 real lines, a large share were BESS/battery DUIDs. Returns None if the registry isn't
+    available, so callers can fall back to showing everything rather than silently showing
+    nothing.
+    """
+    registry = nw.load_registry()
+    if registry.fuel_info is None:
+        return None
+    fcol = cft.fuel_column(registry.fuel_info)
+    if not fcol:
+        return None
+    rows = registry.fuel_info[registry.fuel_info[fcol].str.lower().isin(PRICE_MOVING_FUELS)]
+    return set(rows["DUID"])
+
+
+def _dedupe_overlapping_windows(windows: list[dict]) -> list[dict]:
+    """
+    pasa_recent_windows.json is an append-only log of every declared-change event pasa_monitor.py
+    has ever found, not a "current state" snapshot - a revised/extended declaration creates a NEW
+    cache entry rather than replacing the old one. Confirmed live (2026-09-17): BW02 alone had 3
+    separate -685MW entries whose date ranges overlapped or were adjacent (one revised twice),
+    which a naive group-and-sum was triple-counting as three concurrent outages. For each DUID,
+    collapses any windows whose date ranges overlap or touch into one - keeping the entry with the
+    latest found_at (the most recently declared version, on the assumption a later declaration
+    supersedes an earlier one for the same real event) - while genuinely separate, non-overlapping
+    windows for the same DUID (two distinct real outages weeks apart) are both kept as-is.
+    """
+    by_duid: dict[str, list[dict]] = {}
+    for w in windows:
+        by_duid.setdefault(w["duid"], []).append(w)
+    result = []
+    for duid, ws in by_duid.items():
+        ws = sorted(ws, key=lambda w: w["start"])
+        cluster = [ws[0]]
+        cluster_end = ws[0]["end"]
+        for w in ws[1:]:
+            if w["start"] <= cluster_end:
+                cluster.append(w)
+                cluster_end = max(cluster_end, w["end"])
+            else:
+                result.append(max(cluster, key=lambda x: x.get("found_at", "")))
+                cluster = [w]
+                cluster_end = w["end"]
+        result.append(max(cluster, key=lambda x: x.get("found_at", "")))
+    return result
+
+
+def _group_windows_by_station(windows: list[dict]) -> list[dict]:
+    """
+    Combines multiple units at the same station (e.g. YWPS1/YWPS2/YWPS4 all at Yallourn) into
+    one grouped entry - per your request, these were showing as separate lines even though
+    they're the same generator. Groups by (station, owner, region) rather than station name
+    alone, so two same-named stations under different owners/regions (edge case, but the
+    registry doesn't guarantee unique station names) never get merged. total_delta is the sum
+    across all units in the group; start/end span the earliest start to the latest end across
+    the group's units, same "widest honest span" convention format_major_network_outages_upcoming
+    already uses for pooling. Falls back to DUID as the grouping name when station is blank, so
+    ungrouped/unknown units still get their own entry rather than merging into one "" bucket.
+    """
+    groups: dict[tuple, dict] = {}
+    for w in windows:
+        name = w.get("station") or w["duid"]
+        key = (name, w.get("owner") or "UNKNOWN", w.get("region") or "?")
+        g = groups.setdefault(key, {"name": name, "owner": w.get("owner") or "UNKNOWN",
+                                     "region": w.get("region") or "?", "duids": [], "total_delta": 0.0,
+                                     "start": w.get("start"), "end": w.get("end")})
+        # Unique DUIDs only, in first-seen order - after _dedupe_overlapping_windows, the same
+        # DUID can still legitimately appear more than once here if it has two genuinely
+        # separate (non-overlapping) declared windows within the lookahead period; the unit
+        # itself should still only be *named* once, not once per window.
+        if w["duid"] not in g["duids"]:
+            g["duids"].append(w["duid"])
+        g["total_delta"] += w.get("delta", 0)
+        if w.get("start") and w["start"] < g["start"]:
+            g["start"] = w["start"]
+        if w.get("end") and w["end"] > g["end"]:
+            g["end"] = w["end"]
+    return sorted(groups.values(), key=lambda g: abs(g["total_delta"]), reverse=True)
+
+
 def format_units_out_today(now: datetime) -> list[str]:
     """
     Live-enough without re-fetching the raw MTPASA data: pasa_monitor.py maintains a rolling
@@ -472,22 +562,25 @@ def format_units_out_today(now: datetime) -> list[str]:
     specifically so downstream consumers don't need to re-download/re-diff the ~250k-row MTPASA
     snapshot themselves - re-fetching that here would just duplicate pasa_monitor's own job.
     Filters the cache to windows covering today with a real reduction (delta < 0) - "what units
-    are out today", not "what changed recently" (the old log-replay's framing).
+    are out today", not "what changed recently" (the old log-replay's framing). Also filtered to
+    PRICE_MOVING_FUELS (coal/gas/hydro) - see _price_moving_duids for why.
     """
     cache = nw.read_state("pasa_recent_windows.json", default=[])
+    price_moving = _price_moving_duids()
     today_str = now.date().isoformat()
-    active = sorted(
-        (w for w in cache if w.get("start", "") <= today_str <= w.get("end", "") and w.get("delta", 0) < 0),
-        key=lambda w: w["delta"],
-    )
-    lines = ["\nUnits out today (>=100MW declared reduction):"]
+    active = [
+        w for w in cache
+        if w.get("start", "") <= today_str <= w.get("end", "") and w.get("delta", 0) < 0
+        and (price_moving is None or w.get("duid") in price_moving)
+    ]
+    lines = ["\nUnits out today (>=100MW declared reduction, coal/gas/hydro):"]
     if not active:
         lines.append("  None.")
         return lines
-    for w in active:
-        name = w.get("station") or w["duid"]
-        owner = w.get("owner") or "UNKNOWN"
-        lines.append(f"  {w['duid']} ({name}) [{owner}, {w['region']}]: {w['delta']:.0f}MW until {w['end']}")
+    for g in _group_windows_by_station(_dedupe_overlapping_windows(active)):
+        duid_list = "/".join(g["duids"])
+        unit_note = f" ({len(g['duids'])} units)" if len(g["duids"]) > 1 else ""
+        lines.append(f"  {duid_list} ({g['name']}) [{g['owner']}, {g['region']}]: {g['total_delta']:.0f}MW{unit_note} until {g['end']}")
     return lines
 
 
@@ -501,26 +594,29 @@ def format_large_outages_upcoming(now: datetime) -> list[str]:
     reduction >=300MW - the QED-established size range for single-unit price-moving events
     (every unit AEMO's own quarterly reports ever named as price-moving was 120-760MW,
     always coal/gas/hydro, never a single wind/solar/battery unit) - whose window is still
-    active or starts within the next 6 weeks, not just today.
+    active or starts within the next 6 weeks, not just today. Also explicitly filtered to
+    PRICE_MOVING_FUELS now (see _price_moving_duids) - the 300MW threshold alone no longer
+    reliably excludes batteries on its own now that some grid-scale batteries exceed 300MW.
     """
     cache = nw.read_state("pasa_recent_windows.json", default=[])
+    price_moving = _price_moving_duids()
     today = now.date()
     cutoff = today + timedelta(days=LARGE_OUTAGE_LOOKAHEAD_DAYS)
-    upcoming = sorted(
-        (w for w in cache
-         if w.get("delta", 0) <= -LARGE_OUTAGE_THRESHOLD_MW
-         and datetime.strptime(w["start"], "%Y-%m-%d").date() <= cutoff
-         and datetime.strptime(w["end"], "%Y-%m-%d").date() >= today),
-        key=lambda w: w["start"],
-    )
-    lines = [f"\nLarge outages (>={LARGE_OUTAGE_THRESHOLD_MW}MW) in the next {LARGE_OUTAGE_LOOKAHEAD_DAYS // 7} weeks:"]
+    upcoming = [
+        w for w in cache
+        if w.get("delta", 0) <= -LARGE_OUTAGE_THRESHOLD_MW
+        and (price_moving is None or w.get("duid") in price_moving)
+        and datetime.strptime(w["start"], "%Y-%m-%d").date() <= cutoff
+        and datetime.strptime(w["end"], "%Y-%m-%d").date() >= today
+    ]
+    lines = [f"\nLarge outages (>={LARGE_OUTAGE_THRESHOLD_MW}MW, coal/gas/hydro) in the next {LARGE_OUTAGE_LOOKAHEAD_DAYS // 7} weeks:"]
     if not upcoming:
         lines.append("  None.")
         return lines
-    for w in upcoming:
-        name = w.get("station") or w["duid"]
-        owner = w.get("owner") or "UNKNOWN"
-        lines.append(f"  {w['duid']} ({name}) [{owner}, {w['region']}]: {w['delta']:.0f}MW, {w['start']} to {w['end']}")
+    for g in _group_windows_by_station(_dedupe_overlapping_windows(upcoming)):
+        duid_list = "/".join(g["duids"])
+        unit_note = f" ({len(g['duids'])} units)" if len(g["duids"]) > 1 else ""
+        lines.append(f"  {duid_list} ({g['name']}) [{g['owner']}, {g['region']}]: {g['total_delta']:.0f}MW{unit_note}, {g['start']} to {g['end']}")
     return lines
 
 
@@ -561,6 +657,9 @@ def format_network_outages_today(now: datetime) -> list[str]:
     return lines
 
 
+MAJOR_OUTAGE_MIN_DURATION_DAYS = 14
+
+
 def format_major_network_outages_upcoming(now: datetime) -> list[str]:
     """
     Same High Impact Outages feed as units-out-today's network equivalent, widened like
@@ -568,6 +667,12 @@ def format_major_network_outages_upcoming(now: datetime) -> list[str]:
     (AEMO's own "T" flag, confirmed live: 76 of 206 current rows) - i.e. genuinely major,
     cross-region-significant, not just a local asset - whose window is still active or starts
     within the next 6 weeks.
+
+    Also requires each individual window to run >=14 days on its own (MAJOR_OUTAGE_MIN_DURATION_DAYS),
+    filtered before pooling - per your request, this section was getting cluttered with recurring
+    short (often overnight/1-day) maintenance windows that only LOOKED like a long outage once
+    pooled by asset into one earliest-to-latest summary line. A genuinely brief window now never
+    counts toward that span at all, rather than just being folded into a wider-looking one.
     """
     try:
         df = nw.fetch_high_impact_outages()
@@ -585,10 +690,12 @@ def format_major_network_outages_upcoming(now: datetime) -> list[str]:
             finish_dt = datetime.strptime(row["Finish"], "%d/%m/%Y %H:%M").date()
         except (ValueError, TypeError, KeyError):
             continue
+        if (finish_dt - start_dt).days < MAJOR_OUTAGE_MIN_DURATION_DAYS:
+            continue
         if start_dt <= cutoff and finish_dt >= today:
             major.append((start_dt, finish_dt, row))
 
-    lines = [f"\nMajor network outages (Inter-Regional) in the next {LARGE_OUTAGE_LOOKAHEAD_DAYS // 7} weeks:"]
+    lines = [f"\nMajor network outages (Inter-Regional, {MAJOR_OUTAGE_MIN_DURATION_DAYS}+ days) in the next {LARGE_OUTAGE_LOOKAHEAD_DAYS // 7} weeks:"]
     if not major:
         lines.append("  None.")
         return lines
