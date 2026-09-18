@@ -2228,5 +2228,125 @@
     "start": "2026-11-01",
     "end": "2026-11-13",
     "found_at": "2026-09-17T11:01:00.632577"
+  },
+  {
+    "duid": "YWPS3",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": -370,
+    "start": "2026-09-22",
+    "end": "2026-09-22",
+    "found_at": "2026-09-18T03:43:31.747554"
+  },
+  {
+    "duid": "YWPS4",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": -370,
+    "start": "2026-09-21",
+    "end": "2026-09-21",
+    "found_at": "2026-09-18T03:43:31.747554"
+  },
+  {
+    "duid": "TNPS1",
+    "station": "Tarong North",
+    "owner": "Stanwell Corporation Limited",
+    "region": "QLD1",
+    "delta": -175,
+    "start": "2026-09-20",
+    "end": "2026-09-21",
+    "found_at": "2026-09-18T03:43:31.747554"
+  },
+  {
+    "duid": "QPS5",
+    "station": "Quarantine",
+    "owner": "Origin Energy Power Limited",
+    "region": "SA1",
+    "delta": -125,
+    "start": "2026-09-20",
+    "end": "2026-09-20",
+    "found_at": "2026-09-18T03:43:31.747554"
+  },
+  {
+    "duid": "QPS5",
+    "station": "Quarantine",
+    "owner": "Origin Energy Power Limited",
+    "region": "SA1",
+    "delta": -125,
+    "start": "2026-09-25",
+    "end": "2026-09-26",
+    "found_at": "2026-09-18T03:43:31.747554"
+  },
+  {
+    "duid": "TEMPB1",
+    "station": "Templers Battery Energy Storage System",
+    "owner": NaN,
+    "region": "SA1",
+    "delta": 111,
+    "start": "2026-09-22",
+    "end": "2026-09-26",
+    "found_at": "2026-09-18T03:43:31.747554"
+  },
+  {
+    "duid": "TEMPB1",
+    "station": "Templers Battery Energy Storage System",
+    "owner": NaN,
+    "region": "SA1",
+    "delta": 111,
+    "start": "2026-10-02",
+    "end": "2026-10-05",
+    "found_at": "2026-09-18T03:43:31.747554"
+  },
+  {
+    "duid": "TEMPB1",
+    "station": "Templers Battery Energy Storage System",
+    "owner": NaN,
+    "region": "SA1",
+    "delta": 111,
+    "start": "2026-10-10",
+    "end": "2026-10-11",
+    "found_at": "2026-09-18T03:43:31.747554"
+  },
+  {
+    "duid": "TEMPB1",
+    "station": "Templers Battery Energy Storage System",
+    "owner": NaN,
+    "region": "SA1",
+    "delta": 111,
+    "start": "2026-10-17",
+    "end": "2027-01-09",
+    "found_at": "2026-09-18T03:43:31.747554"
+  },
+  {
+    "duid": "TEMPB1",
+    "station": "Templers Battery Energy Storage System",
+    "owner": NaN,
+    "region": "SA1",
+    "delta": 105,
+    "start": "2026-10-01",
+    "end": "2026-10-01",
+    "found_at": "2026-09-18T03:43:31.747554"
+  },
+  {
+    "duid": "TEMPB1",
+    "station": "Templers Battery Energy Storage System",
+    "owner": NaN,
+    "region": "SA1",
+    "delta": 105,
+    "start": "2026-10-06",
+    "end": "2026-10-09",
+    "found_at": "2026-09-18T03:43:31.747554"
+  },
+  {
+    "duid": "TEMPB1",
+    "station": "Templers Battery Energy Storage System",
+    "owner": NaN,
+    "region": "SA1",
+    "delta": 105,
+    "start": "2026-10-12",
+    "end": "2026-10-16",
+    "found_at": "2026-09-18T03:43:31.747554"
   }
 ]
