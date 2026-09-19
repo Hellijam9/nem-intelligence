@@ -2368,5 +2368,15 @@
     "start": "2026-09-26",
     "end": "2026-09-27",
     "found_at": "2026-09-19T02:00:55.813611"
+  },
+  {
+    "duid": "SITHE01",
+    "station": "Smithfield Energy Facility",
+    "owner": "Smithfield Power Generation Pty Ltd",
+    "region": "NSW1",
+    "delta": -101,
+    "start": "2027-01-18",
+    "end": "2027-01-18",
+    "found_at": "2026-09-19T10:29:20.375415"
   }
 ]
