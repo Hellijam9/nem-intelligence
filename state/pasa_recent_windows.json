@@ -2378,5 +2378,25 @@
     "start": "2027-01-18",
     "end": "2027-01-18",
     "found_at": "2026-09-19T10:29:20.375415"
+  },
+  {
+    "duid": "ER03",
+    "station": "Eraring",
+    "owner": "Origin Energy Eraring Pty Ltd",
+    "region": "NSW1",
+    "delta": -700,
+    "start": "2026-10-03",
+    "end": "2026-10-05",
+    "found_at": "2026-09-21T02:01:00.130824"
+  },
+  {
+    "duid": "ER03",
+    "station": "Eraring",
+    "owner": "Origin Energy Eraring Pty Ltd",
+    "region": "NSW1",
+    "delta": -680,
+    "start": "2026-09-27",
+    "end": "2026-10-02",
+    "found_at": "2026-09-21T02:01:00.130824"
   }
 ]
