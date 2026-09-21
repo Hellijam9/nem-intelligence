@@ -2398,5 +2398,45 @@
     "start": "2026-09-27",
     "end": "2026-10-02",
     "found_at": "2026-09-21T02:01:00.130824"
+  },
+  {
+    "duid": "MURRAY",
+    "station": "Murray",
+    "owner": "Snowy Hydro Ltd",
+    "region": "VIC1",
+    "delta": -190,
+    "start": "2026-10-26",
+    "end": "2026-10-28",
+    "found_at": "2026-09-21T11:01:06.537435"
+  },
+  {
+    "duid": "CG1",
+    "station": "Colongra",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": -164,
+    "start": "2026-11-02",
+    "end": "2026-11-21",
+    "found_at": "2026-09-21T11:01:06.537435"
+  },
+  {
+    "duid": "UPPTUMUT",
+    "station": "Upper Tumut",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": -144,
+    "start": "2026-11-30",
+    "end": "2026-12-18",
+    "found_at": "2026-09-21T11:01:06.537435"
+  },
+  {
+    "duid": "UPPTUMUT",
+    "station": "Upper Tumut",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": 144,
+    "start": "2026-10-12",
+    "end": "2026-10-23",
+    "found_at": "2026-09-21T11:01:06.537435"
   }
 ]
