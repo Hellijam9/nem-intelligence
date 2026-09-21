@@ -1638,7 +1638,7 @@ def main() -> None:
     html_page = build_html_page(title, message)
     short_message = f"Full recap ready - tap to open ({len(message.encode('utf-8')):,} bytes)"
 
-    nw.push_ntfy_attachment(
+    delivered = nw.push_ntfy_attachment(
         topic=topic,
         filename=f"recap-{now.strftime('%Y-%m-%d')}.html",
         content=html_page,
@@ -1647,7 +1647,17 @@ def main() -> None:
         tags=["sunrise"],
     )
 
-    nw.write_state(STATE_FILE, {"last_recap_at": now.isoformat()})
+    # Only mark today as "done" if the push actually landed - this used to write
+    # unconditionally, which meant a rejected/failed push (see push_ntfy_attachment's docstring)
+    # still set last_recap_at, so the same-day guard above then blocked the schedule: fallback's
+    # retry a few hours later too - a single failed attempt was silently costing the whole day's
+    # recap, not just that one try. Confirmed live: this workflow's schedule: fallback fires
+    # every single day (not rarely, as originally assumed), so a real retry opportunity existed
+    # and was being thrown away.
+    if delivered:
+        nw.write_state(STATE_FILE, {"last_recap_at": now.isoformat()})
+    else:
+        print("[notification_recap] Push failed - NOT marking today as sent, so a later retry (schedule: fallback) can still succeed.")
 
 
 if __name__ == "__main__":

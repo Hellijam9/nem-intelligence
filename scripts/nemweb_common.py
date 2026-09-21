@@ -482,13 +482,20 @@ NOTIFICATION_LOG_FILE = "notification_log.jsonl"
 NOTIFICATION_LOG_RETENTION_DAYS = 30
 
 
-def _log_notification(topic: str, title: Optional[str], message: str) -> None:
+def _log_notification(topic: str, title: Optional[str], message: str, delivered: bool = True) -> None:
     """
     Appends every ntfy push to a shared log so the morning/weekend recap can
     later answer "what fired since the last recap" - push_ntfy() itself never
     persisted anything before this, so there was nothing for a recap to read.
     Source script is inferred from the caller's filename, not passed in, so
     every existing push_ntfy() call site needed zero changes.
+
+    `delivered` records whether ntfy.sh actually accepted the push (2xx response), not just
+    whether the local script attempted it - added 2026-09-22 after finding this log had no way
+    to distinguish "really sent" from "attempted but rejected", which let a real week-long
+    silent-delivery gap go unnoticed (the log looked identical either way). Still logged either
+    way, deliberately - an entry the recap can see is more useful than a call site that goes
+    quiet on failure, same reasoning push_ntfy's own "never raises" docstring already gives.
     """
     caller = inspect.stack()[2]
     source = Path(caller.filename).stem
@@ -498,6 +505,7 @@ def _log_notification(topic: str, title: Optional[str], message: str) -> None:
         "topic": topic,
         "title": title or "",
         "message": message,
+        "delivered": delivered,
     }
     path = STATE_DIR / NOTIFICATION_LOG_FILE
     cutoff = datetime.now(NEM_TZ) - timedelta(days=NOTIFICATION_LOG_RETENTION_DAYS)
@@ -548,12 +556,17 @@ NTFY_MAX_MESSAGE_BYTES = 3900
 
 
 def push_ntfy(topic: str, message: str, title: Optional[str] = None,
-              priority: Optional[str] = None, tags: Optional[list[str]] = None) -> None:
+              priority: Optional[str] = None, tags: Optional[list[str]] = None) -> bool:
     """
     Push a message to an ntfy topic. Priority: min/low/default/high/urgent.
     Tags are ntfy's emoji-shortcode annotations, e.g. ["warning", "zap"].
     Never raises on failure - an alerting script failing to alert should log
     the problem, not crash the whole cron job.
+
+    Returns whether ntfy.sh actually accepted the push (2xx response) - see
+    push_ntfy_attachment's docstring for why this matters. Existing call sites that ignore the
+    return value keep working unchanged; only callers with their own "did this already happen
+    today" state need to actually check it.
     """
 
     body = message.encode("utf-8")
@@ -578,20 +591,31 @@ def push_ntfy(topic: str, message: str, title: Optional[str] = None,
         headers["Priority"] = priority
     if tags:
         headers["Tags"] = ",".join(tags)
+    delivered = False
     try:
-        requests.post(url, data=body, headers=headers,
-                       timeout=CONFIG["request_timeout_seconds"])
+        resp = requests.post(url, data=body, headers=headers,
+                              timeout=CONFIG["request_timeout_seconds"])
+        # requests does NOT raise for a non-2xx response on its own - only for a genuine
+        # network-level failure (DNS, connection refused, timeout). A rejected push (rate
+        # limit, server error, bad request) was previously falling through here silently,
+        # then still getting logged as "sent" below - confirmed live (2026-09-22) as a real,
+        # system-wide blind spot: notification_recap.py had logged 5 successful-looking pushes
+        # in a week the user only actually received 1 of. raise_for_status() surfaces exactly
+        # that gap from now on.
+        resp.raise_for_status()
+        delivered = True
     except requests.RequestException as exc:
         print(f"[nemweb_common] WARNING: ntfy push to {topic!r} failed: {exc}")
     try:
-        _log_notification(topic, title, message)
+        _log_notification(topic, title, message, delivered=delivered)
     except Exception as exc:
         print(f"[nemweb_common] WARNING: failed to log notification: {exc}")
+    return delivered
 
 
 def push_ntfy_attachment(topic: str, filename: str, content: str, short_message: str,
                           title: Optional[str] = None, priority: Optional[str] = None,
-                          tags: Optional[list[str]] = None) -> None:
+                          tags: Optional[list[str]] = None) -> bool:
     """
     Push a notification whose full content rides as a downloadable file attachment instead of
     the message body - for content too long for ntfy's ~4096-byte body limit (push_ntfy's own
@@ -601,6 +625,12 @@ def push_ntfy_attachment(topic: str, filename: str, content: str, short_message:
     unlike a plain .txt attachment (confirmed to sometimes have no default handler on mobile).
     `short_message` is the actual notification text people see before opening the attachment -
     keep it to a one-line summary.
+
+    Returns whether ntfy.sh actually accepted the push (2xx response) - added 2026-09-22 so a
+    caller with its own "already sent today" state (like notification_recap.py) can avoid
+    marking a failed attempt as done, which was silently costing an entire day's recap when the
+    push failed and the later schedule: fallback trigger then saw "already sent" and skipped
+    the retry it should have gotten.
     """
     url = f"{CONFIG['ntfy_base_url'].rstrip('/')}/{topic}"
     headers = dict(HTTP_HEADERS)
@@ -612,15 +642,22 @@ def push_ntfy_attachment(topic: str, filename: str, content: str, short_message:
         headers["Priority"] = priority
     if tags:
         headers["Tags"] = ",".join(tags)
+    delivered = False
     try:
-        requests.post(url, data=content.encode("utf-8"), headers=headers,
-                       timeout=CONFIG["request_timeout_seconds"])
+        resp = requests.post(url, data=content.encode("utf-8"), headers=headers,
+                              timeout=CONFIG["request_timeout_seconds"])
+        # Same fix as push_ntfy - requests does NOT raise for a non-2xx response on its own,
+        # so a rejected attachment push (rate limit, server error, bad request) was previously
+        # falling through here silently and still getting logged as "sent" below.
+        resp.raise_for_status()
+        delivered = True
     except requests.RequestException as exc:
         print(f"[nemweb_common] WARNING: ntfy attachment push to {topic!r} failed: {exc}")
     try:
-        _log_notification(topic, title, short_message)
+        _log_notification(topic, title, short_message, delivered=delivered)
     except Exception as exc:
         print(f"[nemweb_common] WARNING: failed to log notification: {exc}")
+    return delivered
 
 
 # ---------------------------------------------------------------------------
