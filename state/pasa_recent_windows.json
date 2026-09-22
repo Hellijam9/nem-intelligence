@@ -2468,5 +2468,125 @@
     "start": "2026-11-23",
     "end": "2026-12-17",
     "found_at": "2026-09-22T08:01:07.405115"
+  },
+  {
+    "duid": "TUMUT3",
+    "station": "Tumut3",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": -600,
+    "start": "2026-11-13",
+    "end": "2026-11-13",
+    "found_at": "2026-09-22T11:01:07.888175"
+  },
+  {
+    "duid": "TUMUT3",
+    "station": "Tumut3",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": 600,
+    "start": "2027-07-23",
+    "end": "2027-07-23",
+    "found_at": "2026-09-22T11:01:07.888175"
+  },
+  {
+    "duid": "MURRAY",
+    "station": "Murray",
+    "owner": "Snowy Hydro Ltd",
+    "region": "VIC1",
+    "delta": 380,
+    "start": "2027-11-01",
+    "end": "2027-11-15",
+    "found_at": "2026-09-22T11:01:07.888175"
+  },
+  {
+    "duid": "TUMUT3",
+    "station": "Tumut3",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": 300,
+    "start": "2027-03-08",
+    "end": "2027-03-15",
+    "found_at": "2026-09-22T11:01:07.888175"
+  },
+  {
+    "duid": "TUMUT3",
+    "station": "Tumut3",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": 300,
+    "start": "2027-07-12",
+    "end": "2027-07-22",
+    "found_at": "2026-09-22T11:01:07.888175"
+  },
+  {
+    "duid": "TUMUT3",
+    "station": "Tumut3",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": 300,
+    "start": "2027-10-11",
+    "end": "2027-10-18",
+    "found_at": "2026-09-22T11:01:07.888175"
+  },
+  {
+    "duid": "MURRAY",
+    "station": "Murray",
+    "owner": "Snowy Hydro Ltd",
+    "region": "VIC1",
+    "delta": 285,
+    "start": "2027-11-22",
+    "end": "2027-12-06",
+    "found_at": "2026-09-22T11:01:07.888175"
+  },
+  {
+    "duid": "TVCC201",
+    "station": "Tamar Valley Combined Cycle",
+    "owner": "AETV Pty Ltd",
+    "region": "TAS1",
+    "delta": -208,
+    "start": "2026-09-27",
+    "end": "2026-09-28",
+    "found_at": "2026-09-22T11:01:07.888175"
+  },
+  {
+    "duid": "UPPTUMUT",
+    "station": "Upper Tumut",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": 184,
+    "start": "2028-10-16",
+    "end": "2028-10-27",
+    "found_at": "2026-09-22T11:01:07.888175"
+  },
+  {
+    "duid": "MURRAY",
+    "station": "Murray",
+    "owner": "Snowy Hydro Ltd",
+    "region": "VIC1",
+    "delta": 155,
+    "start": "2027-08-30",
+    "end": "2027-09-13",
+    "found_at": "2026-09-22T11:01:07.888175"
+  },
+  {
+    "duid": "UPPTUMUT",
+    "station": "Upper Tumut",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": 147,
+    "start": "2028-04-17",
+    "end": "2028-04-28",
+    "found_at": "2026-09-22T11:01:07.888175"
+  },
+  {
+    "duid": "UPPTUMUT",
+    "station": "Upper Tumut",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": 143,
+    "start": "2027-11-15",
+    "end": "2027-11-26",
+    "found_at": "2026-09-22T11:01:07.888175"
   }
 ]
