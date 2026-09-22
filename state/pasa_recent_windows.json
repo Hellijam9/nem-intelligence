@@ -2438,5 +2438,15 @@
     "start": "2026-10-12",
     "end": "2026-10-23",
     "found_at": "2026-09-21T11:01:06.537435"
+  },
+  {
+    "duid": "BRAEMAR5",
+    "station": "Braemar 2 Power",
+    "owner": "NewGen Braemar 2 Partnership comprising Arrow Braemar 2 Pty Ltd and Arrow Southern Generation Pty Ltd",
+    "region": "QLD1",
+    "delta": -173,
+    "start": "2026-09-27",
+    "end": "2026-10-16",
+    "found_at": "2026-09-22T02:01:06.655618"
   }
 ]
