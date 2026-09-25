@@ -2688,5 +2688,15 @@
     "start": "2026-09-30",
     "end": "2026-10-04",
     "found_at": "2026-09-24T11:00:57.305161"
+  },
+  {
+    "duid": "QPS5",
+    "station": "Quarantine",
+    "owner": "Origin Energy Power Limited",
+    "region": "SA1",
+    "delta": -125,
+    "start": "2026-09-27",
+    "end": "2026-09-29",
+    "found_at": "2026-09-25T02:01:03.563486"
   }
 ]
