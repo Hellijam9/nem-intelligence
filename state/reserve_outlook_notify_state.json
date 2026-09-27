@@ -1,136 +1,132 @@
 {
   "values": {
     "NSW1": {
-      "2026-09-28": [
-        2435.0,
-        0
-      ],
       "2026-09-29": [
-        2346.0,
+        2263.0,
         0
       ],
       "2026-09-30": [
-        2307.0,
+        2226.0,
         0
       ],
       "2026-10-01": [
-        3426.0,
+        3406.0,
         0
       ],
       "2026-10-02": [
-        3722.0,
+        3724.0,
         0
       ],
       "2026-10-03": [
-        3875.0,
+        3917.0,
         0
       ],
       "2026-10-04": [
-        4044.0,
+        4056.0,
+        0
+      ],
+      "2026-10-05": [
+        4195.0,
         0
       ]
     },
     "QLD1": {
-      "2026-09-28": [
-        2419.0,
-        0
-      ],
       "2026-09-29": [
-        2157.0,
+        2320.0,
         0
       ],
       "2026-09-30": [
-        2203.0,
+        2139.0,
         0
       ],
       "2026-10-01": [
-        2221.0,
+        2172.0,
         0
       ],
       "2026-10-02": [
-        2238.0,
+        2210.0,
         0
       ],
       "2026-10-03": [
-        2361.0,
+        2334.0,
         0
       ],
       "2026-10-04": [
-        2662.0,
+        2559.0,
+        0
+      ],
+      "2026-10-05": [
+        2743.0,
         0
       ]
     },
     "VIC1": {
-      "2026-09-28": [
-        3669.0,
-        0
-      ],
       "2026-09-29": [
-        4224.0,
+        4082.0,
         0
       ],
       "2026-09-30": [
-        3294.0,
+        4159.0,
         0
       ],
       "2026-10-01": [
-        2949.0,
+        2736.0,
         0
       ],
       "2026-10-02": [
-        3431.0,
+        2666.0,
         0
       ],
       "2026-10-03": [
-        3387.0,
+        3615.0,
         0
       ],
       "2026-10-04": [
-        3693.0,
+        3985.0,
+        0
+      ],
+      "2026-10-05": [
+        4148.0,
         0
       ]
     },
     "SA1": {
-      "2026-09-28": [
-        1015.0,
-        0
-      ],
       "2026-09-29": [
-        990.0,
+        1056.0,
         0
       ],
       "2026-09-30": [
-        582.0,
+        812.0,
         0
       ],
       "2026-10-01": [
-        710.0,
+        960.0,
         0
       ],
       "2026-10-02": [
-        878.0,
+        906.0,
         0
       ],
       "2026-10-03": [
-        788.0,
+        813.0,
         0
       ],
       "2026-10-04": [
-        1321.0,
+        890.0,
+        0
+      ],
+      "2026-10-05": [
+        1333.0,
         0
       ]
     },
     "TAS1": {
-      "2026-09-28": [
-        835.0,
-        0
-      ],
       "2026-09-29": [
-        1057.0,
+        1175.0,
         0
       ],
       "2026-09-30": [
-        1203.0,
+        1212.0,
         0
       ],
       "2026-10-01": [
@@ -138,18 +134,22 @@
         0
       ],
       "2026-10-02": [
-        1159.0,
+        1098.0,
         0
       ],
       "2026-10-03": [
-        1193.0,
+        1173.0,
         0
       ],
       "2026-10-04": [
-        1438.0,
+        1190.0,
+        0
+      ],
+      "2026-10-05": [
+        1613.0,
         0
       ]
     },
-    "_interconnector_reductions": "\nInterconnector capacity outlook (next ~7 days, vs today's own forecast):\n  N-Q-MNSP1 export: 2026-09-30 - 58MW -> 0MW (100% down)\n  N-Q-MNSP1 export: 2026-10-02 - 58MW -> 0MW (100% down)\n  N-Q-MNSP1 export: 2026-10-03 - 58MW -> 0MW (100% down)\n  N-Q-MNSP1 export: 2026-10-04 - 58MW -> 21MW (64% down)\n  NSW1-QLD1 export: 2026-09-30 - 137MW -> 0MW (100% down)\n  NSW1-QLD1 import: 2026-10-01 - 562MW -> 214MW (62% down)\n  T-V-MNSP1 export: 2026-09-29 - 205MW -> 102MW (50% down)\n  T-V-MNSP1 export: 2026-09-30 - 205MW -> 50MW (76% down)\n  T-V-MNSP1 export: 2026-10-01 - 205MW -> 23MW (89% down)\n  T-V-MNSP1 export: 2026-10-02 - 205MW -> 0MW (100% down)\n  T-V-MNSP1 export: 2026-10-03 - 205MW -> 142MW (31% down)\n  V-SA export: 2026-09-29 - 77MW -> 21MW (72% down)\n  V-SA export: 2026-09-30 - 77MW -> 5MW (94% down)\n  V-SA export: 2026-10-01 - 77MW -> 0MW (100% down)\n  V-SA export: 2026-10-02 - 77MW -> 0MW (100% down)\n  V-SA export: 2026-10-03 - 77MW -> 0MW (100% down)\n  V-SA export: 2026-10-04 - 77MW -> 0MW (100% down)\n  VIC1-NSW1 export: 2026-09-29 - 82MW -> 40MW (51% down)\n  VIC1-NSW1 import: 2026-09-29 - 271MW -> 148MW (45% down)\n  VIC1-NSW1 export: 2026-09-30 - 82MW -> 0MW (100% down)\n  VIC1-NSW1 import: 2026-09-30 - 271MW -> 165MW (39% down)\n  VIC1-NSW1 export: 2026-10-01 - 82MW -> 0MW (100% down)\n  VIC1-NSW1 import: 2026-10-01 - 271MW -> 0MW (100% down)\n  VIC1-NSW1 export: 2026-10-02 - 82MW -> 0MW (100% down)\n  VIC1-NSW1 import: 2026-10-02 - 271MW -> 0MW (100% down)\n  VIC1-NSW1 export: 2026-10-03 - 82MW -> 0MW (100% down)\n  VIC1-NSW1 import: 2026-10-03 - 271MW -> 0MW (100% down)\n  VIC1-NSW1 export: 2026-10-04 - 82MW -> 0MW (100% down)\n  VIC1-NSW1 import: 2026-10-04 - 271MW -> 0MW (100% down)"
+    "_interconnector_reductions": "\nInterconnector capacity outlook (next ~7 days, vs today's own forecast):\n  N-Q-MNSP1 export: 2026-09-30 - 63MW -> 8MW (87% down)\n  N-Q-MNSP1 export: 2026-10-02 - 63MW -> 0MW (100% down)\n  N-Q-MNSP1 export: 2026-10-03 - 63MW -> 4MW (93% down)\n  N-Q-MNSP1 export: 2026-10-04 - 63MW -> 1MW (98% down)\n  N-Q-MNSP1 export: 2026-10-05 - 63MW -> 1MW (98% down)\n  NSW1-QLD1 export: 2026-09-30 - 391MW -> 0MW (100% down)\n  NSW1-QLD1 import: 2026-09-30 - 787MW -> 500MW (36% down)\n  NSW1-QLD1 import: 2026-10-01 - 787MW -> 180MW (77% down)\n  NSW1-QLD1 export: 2026-10-02 - 391MW -> 0MW (100% down)\n  NSW1-QLD1 import: 2026-10-03 - 787MW -> 366MW (53% down)\n  NSW1-QLD1 export: 2026-10-04 - 391MW -> 38MW (90% down)\n  NSW1-QLD1 import: 2026-10-04 - 787MW -> 15MW (98% down)\n  NSW1-QLD1 import: 2026-10-05 - 787MW -> 282MW (64% down)\n  T-V-MNSP1 export: 2026-09-30 - 64MW -> 0MW (100% down)\n  VIC1-NSW1 import: 2026-10-01 - 102MW -> 0MW (100% down)\n  VIC1-NSW1 import: 2026-10-02 - 102MW -> 0MW (100% down)\n  VIC1-NSW1 import: 2026-10-03 - 102MW -> 0MW (100% down)\n  VIC1-NSW1 import: 2026-10-04 - 102MW -> 0MW (100% down)\n  VIC1-NSW1 import: 2026-10-05 - 102MW -> 0MW (100% down)"
   }
 }
