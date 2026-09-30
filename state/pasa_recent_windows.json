@@ -2828,5 +2828,15 @@
     "start": "2026-10-04",
     "end": "2026-10-09",
     "found_at": "2026-09-30T02:01:05.610788"
+  },
+  {
+    "duid": "TIB1",
+    "station": "Torrens Island BESS",
+    "owner": "TIPSCO",
+    "region": "SA1",
+    "delta": -250,
+    "start": "2026-10-12",
+    "end": "2026-10-12",
+    "found_at": "2026-09-30T04:33:21.722021"
   }
 ]
