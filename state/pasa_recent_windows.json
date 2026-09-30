@@ -2868,5 +2868,25 @@
     "start": "2026-10-04",
     "end": "2026-10-04",
     "found_at": "2026-09-30T08:01:06.998857"
+  },
+  {
+    "duid": "VBB1",
+    "station": "Victorian Big Battery",
+    "owner": "Victorian Big Battery Pty Ltd",
+    "region": "VIC1",
+    "delta": 190,
+    "start": "2026-10-04",
+    "end": "2026-10-31",
+    "found_at": "2026-09-30T11:01:08.574783"
+  },
+  {
+    "duid": "WOOLES1",
+    "station": "",
+    "owner": "",
+    "region": "QLD1",
+    "delta": -125,
+    "start": "2026-10-04",
+    "end": "2026-10-11",
+    "found_at": "2026-09-30T11:01:08.574783"
   }
 ]
