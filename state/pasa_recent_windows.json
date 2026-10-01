@@ -2918,5 +2918,35 @@
     "start": "2027-09-02",
     "end": "2027-10-01",
     "found_at": "2026-10-01T08:01:12.435035"
+  },
+  {
+    "duid": "W/HOE#2",
+    "station": "Wivenhoe",
+    "owner": "CleanCo Queensland Limited",
+    "region": "QLD1",
+    "delta": -285,
+    "start": "2026-11-17",
+    "end": "2026-11-19",
+    "found_at": "2026-10-01T11:01:16.370995"
+  },
+  {
+    "duid": "W/HOE#2",
+    "station": "Wivenhoe",
+    "owner": "CleanCo Queensland Limited",
+    "region": "QLD1",
+    "delta": 285,
+    "start": "2026-11-03",
+    "end": "2026-11-05",
+    "found_at": "2026-10-01T11:01:16.370995"
+  },
+  {
+    "duid": "TARBESS1",
+    "station": "Tarong BESS",
+    "owner": "Stanwell Corporation Limited",
+    "region": "QLD1",
+    "delta": -150,
+    "start": "2026-10-04",
+    "end": "2026-10-07",
+    "found_at": "2026-10-01T11:01:16.370995"
   }
 ]
