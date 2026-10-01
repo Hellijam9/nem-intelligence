@@ -2888,5 +2888,35 @@
     "start": "2026-10-04",
     "end": "2026-10-11",
     "found_at": "2026-09-30T11:01:08.574783"
+  },
+  {
+    "duid": "BRAEMAR3",
+    "station": "Braemar Power",
+    "owner": "Braemar Power Project Pty Ltd",
+    "region": "QLD1",
+    "delta": 181,
+    "start": "2029-09-30",
+    "end": "2029-09-30",
+    "found_at": "2026-10-01T08:01:12.435035"
+  },
+  {
+    "duid": "WTAHB1",
+    "station": "Waratah Super Battery",
+    "owner": "Munmorah Battery ProjectCo Pty Ltd",
+    "region": "NSW1",
+    "delta": -150,
+    "start": "2026-10-12",
+    "end": "2026-10-16",
+    "found_at": "2026-10-01T08:01:12.435035"
+  },
+  {
+    "duid": "TUNGATIN",
+    "station": "Tungatinah",
+    "owner": "Hydro-Electric Corporation",
+    "region": "TAS1",
+    "delta": -109,
+    "start": "2027-09-02",
+    "end": "2027-10-01",
+    "found_at": "2026-10-01T08:01:12.435035"
   }
 ]
