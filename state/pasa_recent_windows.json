@@ -2978,5 +2978,25 @@
     "start": "2026-10-04",
     "end": "2026-10-12",
     "found_at": "2026-10-03T11:01:02.465025"
+  },
+  {
+    "duid": "LOYYB1",
+    "station": "Loy Yang B",
+    "owner": "Gippsland Power Pty Ltd / LYB Ventures Australia Pty Ltd / Traralgon Power Pty Ltd / Latrobe Power Pty Ltd / LYB Australia Limited",
+    "region": "VIC1",
+    "delta": -580,
+    "start": "2029-10-07",
+    "end": "2029-10-07",
+    "found_at": "2026-10-05T07:01:06.645021"
+  },
+  {
+    "duid": "DARTM1",
+    "station": "Dartmouth",
+    "owner": "AGL Hydro Partnership",
+    "region": "VIC1",
+    "delta": 140,
+    "start": "2027-05-10",
+    "end": "2027-05-27",
+    "found_at": "2026-10-05T07:01:06.645021"
   }
 ]
