@@ -60,6 +60,7 @@ the rollup.
 from __future__ import annotations
 
 import html
+import json
 import re
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
@@ -1503,6 +1504,43 @@ def format_qed_commentary(now: datetime, by_source: dict[str, list[dict]]) -> li
     return lines
 
 
+def format_bidstack_section(now: datetime) -> list[str]:
+    """
+    Bid stack read from bid_stack_analysis.py (runs ~05:30 NEM, before this recap). Reads its
+    saved dashboard data rather than replaying the notification log, so it's the full ranked
+    list for yesterday's trading day: regional headroom at the evening peak plus the top reads
+    (aggressive pricing vs each portfolio's own norm, pivotal portfolios, forward look).
+    """
+    lines = ["\nBid stack:"]
+    state = nw.read_state("bidstack_state.json", default=None) or {}
+    day = state.get("last_trading_day")
+    expected = (now.replace(tzinfo=None) - timedelta(days=1)).strftime("%Y-%m-%d")
+    path = nw.PROJECT_ROOT / "docs" / "bidstack" / "data" / f"{day}.json"
+    if not day or not path.exists():
+        return lines + ["  not available yet."]
+    try:
+        data = json.loads(path.read_text())
+    except (OSError, json.JSONDecodeError):
+        return lines + ["  not available yet."]
+    stale = "" if day == expected else f" - latest available, {expected} not processed yet"
+    lines[0] = f"\nBid stack (trading day {day}, evening peak {data.get('peak_window', '')} NEM{stale}):"
+    heads = []
+    for region, r in data.get("regions", {}).items():
+        if r.get("cheap_headroom") is not None:
+            heads.append(f"{region.rstrip('1')} {r['cheap_headroom']:,}MW")
+    if heads:
+        lines.append("  Sub-$300 headroom at peak: " + ", ".join(heads))
+    reads = sorted(data.get("reads", []), key=lambda x: (-x.get("level", 0), not x.get("forward", False)))[:5]
+    if reads:
+        lines.extend(f"  - {'[ahead] ' if x.get('forward') else ''}{x['text']}" for x in reads)
+    else:
+        lines.append("  Nothing stood out - no unusual pricing or pivotal portfolios.")
+    url = nw.CONFIG.get("bidstack_dashboard_url")
+    if url:
+        lines.append(f"  Dashboard: {url}")
+    return lines
+
+
 def build_recap(now: datetime, log_entries: list[dict]) -> str:
     since = overnight_window(now)
     is_monday = now.weekday() == 0
@@ -1548,6 +1586,7 @@ def build_recap(now: datetime, log_entries: list[dict]) -> str:
     if not overnight_had_content:
         lines.append("\nQuiet - no other alerts overnight.")
     lines.extend(format_network_outage_changes_overnight(now))
+    lines.extend(format_bidstack_section(now))
 
     lines.append("\n\n=== DAY AHEAD - what's coming ===")
     lines.extend(format_price_outlook_section(now))
