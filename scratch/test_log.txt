@@ -1,0 +1,42 @@
+[bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20261005_0000000541385589.zip
+[bid_stack] bids: 478 DUIDs with energy price bands, 137424 per-interval volume rows
+[bid_stack] dispatch: 164496 unit-interval rows
+[bid_stack] NOTE: 79 DUIDs have no region in registry/ and were excluded: ['BRDDBES1', 'BRDDSF01', 'BRNDBES1', 'BUNGAMB1', 'BUSF1', 'CGBESS01', 'CRWARP1', 'DG_NSW1', 'DG_QLD1', 'DG_SA1', 'DG_TAS1', 'DG_VIC1']
+[bid_stack] stack: 112253 unit-interval-band rows from 137424 unit-intervals
+[bid_stack] interconnector limits: 42 peak intervals
+[bid_stack] dashboard written: /home/runner/work/nem-intelligence/nem-intelligence/docs/bidstack/index.html
+Bid stack 2026-10-05 (evening 17:00-20:30 NEM)
+NSW: peak 18:25 | sub-$300 headroom 1,475MW | most $300+: Snowy Hydro 2,485MW
+QLD: peak 18:15 | sub-$300 headroom 1,029MW | most $300+: Origin Energy 455MW
+VIC: peak 19:05 | sub-$300 headroom 1,988MW | most $300+: Snowy Hydro 1,286MW
+SA: peak 19:30 | sub-$300 headroom 781MW | most $300+: Origin Energy 290MW
+TAS: peak 19:20 | sub-$300 headroom 629MW | most $300+: Hydro Tas 194MW
+
+- TAS: Hydro Tas was pivotal in 42/42 evening intervals (demand couldn't be met without it, up to 798MW short) - it had 194MW offered at $300+.
+- QLD Wed 07 Oct 18:30: Stanwell Corp would be pivotal at forecast demand 7,628MW if offers match yesterday's (predispatch $131).
+- TAS Wed 07 Oct 19:00: Hydro Tas would be pivotal at forecast demand 1,268MW if offers match yesterday's (predispatch $124).
+- QLD: Stanwell Corp was pivotal in 18/42 evening intervals (demand couldn't be met without it, up to 240MW short) - it had 122MW offered at $300+.
+- NSW: Snowy Hydro had 1,972MW sitting at $5,000+ through the evening (78% of its dispatchable capacity at $300+).
+	Command being timed: "python scripts/bid_stack_analysis.py --force --no-push"
+	User time (seconds): 8.22
+	System time (seconds): 0.19
+	Percent of CPU this job got: 34%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:24.72
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 295352
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 13
+	Minor (reclaiming a frame) page faults: 62649
+	Voluntary context switches: 3123
+	Involuntary context switches: 372
+	Swaps: 0
+	File system inputs: 4992
+	File system outputs: 816
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
