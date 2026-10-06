@@ -90,6 +90,10 @@ jobs:
 
       - run: python scripts/notification_recap.py
 
+      # Bid stack dashboard as its own push, same time as the recap (bid_stack_analysis.py
+      # itself runs ~05:30 NEM and only builds the page). Never blocks the recap commit.
+      - run: python scripts/bid_stack_analysis.py --push-only || true
+
       - name: Commit and push state changes
         run: |
           git config user.name "github-actions[bot]"

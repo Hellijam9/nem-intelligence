@@ -1,6 +1,6 @@
 name: Bid stack analysis
 
-# Next-morning bid stack read: who priced aggressively yesterday, supply cushion, pivotal
+# Next-morning bid stack read (the push to phone happens with the 7:30 recap, see recap.yml): who priced aggressively yesterday, supply cushion, pivotal
 # portfolios, and a forward look at the next evening peaks. See scripts/bid_stack_analysis.py.
 #
 # Triggers mirror daily-morning.yml: the external cron-job.org "tick-daily" ping (05:30 NEM)

@@ -944,7 +944,50 @@ def ntfy_summary(result: dict) -> str:
     return "\n".join(lines)
 
 
+def bidstack_topic() -> str | None:
+    """Own ntfy topic. Uses ntfy_topics.bidstack if the NTFY_TOPICS_JSON secret has it; otherwise
+    derives one from the recap topic's private suffix (nem-recap-XXXX -> nem-bidstack-XXXX), so
+    the real topic string never has to be committed to this public repo."""
+    topics = nw.CONFIG.get("ntfy_topics", {})
+    if topics.get("bidstack"):
+        return topics["bidstack"]
+    recap = topics.get("recap") or ""
+    if "recap" in recap and not recap.startswith("CHANGE_ME"):
+        return recap.replace("recap", "bidstack", 1)
+    return None
+
+
+def push_latest() -> None:
+    """Push the latest processed day's dashboard as an .html attachment, once per trading day."""
+    state = nw.read_state(STATE_FILE, default={}) or {}
+    day = state.get("last_trading_day")
+    page = DOCS_DIR / "index.html"
+    data_path = DOCS_DIR / "data" / f"{day}.json"
+    if not day or not page.exists() or not data_path.exists():
+        log("nothing processed yet - no push")
+        return
+    if state.get("last_pushed_day") == day:
+        log(f"{day} already pushed - skipping")
+        return
+    topic = bidstack_topic()
+    if not topic:
+        log("no bid stack ntfy topic configured - skipping push")
+        return
+    data = json.loads(data_path.read_text())
+    ranked = sorted(data.get("reads", []), key=lambda x: -x.get("level", 0))
+    headline = ranked[0]["text"] if ranked else "No standout bidding moves."
+    ok = nw.push_ntfy_attachment(topic, f"bidstack-{day}.html", page.read_text(),
+                                 short_message=f"Tap to open. {headline}"[:300].replace("\n", " "),
+                                 title=f"Bid stack - {day}", tags=["bar_chart"])
+    if ok:
+        state["last_pushed_day"] = day
+        nw.write_state(STATE_FILE, state)
+
+
 def main() -> None:
+    if "--push-only" in sys.argv:
+        push_latest()
+        return
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     force = "--force" in sys.argv
     no_push = "--no-push" in sys.argv
@@ -994,24 +1037,12 @@ def main() -> None:
     hist.to_csv(HISTORY_FILE, index=False)
     log(f"dashboard written: {out}")
 
-    summary = ntfy_summary(result)
-    print(summary)
-    if not no_push:
-        topics = nw.CONFIG.get("ntfy_topics", {})
-        topic = topics.get("bidstack") or topics.get("market_read")
-        url = nw.CONFIG.get("bidstack_dashboard_url")
-        if topic:
-            # The dashboard rides along as an .html attachment (same pattern as the morning recap),
-            # so it opens on the phone straight from the notification, Pages or not.
-            ranked = sorted(result["reads"], key=lambda x: -x["level"])
-            headline = ranked[0]["text"] if ranked else "No standout bidding moves."
-            ok = nw.push_ntfy_attachment(topic, f"bidstack-{day_iso}.html", out.read_text(),
-                                         short_message=f"Tap to open the dashboard. {headline}"[:300].replace("\n", " "),
-                                         title=f"Bid stack - {day_iso}", tags=["bar_chart"])
-            if not ok:
-                nw.push_ntfy(topic, summary + (f"\n\n{url}" if url else ""),
-                             title=f"Bid stack - {day_iso}", tags=["bar_chart"])
-    nw.write_state(STATE_FILE, {"last_trading_day": day_iso, "generated": result["generated"]})
+    print(ntfy_summary(result))
+    # No push here: the dashboard is pushed alongside the morning recap (--push-only, run from
+    # recap.yml) to its own ntfy topic.
+    prev = state.get("last_pushed_day")
+    nw.write_state(STATE_FILE, {"last_trading_day": day_iso, "generated": result["generated"],
+                                **({"last_pushed_day": prev} if prev else {})})
 
 
 if __name__ == "__main__":

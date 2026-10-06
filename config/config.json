@@ -21,7 +21,7 @@
     "recap": "CHANGE_ME-recap",
     "weather": "CHANGE_ME-weather"
   },
-  "_bidstack_note": "bid_stack_analysis.py pushes to ntfy_topics.bidstack if the NTFY_TOPICS_JSON secret has that key, otherwise to market_read. The dashboard URL is appended to the push.",
+  "_bidstack_note": "bid_stack_analysis.py --push-only (run by recap.yml at 7:30) pushes the dashboard to ntfy_topics.bidstack if the NTFY_TOPICS_JSON secret has that key, otherwise to the recap topic's name with 'recap' swapped for 'bidstack' (same private suffix).",
   "bidstack_dashboard_url": "https://hellijam9.github.io/nem-intelligence/bidstack/",
   "_customer_note": "customer_watch_all=true watches every DUID in the registry (all companies, all fuel types) rather than one portfolio - no fuel filter, so wind/solar noise is expected at this threshold. Set it back to false and use customer_portfolios (owner-name substrings, e.g. 'Origin Energy') if you want one specific company's assets instead.",
   "customer_watch_all": true,
