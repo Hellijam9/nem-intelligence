@@ -1,0 +1,121 @@
+[bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20261006_0000000541557678.zip
+[bid_stack] bids: 478 DUIDs with energy price bands, 137664 per-interval volume rows
+[bid_stack] dispatch: 164736 unit-interval rows
+[bid_stack] NOTE: 1 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): UWF1
+[bid_stack] stack: 127257 unit-interval-band rows from 137664 unit-intervals
+[bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20261005_0000000541385589.zip
+[bid_stack] bids: 478 DUIDs with energy price bands, 137424 per-interval volume rows
+[bid_stack] dispatch: 164496 unit-interval rows
+[bid_stack] stack: 120017 unit-interval-band rows from 137424 unit-intervals
+base 20261005 ok
+[bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20261004_0000000541215950.zip
+[bid_stack] bids: 477 DUIDs with energy price bands, 137376 per-interval volume rows
+[bid_stack] dispatch: 164448 unit-interval rows
+[bid_stack] stack: 124835 unit-interval-band rows from 137376 unit-intervals
+base 20261004 ok
+[bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20261003_0000000541054592.zip
+[bid_stack] bids: 477 DUIDs with energy price bands, 137376 per-interval volume rows
+[bid_stack] dispatch: 164448 unit-interval rows
+[bid_stack] stack: 131523 unit-interval-band rows from 137376 unit-intervals
+base 20261003 ok
+[bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20261002_0000000540875768.zip
+[bid_stack] bids: 477 DUIDs with energy price bands, 137376 per-interval volume rows
+[bid_stack] dispatch: 164448 unit-interval rows
+[bid_stack] stack: 130280 unit-interval-band rows from 137376 unit-intervals
+base 20261002 ok
+[bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20261001_0000000540695909.zip
+[bid_stack] bids: 477 DUIDs with energy price bands, 137376 per-interval volume rows
+[bid_stack] dispatch: 164448 unit-interval rows
+[bid_stack] stack: 126415 unit-interval-band rows from 137376 unit-intervals
+base 20261001 ok
+[bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20260930_0000000540513461.zip
+[bid_stack] bids: 477 DUIDs with energy price bands, 137376 per-interval volume rows
+[bid_stack] dispatch: 164448 unit-interval rows
+[bid_stack] stack: 127523 unit-interval-band rows from 137376 unit-intervals
+base 20260930 ok
+[bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20260929_0000000540337221.zip
+[bid_stack] bids: 477 DUIDs with energy price bands, 137376 per-interval volume rows
+[bid_stack] dispatch: 164448 unit-interval rows
+[bid_stack] stack: 124677 unit-interval-band rows from 137376 unit-intervals
+base 20260929 ok
+
+==== OVERNIGHT 21:00 6 Oct -> 04:00 7 Oct NEM ====
+
+## NSW1: RRP avg 115 (7-night avg 113), min 105, max 121; demand 6290-7775; local dispatchable gen avg 5855; net interchange avg -1116 (+ = export)
+   offered by band (avg MW): <$0 3,438, $0-50 184, $50-150 2,776, $150-300 1,177, $300-1k 132, $1k-5k 0, $5k+ 3,093 | wind+solar avail 767
+   Snowy Hydro                  Gas/Hydro/Liquid fuel  avail  3,129   (+91) | <$0     11   (-57) | <$100    427    (-7) | $300+  2,185   (+72) | $5k+  2,146   (+92)
+   Origin Energy                Battery/Black Coal/Gas avail  2,099  (+154) | <$0    844  (+232) | <$100  1,256  (+134) | $300+    406  (-247) | $5k+    406  (-247)
+   AGL                          Battery/Black Coal     avail  1,370  (-569) | <$0    660  (-288) | <$100  1,370  (-470) | $300+      0   (-38) | $5k+      0   (-38)
+   Energy Australia             Battery/Black Coal/Gas avail  1,362  (+235) | <$0    554   (+54) | <$100    962  (+150) | $300+    315   (+41) | $5k+    315   (+41)
+   Delta Electricity            Black Coal             avail  1,260   (-46) | <$0    580   (-44) | <$100    900   (-39) | $300+     89   (-21) | $5k+     89   (-21)
+   Akaysha                      Battery                avail    397    (-1) | <$0      0    (+0) | <$100      9   (-13) | $300+      1   (-20) | $5k+      1   (-20)
+   NEOEN                        Battery                avail     96   (+27) | <$0      0    (+0) | <$100      2    (-2) | $300+     93   (+30) | $5k+      0    (-0)
+   Orana ProjectCo              Battery                avail     76  (-217) | <$0      0    (+0) | <$100      3   (-21) | $300+      0    (-4) | $5k+      0    (-4)
+   Smithfield BESS              Battery                avail     65   (+21) | <$0      0    (+0) | <$100      0    (-2) | $300+     65   (+35) | $5k+     65   (+35)
+   AGL Liddell BESS             Battery                avail     57  (-173) | <$0      0    (+0) | <$100     20   (-26) | $300+     26  (-110) | $5k+     26  (-110)
+   Limondale Battery            Battery                avail     50    (+0) | <$0      0    (-2) | <$100     15    (+3) | $300+      0    (-2) | $5k+      0    (-0)
+   local-stack marginal (where it matched spot, 79/84 intervals): Delta Electricity Black Coal 38; Origin Energy Battery 12; Snowy Hydro Hydro 12; Energy Australia Battery 7; Origin Energy Black Coal 3
+      prior-7 avg per night: Delta Electricity Black Coal 26; AGL Black Coal 9; Origin Energy Black Coal 7; Snowy Hydro Hydro 6; Energy Australia Black Coal 4
+      top marginal units: VP6 x23 @$119; VP5 x15 @$119; ERB01 x12 @$110; UPPTUMUT x12 @$119; DPNTB1 x7 @$114
+
+## QLD1: RRP avg 108 (7-night avg 95), min 102, max 116; demand 5515-7163; local dispatchable gen avg 6552; net interchange avg 461 (+ = export)
+   offered by band (avg MW): <$0 5,312, $0-50 0, $50-150 1,825, $150-300 533, $300-1k 1,330, $1k-5k 0, $5k+ 1,025 | wind+solar avail 408
+   Stanwell Corp                Battery/Black Coal     avail  2,530   (-92) | <$0  1,779  (-377) | <$100  2,395   (-15) | $300+     18   (-43) | $5k+     18   (-43)
+   CS Energy                    Battery/Black Coal     avail  2,165   (+84) | <$0  1,526   (+37) | <$100  1,859   (+65) | $300+    111   (-55) | $5k+    111   (-55)
+   Callide Power Trading        Black Coal             avail    844    (+0) | <$0    842   (+80) | <$100    842    (+6) | $300+      2    (-6) | $5k+      2    (-6)
+   CleanCo                      Battery/Gas/Hydro      avail    818  (+383) | <$0    227   (+49) | <$100    389  (+160) | $300+    200  (+147) | $5k+      0    (+0)
+   Supernode Operations         Battery                avail    513  (+331) | <$0      0    (+0) | <$100     30    (-9) | $300+    396  (+285) | $5k+      3   (-31)
+   NEOEN                        Battery                avail    505  (+124) | <$0      0    (+0) | <$100      0    (-8) | $300+    505  (+135) | $5k+    250  (+102)
+   Origin Energy                Gas/Liquid fuel        avail    461   (-10) | <$0      0    (-6) | <$100      0    (-8) | $300+    461    (-3) | $5k+    461    (-3)
+   InterGen                     Black Coal             avail    435    (+0) | <$0    435    (+0) | <$100    435    (+0) | $300+      0    (+0) | $5k+      0    (+0)
+   Alinta Energy                Gas                    avail    357   (-61) | <$0      0    (+0) | <$100      0    (+0) | $300+    333   (-69) | $5k+     12  (-103)
+   Arrow Energy                 Gas                    avail    321    (+0) | <$0      0    (+0) | <$100      0    (+0) | $300+    321    (+0) | $5k+    159    (+0)
+   Brendale Battery ProjectCo   Battery                avail    205   (+14) | <$0      0    (+0) | <$100      0   (-13) | $300+      0    (-6) | $5k+      0    (-6)
+   Iberdrola Australia Energy M Battery                avail    173   (+24) | <$0      0    (-4) | <$100      0   (-12) | $300+      0  (-124) | $5k+      0  (-124)
+   Akaysha                      Battery                avail    144    (-3) | <$0      0    (+0) | <$100      1    (-4) | $300+      2    (-4) | $5k+      2    (-3)
+   RTA Yarwun                   Gas                    avail     95   (+23) | <$0     95   (+23) | <$100     95   (+23) | $300+      0    (+0) | $5k+      0    (+0)
+   local-stack marginal (where it matched spot, 74/84 intervals): Iberdrola Australia Energy Markets Battery 22; CS Energy Black Coal 14; Supernode Operations Battery 13; CS Energy Battery 10; CleanCo Gas 8
+      prior-7 avg per night: Stanwell Corp Black Coal 15; CS Energy Black Coal 10; Supernode Operations Battery 3; CS Energy Battery 3; Iberdrola Australia Energy Markets Battery 3
+      top marginal units: BRDDBES1 x22 @$106; GREENB1 x10 @$108; SWAN_E x8 @$110; SNB02 x7 @$110; SNB01 x6 @$110
+
+## VIC1: RRP avg 104 (7-night avg 89), min 95, max 113; demand 4744-6088; local dispatchable gen avg 5559; net interchange avg 311 (+ = export)
+   offered by band (avg MW): <$0 4,289, $0-50 1,124, $50-150 270, $150-300 658, $300-1k 342, $1k-5k 460, $5k+ 2,465 | wind+solar avail 1,314
+   AGL                          Brown Coal/Gas/Hydro   avail  2,184   (+18) | <$0  1,163   (+77) | <$100  1,903  (+344) | $300+    266  (-339) | $5k+      7  (-144)
+   Snowy Hydro                  Gas/Hydro              avail  1,685   (-48) | <$0      0    (+0) | <$100    227   (+63) | $300+  1,344  (-107) | $5k+  1,322  (-123)
+   Energy Australia             Battery/Brown Coal/Gas avail  1,243  (-137) | <$0    908   (-60) | <$100    908   (-62) | $300+    335   (-55) | $5k+    315   (-48)
+   Alinta Energy                Brown Coal             avail  1,155    (+9) | <$0  1,155  (+163) | <$100  1,155   (+68) | $300+      0   (-59) | $5k+      0   (-59)
+   Origin Energy                Battery/Gas            avail    534   (+30) | <$0      0   (-11) | <$100     34    (-0) | $300+    351  (-105) | $5k+    351  (-105)
+   Equis Energy (Aust)          Battery                avail    400  (+102) | <$0      0    (-0) | <$100      1   (-34) | $300+    200   (+79) | $5k+      0    (+0)
+   Shell Energy Retail          Battery                avail    385  (+150) | <$0      0    (+0) | <$100     15   (-15) | $300+    358  (+257) | $5k+    358  (+257)
+   NEOEN                        Battery                avail    253   (+70) | <$0      0    (+0) | <$100      2   (-10) | $300+    209   (+81) | $5k+    109   (+61)
+   SEC Energy                   Battery                avail    200   (+25) | <$0      0    (+0) | <$100      0   (-14) | $300+    200   (+60) | $5k+      0    (+0)
+   ENGIE                        Battery                avail    150   (+36) | <$0      0    (-0) | <$100      0   (-24) | $300+      2    (-5) | $5k+      2    (-3)
+   Tilt Renewables              Battery                avail    100   (+14) | <$0      0    (-0) | <$100      0   (-17) | $300+      1   (-10) | $5k+      1    (-1)
+   local-stack marginal (where it matched spot, 9/84 intervals): AGL Gas 5; Snowy Hydro Hydro 3; NEOEN Battery 1
+      prior-7 avg per night: Snowy Hydro Hydro 18; TagEnergy Wind 10; Shell Energy Retail Battery 8; Golden Plains WF2 Pty Ltd ATF The Golden Plains WF2 Unit Trust Wind 6; Equis Energy (Aust) Battery 3
+      top marginal units: AGLSOM x5 @$110; MURRAY x3 @$119; BULBES1 x1 @$89
+
+## SA1: RRP avg 103 (7-night avg 105), min 93, max 113; demand 1254-1474; local dispatchable gen avg 1635; net interchange avg 301 (+ = export)
+   offered by band (avg MW): <$0 1,222, $0-50 112, $50-150 610, $150-300 228, $300-1k 195, $1k-5k 102, $5k+ 881 | wind+solar avail 1,110
+   ENGIE                        Gas                    avail    396    (-0) | <$0     60   (-28) | <$100    180   (+40) | $300+    171    (-4) | $5k+    171    (-1)
+   AGL                          Battery/Gas            avail    298   (+60) | <$0     53   (+21) | <$100     74   (+35) | $300+     85   (-49) | $5k+     49   (-76)
+   Origin Energy                Gas                    avail    293   (+28) | <$0      0   (-35) | <$100      0   (-40) | $300+    293   (+82) | $5k+    293   (+82)
+   NEOEN                        Battery                avail    275   (+16) | <$0      0    (-0) | <$100     62   (+48) | $300+    204   (-28) | $5k+     33   (-19)
+   Energy Australia             Gas                    avail    183   (+14) | <$0      0    (+0) | <$100      0    (+0) | $300+    183   (+14) | $5k+    183   (+14)
+   AGL SA Generation            Gas                    avail    170   (-19) | <$0      0    (+0) | <$100    111   (+42) | $300+      0   (-16) | $5k+      0   (-10)
+   Bungama Project (Solar) Oper Battery                avail    150    (+1) | <$0      0    (+0) | <$100     17    (+5) | $300+      0   (-29) | $5k+      0    (+0)
+   Nexif Energy                 Liquid fuel            avail    115   (-18) | <$0      0    (+0) | <$100      0    (+0) | $300+    115   (-18) | $5k+     25   (-18)
+   Snowy Hydro                  Liquid fuel            avail    112    (-1) | <$0      0    (+0) | <$100      0    (+0) | $300+    112    (-1) | $5k+    112    (-1)
+   Epic Energy                  Battery                avail    100    (+8) | <$0      0    (+0) | <$100      1    (-1) | $300+      0   (-20) | $5k+      0    (-0)
+   Pacific Hydro Clements Gap B Battery                avail     60   (+15) | <$0      0    (-0) | <$100      0    (-4) | $300+      1    (-1) | $5k+      1    (-1)
+   local-stack marginal (where it matched spot, 82/84 intervals): AGL SA Generation Gas 38; ENGIE Gas 17; Pacific Hydro Clements Gap BESS Battery 15; NEOEN Battery 5; AGL Gas 3
+      prior-7 avg per night: ENGIE Gas 10; AGL SA Generation Gas 9; Epic Energy Battery 7; Bungama Project (Solar) Operations Pty Ltd ATF Bungama Project (Solar) Operation Battery 6; AGL Gas 4
+      top marginal units: BARKIPS1 x38 @$101; PPCCGT x17 @$100; CGBESS01 x15 @$112; BLYTHB1 x5 @$100; TORRB3 x3 @$101
+
+## TAS1: RRP avg 109 (7-night avg 87), min 95, max 160; demand 971-1072; local dispatchable gen avg 1114; net interchange avg 100 (+ = export)
+   offered by band (avg MW): <$0 647, $0-50 70, $50-150 485, $150-300 138, $300-1k 309, $1k-5k 0, $5k+ 103 | wind+solar avail 152
+   Hydro Tas                    Hydro                  avail  1,494  (-219) | <$0    451   (+50) | <$100    875   (-36) | $300+    349  (-283) | $5k+     40  (-132)
+   Aurora Energy                Gas                    avail    106    (-7) | <$0     44   (+12) | <$100     44   (+12) | $300+     62   (-19) | $5k+     62   (-19)
+   local-stack marginal (where it matched spot, 57/84 intervals): Hydro Tas Hydro 57
+      prior-7 avg per night: Hydro Tas Hydro 52
+      top marginal units: POAT220 x24 @$110; POAT110 x8 @$110; JBUTTERS x7 @$110; FISHER x7 @$88; REECE1 x7 @$110
