@@ -180,7 +180,8 @@ def load_dispatch(day: str) -> pd.DataFrame | None:
     if not url:
         return None
     t = stream_tables(nw.download_bytes(url), {
-        "UNIT_SOLUTION": (["SETTLEMENTDATE", "DUID", "TOTALCLEARED", "AVAILABILITY"], {"INTERVENTION": {"0"}}),
+        "UNIT_SOLUTION": (["SETTLEMENTDATE", "DUID", "TOTALCLEARED", "AVAILABILITY", "CONNECTIONPOINTID"],
+                          {"INTERVENTION": {"0"}}),
     })
     df = num(t["UNIT_SOLUTION"], ["TOTALCLEARED", "AVAILABILITY"])
     log(f"dispatch: {len(df)} unit-interval rows")
@@ -269,7 +270,22 @@ def load_predispatch() -> tuple[pd.DataFrame, pd.DataFrame] | None:
 # Registry
 # ---------------------------------------------------------------------------
 
-def registry_table(day_df: pd.DataFrame) -> pd.DataFrame:
+CP_REGION = {"N": "NSW1", "Q": "QLD1", "V": "VIC1", "S": "SA1", "T": "TAS1"}
+
+
+def infer_fuel(duid: str) -> str:
+    """Last-resort fuel guess from AEMO's DUID naming habits, only for units missing from registry/."""
+    d = duid.upper()
+    if re.search(r"BES|BAT|BESS|BS\d|BA\d", d):
+        return "Battery"
+    if re.search(r"SF\d|SOL|PV\d", d):
+        return "Solar"
+    if re.search(r"WF\d|WND|WIND|W\d$", d):
+        return "Wind"
+    return "Other"
+
+
+def registry_table(day_df: pd.DataFrame, disp: pd.DataFrame | None) -> pd.DataFrame:
     reg = nw.load_registry()
     base = pd.DataFrame({"DUID": day_df["DUID"], "PARTICIPANTID": day_df["PARTICIPANTID"]})
     if reg.fuel_info is not None:
@@ -284,6 +300,14 @@ def registry_table(day_df: pd.DataFrame) -> pd.DataFrame:
         base = base.merge(di[["DUID", "REGION", "UNIT_NAME"]], on="DUID", how="left")
         base["REGIONID"] = base["REGIONID"].fillna(base["REGION"].astype(str).str.upper().str.rstrip("1") + "1")
         base["STATIONNAME"] = base["STATIONNAME"].fillna(base["UNIT_NAME"])
+    # Units newer than the registry files: region from the connection point (AEMO TNI codes start
+    # with the region letter), fuel guessed from the DUID, portfolio = trading participant.
+    base["INFERRED"] = base["REGIONID"].isna() | ~base["REGIONID"].isin(REGIONS)
+    if disp is not None and "CONNECTIONPOINTID" in disp.columns:
+        cp = disp.drop_duplicates("DUID").set_index("DUID")["CONNECTIONPOINTID"].astype(str).str[:1].map(CP_REGION)
+        base.loc[base["INFERRED"], "REGIONID"] = base.loc[base["INFERRED"], "DUID"].map(cp)
+    base.loc[base["INFERRED"] & base["FUEL"].isna(), "FUEL"] = base.loc[base["INFERRED"] & base["FUEL"].isna(), "DUID"].map(infer_fuel)
+    base = base[~base["DUID"].str.startswith("DG_")]   # AEMO dummy generators, not real supply
     if reg.owner_capacity is not None and "Owner" in reg.owner_capacity.columns:
         base = base.merge(reg.owner_capacity[["DUID", "Owner"]], on="DUID", how="left")
     else:
@@ -295,7 +319,11 @@ def registry_table(day_df: pd.DataFrame) -> pd.DataFrame:
     base["STATIONNAME"] = base["STATIONNAME"].fillna(base["DUID"])
     base["TLF"] = pd.to_numeric(base["TransmissionLossFactor"], errors="coerce").fillna(1.0)
     base.loc[(base["TLF"] < 0.5) | (base["TLF"] > 1.5), "TLF"] = 1.0
-    return base[["DUID", "REGIONID", "PORTFOLIO", "STATIONNAME", "FUEL", "TLF"]]
+    inferred = base[base["INFERRED"] & base["REGIONID"].isin(REGIONS)]
+    if len(inferred):
+        log(f"NOTE: {len(inferred)} DUIDs missing from registry/ - region from connection point, fuel guessed: "
+            + ", ".join(f"{r.DUID}({r.FUEL})" for r in inferred.itertuples()))
+    return base[["DUID", "REGIONID", "PORTFOLIO", "STATIONNAME", "FUEL", "TLF", "INFERRED"]]
 
 
 # ---------------------------------------------------------------------------
@@ -410,12 +438,14 @@ def curve_points(g: pd.DataFrame, max_points: int = 400):
 
 
 def read_history() -> pd.DataFrame:
+    cols = ["date", "region", "portfolio", "avail_mw", "hi300_mw", "hi1000_mw", "hi5000_mw", "pivotal_frac"]
     if HISTORY_FILE.exists():
         try:
-            return pd.read_csv(HISTORY_FILE)
+            return pd.read_csv(HISTORY_FILE).reindex(columns=cols)
         except Exception:
             pass
-    return pd.DataFrame(columns=["date", "region", "portfolio", "avail_mw", "hi300_mw", "hi1000_mw", "hi5000_mw"])
+    return pd.DataFrame(columns=["date", "region", "portfolio", "avail_mw", "hi300_mw", "hi1000_mw", "hi5000_mw",
+                                 "pivotal_frac"])
 
 
 def fmt_mw(x: float) -> str:
@@ -429,7 +459,7 @@ def analyse(day_str: str):
     if disp is None:
         log("WARNING: Next_Day_Dispatch not found - wind/solar volumes NOT trimmed to real availability")
     regions = load_regions(day_str)
-    reg = registry_table(day_df)
+    reg = registry_table(day_df, disp)
     stack = build_stack(day_df, per, disp, reg)
     if regions is not None:
         regions["T"] = pd.to_datetime(regions["INTERVAL_DATETIME"], format=TS_FMT)
@@ -478,15 +508,18 @@ def analyse(day_str: str):
         base = base[base["date"].isin(last_dates)]
         b = base.groupby(["region", "portfolio"]).agg(
             b_avail=("avail_mw", "mean"), b_hi300=("hi300_mw", "mean"), b_hi1000=("hi1000_mw", "mean"),
-            b_days=("date", "nunique")).reset_index()
+            b_piv=("pivotal_frac", "mean"), b_days=("date", "nunique")).reset_index()
         b["b_share300"] = b["b_hi300"] / b["b_avail"].replace(0, np.nan) * 100
         port = port.merge(b, left_on=keys, right_on=["region", "portfolio"], how="left").drop(columns=["region", "portfolio"])
     else:
-        port["b_share300"], port["b_days"], port["b_hi1000"] = np.nan, 0, np.nan
+        port["b_share300"], port["b_days"], port["b_hi1000"], port["b_piv"] = np.nan, 0, np.nan, np.nan
+    if "b_piv" not in port.columns:
+        port["b_piv"] = np.nan
     port["delta_share300"] = np.where(port["b_days"].fillna(0) >= MIN_BASELINE_DAYS,
                                       port["share300"] - port["b_share300"], np.nan)
 
-    new_hist = port[keys + ["avail", "hi300", "hi1000", "hi5000"]].rename(columns={
+    port["pivotal_frac"] = port["PIVOTAL_N"] / max(n_peak, 1)
+    new_hist = port[keys + ["avail", "hi300", "hi1000", "hi5000", "pivotal_frac"]].rename(columns={
         "REGIONID": "region", "PORTFOLIO": "portfolio", "avail": "avail_mw", "hi300": "hi300_mw",
         "hi1000": "hi1000_mw", "hi5000": "hi5000_mw"})
     new_hist.insert(0, "date", date_iso)
@@ -522,6 +555,7 @@ def analyse(day_str: str):
             "pivotal": None if pd.isna(r.PIVOTAL_N) else int(r.PIVOTAL_N),
             "shortfall": None if pd.isna(r.MAX_SHORTFALL) else round(r.MAX_SHORTFALL),
             "vre": round(r.vre),
+            "usually_pivotal": bool(r.b_days >= MIN_BASELINE_DAYS and r.b_piv >= 0.7) if not pd.isna(r.b_piv) else False,
         } for r in p.itertuples()]
 
         cur = s_pk[s_pk["T"] == t_peak]
@@ -573,6 +607,11 @@ def region_reads(region: str, r: dict, ptable: list[dict], n_peak: int) -> list[
                 f"{r['peak_time']} peak - one unit trip or a warmer evening moves it into $300+ bands."})
     piv = [p for p in ptable if p["pivotal"]]
     for p in sorted(piv, key=lambda x: -x["pivotal"])[:3]:
+        if p["usually_pivotal"]:   # structural (e.g. Hydro Tas in TAS) - keep it, but don't shout
+            out.append({"region": region, "level": 1, "text":
+                f"{name}: {p['portfolio']} pivotal in {p['pivotal']}/{n_peak} evening intervals, as it usually is "
+                f"- {fmt_mw(p['hi300'])} offered at $300+."})
+            continue
         out.append({"region": region, "level": 3 if p["pivotal"] >= n_peak / 2 else 2, "text":
             f"{name}: {p['portfolio']} was pivotal in {p['pivotal']}/{n_peak} evening intervals "
             f"(demand couldn't be met without it, up to {fmt_mw(p['shortfall'])} short) - "
