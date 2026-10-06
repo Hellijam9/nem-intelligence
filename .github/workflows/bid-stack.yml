@@ -78,11 +78,10 @@ jobs:
 
       # Publishes docs/ to GitHub Pages. Needs Settings -> Pages -> Source: "GitHub Actions"
       # (one-off). Until that's set these steps fail softly and the run still succeeds.
+      # Deploys every run so the page always matches docs/ on main.
       - uses: actions/upload-pages-artifact@v3
-        if: steps.commit.outputs.changed == 'true'
         continue-on-error: true
         with:
           path: docs
       - uses: actions/deploy-pages@v4
-        if: steps.commit.outputs.changed == 'true'
         continue-on-error: true

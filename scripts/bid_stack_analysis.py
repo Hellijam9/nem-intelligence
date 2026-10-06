@@ -307,6 +307,7 @@ def load_predispatch() -> tuple[pd.DataFrame, pd.DataFrame] | None:
 MMSDM_BASE = "https://www.nemweb.com.au/Data_Archive/Wholesale_Electricity/MMSDM/"
 AEMO_UNITS_CACHE = nw.REGISTRY_DIR / "aemo_units.csv"
 AEMO_UNITS_META = "aemo_units_meta.json"
+AEMO_UNITS_VERSION = 2   # bump when the mapping below changes, to force a rebuild of the cache
 ENERGY_SOURCE_FUEL = {
     "black coal": "Black Coal",
     "brown coal": "Brown Coal",
@@ -318,8 +319,8 @@ ENERGY_SOURCE_FUEL = {
     "battery storage": "Battery",
     "wind": "Wind",
     "solar": "Solar",
-    "diesel oil": "Diesel",
-    "kerosene - non aviation": "Diesel",
+    "diesel oil": "Liquid fuel",
+    "kerosene - non aviation": "Liquid fuel",
     "landfill biogas methane": "Bioenergy",
     "biomass and industrial materials": "Bioenergy",
     "bagasse": "Bioenergy",
@@ -400,6 +401,10 @@ def build_aemo_units() -> pd.DataFrame:
     out = (dus.merge(g[["DUID", "CO2E_ENERGY_SOURCE"]], on="DUID", how="left")
               .merge(st, on="STATIONID", how="left").merge(pa, on="PARTICIPANTID", how="left"))
     out["AEMO_FUEL"] = out["CO2E_ENERGY_SOURCE"].str.strip().str.lower().map(ENERGY_SOURCE_FUEL)
+    # Wholesale demand response: AEMO registers these as scheduled LOAD units with no generating
+    # set, yet they offer energy in the generating direction (station names carry "WDR").
+    wdr = out["AEMO_FUEL"].isna() & out["CO2E_ENERGY_SOURCE"].isna() & (out["DISPATCHTYPE"] == "LOAD")
+    out.loc[wdr, "AEMO_FUEL"] = "Demand response"
     unmapped = sorted(set(out.loc[out["CO2E_ENERGY_SOURCE"].notna() & out["AEMO_FUEL"].isna(), "CO2E_ENERGY_SOURCE"]))
     if unmapped:
         log(f"WARNING: new AEMO energy-source values not mapped yet (shown as Unclassified): {unmapped}")
@@ -420,15 +425,19 @@ def load_aemo_units() -> pd.DataFrame | None:
     if stale:
         try:
             _, month = _latest_mmsdm_data_dir()
-            if cached is None or month != meta.get("month"):
+            if cached is None or month != meta.get("month") or meta.get("version") != AEMO_UNITS_VERSION:
                 fresh = build_aemo_units()
                 fresh.to_csv(AEMO_UNITS_CACHE, index=False)
                 cached = fresh.astype(str).replace({"nan": np.nan, "None": np.nan})
-            nw.write_state(AEMO_UNITS_META, {"month": month, "checked": datetime.now(nw.NEM_TZ).strftime("%Y-%m-%d")})
+            nw.write_state(AEMO_UNITS_META, {"month": month, "version": AEMO_UNITS_VERSION,
+                                             "checked": datetime.now(nw.NEM_TZ).strftime("%Y-%m-%d")})
         except Exception as exc:
             log(f"WARNING: AEMO unit registration refresh failed ({exc}) - using cached copy" if cached is not None
                 else f"WARNING: AEMO unit registration unavailable ({exc})")
     return cached
+
+
+_LOGGED: set = set()
 
 
 def registry_table(day_df: pd.DataFrame, disp: pd.DataFrame | None) -> pd.DataFrame:
@@ -460,7 +469,7 @@ def registry_table(day_df: pd.DataFrame, disp: pd.DataFrame | None) -> pd.DataFr
 
     # AEMO's registration is the authority; the hand-kept registry/ files fill gaps only.
     base["REGIONID"] = base["A_REGION"].where(base["A_REGION"].isin(REGIONS), base["REGIONID"])
-    base["FUEL"] = base["AEMO_FUEL"].fillna(base["FUEL"])
+    base["FUEL"] = base["AEMO_FUEL"].fillna(base["FUEL"].replace({"Diesel": "Liquid fuel"}))
     base["STATIONNAME"] = base["A_STATION"].fillna(base["STATIONNAME"])
     base["TLF"] = pd.to_numeric(base["A_TLF"], errors="coerce").fillna(
         pd.to_numeric(base["TransmissionLossFactor"], errors="coerce"))
@@ -494,7 +503,9 @@ def registry_table(day_df: pd.DataFrame, disp: pd.DataFrame | None) -> pd.DataFr
     base.loc[(base["TLF"] < 0.5) | (base["TLF"] > 1.5), "TLF"] = 1.0
 
     uncl = base[base["FUEL"] == "Unclassified"]
-    if len(uncl):
+    msg_key = ",".join(sorted(uncl["DUID"]))
+    if len(uncl) and msg_key not in _LOGGED:
+        _LOGGED.add(msg_key)
         log(f"NOTE: {len(uncl)} DUIDs not yet fuel-classified by AEMO (shown as Unclassified): "
             + ", ".join(sorted(uncl["DUID"])))
     return base[["DUID", "REGIONID", "PORTFOLIO", "STATIONNAME", "FUEL", "TLF", "INFERRED"]]
@@ -545,7 +556,7 @@ def build_stack(day_df, per, disp, reg) -> pd.DataFrame:
     stack = stack[stack["REGIONID"].isin(REGIONS)]
     stack["T"] = pd.to_datetime(stack["INTERVAL_DATETIME"], format=TS_FMT)
     stack["BUCKET"] = pd.cut(stack["PRICE"], BUCKET_EDGES, labels=BUCKET_LABELS, right=False)
-    unknown = set(df.loc[~df["REGIONID"].isin(REGIONS), "DUID"])
+    unknown = {d for d in df.loc[~df["REGIONID"].isin(REGIONS), "DUID"] if not d.startswith("DG_")}
     if unknown:
         log(f"NOTE: {len(unknown)} DUIDs have no region in registry/ and were excluded: {sorted(unknown)[:12]}")
     log(f"stack: {len(stack)} unit-interval-band rows from {n} unit-intervals")
