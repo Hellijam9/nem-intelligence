@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NEM Bid Stack</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  color-scheme: light;
+  --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink2: #52514e; --muted: #898781;
+  --grid: #e1e0d9; --axis: #c3c2b7; --ring: rgba(11,11,11,0.10);
+  --s1: #2a78d6; --s2: #eb6834;
+  --b0: #1c5cab; --b1: #3987e5; --b2: #86b6ef; --b3: #c3c2b7; --b4: #ec8f8e; --b5: #d03b3b; --b6: #8f1f22;
+  --crit: #d03b3b; --serious: #ec835a; --info: #2a78d6;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19; --ink: #ffffff; --ink2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --ring: rgba(255,255,255,0.10);
+    --s1: #3987e5; --s2: #d95926;
+    --b0: #9ec5f4; --b1: #5598e7; --b2: #256abf; --b3: #5a5954; --b4: #a83232; --b5: #e34948; --b6: #f4a5a4;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0d0d; --surface: #1a1a19; --ink: #ffffff; --ink2: #c3c2b7; --muted: #898781;
+  --grid: #2c2c2a; --axis: #383835; --ring: rgba(255,255,255,0.10);
+  --s1: #3987e5; --s2: #d95926;
+  --b0: #9ec5f4; --b1: #5598e7; --b2: #256abf; --b3: #5a5954; --b4: #a83232; --b5: #e34948; --b6: #f4a5a4;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink);
+  font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 980px; margin: 0 auto; padding: 16px 16px 48px; }
+header h1 { font-size: 20px; margin: 0; }
+header p { margin: 2px 0 0; color: var(--ink2); font-size: 13px; }
+.pills { display: flex; gap: 6px; flex-wrap: wrap; margin: 14px 0 6px; position: sticky; top: 0;
+  background: var(--page); padding: 8px 0; z-index: 5; }
+.pills button { border: 1px solid var(--ring); background: var(--surface); color: var(--ink2);
+  border-radius: 999px; padding: 6px 14px; font: inherit; font-size: 14px; cursor: pointer; }
+.pills button[aria-pressed="true"] { background: var(--ink); color: var(--page); border-color: var(--ink); }
+section { background: var(--surface); border: 1px solid var(--ring); border-radius: 12px;
+  padding: 14px; margin-top: 12px; }
+h2 { font-size: 15px; margin: 0 0 4px; }
+.sub { color: var(--muted); font-size: 12.5px; margin: 0 0 10px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; }
+.tile { border: 1px solid var(--ring); border-radius: 10px; padding: 10px; }
+.tile .k { color: var(--muted); font-size: 12px; }
+.tile .v { font-size: 20px; font-weight: 600; margin-top: 2px; }
+.tile .n { color: var(--ink2); font-size: 12px; }
+ul.reads { list-style: none; padding: 0; margin: 0; }
+ul.reads li { display: flex; gap: 8px; padding: 8px 0; border-top: 1px solid var(--grid); font-size: 14px; }
+ul.reads li:first-child { border-top: 0; }
+.tag { flex: none; font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 6px; height: fit-content;
+  border: 1px solid currentColor; }
+.l3 { color: var(--crit); } .l2 { color: var(--serious); } .l1 { color: var(--muted); }
+.fwd { font-size: 11px; color: var(--info); font-weight: 600; margin-right: 4px; }
+.chart { position: relative; height: 300px; }
+.chart.short { height: 240px; }
+.tablewrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+th, td { text-align: right; padding: 6px 6px; border-top: 1px solid var(--grid); white-space: nowrap; }
+th { color: var(--muted); font-weight: 500; font-size: 12px; position: sticky; top: 0; background: var(--surface); }
+th:first-child, td:first-child { text-align: left; white-space: normal; min-width: 120px; }
+td .f { display: block; color: var(--muted); font-size: 11px; }
+.up { color: var(--crit); } .down { color: var(--ink2); }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 12px; color: var(--ink2); margin: 6px 0 0; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 4px; vertical-align: -1px; }
+.toggle { font: inherit; font-size: 12px; border: 1px solid var(--ring); background: transparent; color: var(--ink2);
+  border-radius: 6px; padding: 3px 8px; cursor: pointer; float: right; }
+details { color: var(--ink2); font-size: 13px; }
+details summary { cursor: pointer; color: var(--ink); font-weight: 600; }
+.empty { color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>NEM Bid Stack</h1>
+    <p id="meta"></p>
+  </header>
+  <div class="pills" id="pills" role="group" aria-label="Region"></div>
+
+  <section id="readsSec">
+    <h2>Key reads</h2>
+    <p class="sub">Ranked by severity. <span class="fwd">AHEAD</span> = forward look from the latest predispatch.</p>
+    <ul class="reads" id="reads"></ul>
+  </section>
+
+  <section id="tilesSec">
+    <h2 id="tilesTitle">Evening peak</h2>
+    <p class="sub" id="tilesSub"></p>
+    <div class="tiles" id="tiles"></div>
+  </section>
+
+  <section id="fwdSec">
+    <h2>Forward look</h2>
+    <p class="sub">Forecast evening-peak demand (predispatch) set against the offers each portfolio made for the same half-hour yesterday. Bids for these days aren't public yet, so this shows what happens if offers repeat.</p>
+    <div class="tablewrap"><table id="fwd"></table></div>
+  </section>
+
+  <section id="curveSec">
+    <button class="toggle" id="curveToggle" type="button">Show to price cap</button>
+    <h2>Supply curve at the peak interval</h2>
+    <p class="sub" id="curveSub"></p>
+    <div class="chart"><canvas id="curve"></canvas></div>
+    <div class="legend" id="curveLegend"></div>
+  </section>
+
+  <section id="portSec">
+    <h2>Who is pricing aggressively</h2>
+    <p class="sub">Dispatchable capacity (coal, gas, hydro, batteries, diesel) averaged over the evening peak, after trimming to real availability. Δ = change in share offered at $300+ vs the portfolio's own 20-day norm. Pivotal = intervals where demand could not be met without them.</p>
+    <div class="tablewrap"><table id="port"></table></div>
+  </section>
+
+  <section id="fuelSec">
+    <h2>Offers by price band and fuel</h2>
+    <p class="sub">Average MW offered across the evening peak.</p>
+    <div class="chart short"><canvas id="fuel"></canvas></div>
+    <div class="legend" id="fuelLegend"></div>
+  </section>
+
+  <section id="seriesSec">
+    <h2>Spot price vs stack-implied price</h2>
+    <p class="sub" id="seriesSub"></p>
+    <div class="chart short"><canvas id="series"></canvas></div>
+    <div class="legend" id="seriesLegend"></div>
+  </section>
+
+  <section>
+    <details>
+      <summary>Method &amp; caveats</summary>
+      <p>Data: AEMO next-day public files - Bidmove_Complete (bid price bands and per-interval volumes), Next_Day_Dispatch (unit availability), Public_Prices (regional price and demand), DispatchIS (interconnector limits) and the latest Predispatch run.</p>
+      <p>Band volumes are trimmed from the top band down to each unit's dispatch availability (the approach used by UNSW-CEEM's NEM bidding dashboard), so wind and solar count only what the weather allowed. Fixed loads count as priced below $0 and offers are summed per price range and averaged over intervals, following the AER's wholesale market performance methods. Prices are referred to the regional reference node using each unit's transmission loss factor. Only energy offers in the generating direction are counted.</p>
+      <p>Pivotal test: simplified AER pivotal supplier test - regional available capacity minus the portfolio's own, plus interconnector import capability, compared with regional total demand. Forced interconnector flows aren't netted off, so treat it as a screen, not a finding.</p>
+      <p>Not a price-setter analysis. AEMO's price-setter files arrive about a month late, and a single-region stack ignores interconnectors, network constraints and FCAS co-optimisation. The stack-implied price is only a check on the stack.</p>
+      <p>Fuel type, region, station and loss factor come from AEMO's own unit registration (the monthly MMSDM archive: GENUNITS energy source, DUDETAILSUMMARY), refreshed when AEMO publishes a new month. Units registered since the latest archive show as "Unclassified" rather than being guessed. Portfolios use the trading-brand name from the registry file (e.g. AGL, Origin Energy, CS Energy), falling back to AEMO's registered participant name.</p>
+    </details>
+  </section>
+</main>
+
+<script>
+const DATA = /*__DATA__*/null;
+const REGIONS = ["NSW1","QLD1","VIC1","SA1","TAS1"];
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const fmt = (v, d=0) => v == null || Number.isNaN(v) ? "–" : Number(v).toLocaleString("en-AU", {maximumFractionDigits: d, minimumFractionDigits: d});
+const money = v => v == null ? "–" : "$" + fmt(v, Math.abs(v) < 100 ? 2 : 0);
+const charts = {};
+let region = "NSW1";
+let fullCurve = false;
+
+function kill(id){ if (charts[id]) { charts[id].destroy(); delete charts[id]; } }
+function base(){
+  Chart.defaults.font.family = 'system-ui, -apple-system, "Segoe UI", sans-serif';
+  Chart.defaults.font.size = 11;
+  Chart.defaults.color = css("--muted");
+  Chart.defaults.borderColor = css("--grid");
+}
+function tooltipStyle(){
+  return { backgroundColor: css("--surface"), titleColor: css("--ink"), bodyColor: css("--ink2"),
+    borderColor: css("--ring"), borderWidth: 1, padding: 8, displayColors: true, boxPadding: 3 };
+}
+
+function pills(){
+  const el = document.getElementById("pills");
+  el.innerHTML = "";
+  REGIONS.filter(r => DATA.regions[r]).forEach(r => {
+    const b = document.createElement("button");
+    b.type = "button"; b.textContent = r.replace("1","");
+    b.setAttribute("aria-pressed", r === region);
+    b.onclick = () => { region = r; render(); };
+    el.appendChild(b);
+  });
+}
+
+function reads(){
+  const ul = document.getElementById("reads");
+  const items = DATA.reads.filter(x => x.region === region || x.region === "NEM")
+    .sort((a,b) => (b.level - a.level) || ((b.forward?1:0) - (a.forward?1:0)));
+  const names = {3: "Tight", 2: "Watch", 1: "Note"};
+  ul.innerHTML = items.length ? items.map(x =>
+    `<li><span class="tag l${x.level}">${names[x.level]}</span><span>${x.forward ? '<span class="fwd">AHEAD</span>' : ""}${x.text}</span></li>`
+  ).join("") : `<li class="empty">Nothing stood out in ${region.replace("1","")} - ample cheap supply and no pivotal portfolios.</li>`;
+}
+
+function tiles(r){
+  document.getElementById("tilesTitle").textContent = `Evening peak - ${region.replace("1","")}`;
+  document.getElementById("tilesSub").textContent = `Highest-demand interval ending ${r.peak_time} on ${DATA.trading_day}.`;
+  const t = [
+    ["Demand", fmt(r.peak_demand)+" MW", `spot ${money(r.peak_rrp)}/MWh`],
+    ["Evening price", money(r.avg_rrp_peak), `avg · max ${money(r.max_rrp_peak)}`],
+    ["Sub-$300 headroom", r.cheap_headroom == null ? "–" : fmt(r.cheap_headroom)+" MW", `tightest ${r.min_cheap_headroom == null ? "–" : fmt(r.min_cheap_headroom)+" MW"}`],
+    ["Supply cushion", r.cushion_pct == null ? "–" : fmt(r.cushion_pct,1)+"%", `incl. ${fmt(r.peak_import_cap)} MW import capability`],
+  ];
+  document.getElementById("tiles").innerHTML = t.map(([k,v,n]) =>
+    `<div class="tile"><div class="k">${k}</div><div class="v">${v}</div><div class="n">${n}</div></div>`).join("");
+}
+
+function forward(){
+  const rows = (DATA.forward || []).filter(f => f.region === region);
+  const el = document.getElementById("fwd");
+  if (!rows.length) { el.innerHTML = `<tr><td class="empty">Predispatch didn't cover an upcoming evening peak at run time.</td></tr>`; return; }
+  el.innerHTML = `<thead><tr><th>Peak</th><th>Sub-$300 headroom</th><th>Demand</th><th>Predispatch</th><th>Cushion</th><th>Wind+solar (yday)</th></tr></thead><tbody>` +
+    rows.map(f => `<tr><td>${f.date} ${f.time}${f.pivotal.length ? `<span class="f">Pivotal: ${f.pivotal.map(p => p.portfolio).join(", ")}</span>` : ""}</td>
+      <td class="${f.cheap_headroom != null && f.cheap_headroom < 300 ? "up" : ""}">${f.cheap_headroom == null ? "–" : fmt(f.cheap_headroom) + " MW"}</td>
+      <td>${fmt(f.demand)}</td><td>${money(f.pd_rrp)}</td>
+      <td>${f.cushion_pct == null ? "–" : fmt(f.cushion_pct,1)+"%"}</td><td>${fmt(f.vre)}</td></tr>`).join("") + "</tbody>";
+}
+
+function curve(r){
+  kill("curve");
+  const pts = r.curve;
+  const sub = document.getElementById("curveSub");
+  sub.textContent = `Availability-adjusted offers in ${region.replace("1","")} at ${r.peak_time}, cheapest first. Dashed line = MW actually dispatched from the region (${fmt(r.peak_dispgen)} MW); the rest of demand came from imports.`;
+  const data = []; let prev = 0;
+  pts.forEach(pt => { data.push({x: prev, y: pt.p, p: pt.p, o: pt.o}); data.push({x: pt.mw, y: pt.p, p: pt.p, o: pt.o}); prev = pt.mw; });
+  const ymax = fullCurve ? undefined : Math.max(600, (r.peak_rrp || 0) * 1.6);
+  const ymin = fullCurve ? undefined : -150;
+  // Pin out-of-range steps to the chart edge so floor-priced and cap-priced volume stays visible.
+  if (!fullCurve) data.forEach(d => { d.y = Math.max(ymin, Math.min(ymax, d.y)); });
+  const yvals = data.map(d => d.y);
+  const lo = ymin ?? Math.min(...yvals), hi = ymax ?? Math.max(...yvals);
+  charts.curve = new Chart(document.getElementById("curve"), {
+    type: "line",
+    data: { datasets: [
+      { label: "Offers", data, parsing: false, borderColor: css("--s1"), backgroundColor: css("--s1") + "22",
+        borderWidth: 2, pointRadius: 0, pointHitRadius: 6, fill: "start", stepped: false },
+      { label: "Dispatched", data: r.peak_dispgen ? [{x: r.peak_dispgen, y: lo}, {x: r.peak_dispgen, y: hi}] : [],
+        parsing: false, borderColor: css("--ink2"), borderDash: [5,4], borderWidth: 1.5, pointRadius: 0 },
+    ]},
+    options: { responsive: true, maintainAspectRatio: false, animation: false,
+      interaction: { mode: "nearest", intersect: false, axis: "x" },
+      scales: {
+        x: { type: "linear", min: 0, ticks: { maxRotation: 0, maxTicksLimit: 6, callback: v => fmt(v) }, max: pts.length ? Math.ceil(pts[pts.length-1].mw / 500) * 500 : undefined, title: { display: true, text: "Cumulative MW offered" }, grid: { color: css("--grid") } },
+        y: { min: ymin, max: ymax, title: { display: true, text: "$/MWh (RRN)" }, grid: { color: css("--grid") },
+             ticks: { callback: v => "$" + fmt(v) } },
+      },
+      plugins: { legend: { display: false }, tooltip: { ...tooltipStyle(), filter: i => i.datasetIndex === 0,
+        callbacks: { title: i => `${fmt(i[0].raw.x)} MW`, label: i => ` ${money(i.raw.p)} - ${i.raw.o}` } } } }
+  });
+  document.getElementById("curveLegend").innerHTML =
+    `<span><i style="background:${css("--s1")}"></i>Offers (y-axis ${fullCurve ? "full range" : "clipped - tap Show to price cap"})</span><span><i style="background:${css("--ink2")}"></i>Dispatched in region</span>`;
+}
+
+function portfolios(r){
+  const el = document.getElementById("port");
+  if (!r.portfolios.length) { el.innerHTML = `<tr><td class="empty">No dispatchable portfolios above 50 MW.</td></tr>`; return; }
+  const rows = r.portfolios.filter(p => p.hi300 > 0 || p.pivotal || p.avail >= 300).slice(0, 14);
+  el.innerHTML = `<thead><tr><th>Portfolio</th><th>$300+ share</th><th>Δ vs norm</th><th>$300+ MW</th><th>Avail MW</th><th>$5k+ MW</th><th>Below $0</th><th>Pivotal</th></tr></thead><tbody>` +
+    rows.map(p => {
+      const d = p.delta == null ? `<span class="f">building</span>` :
+        `<span class="${p.delta >= 10 ? "up" : p.delta <= -10 ? "down" : ""}">${p.delta > 0 ? "+" : ""}${fmt(p.delta)}pp</span>`;
+      return `<tr><td>${p.portfolio}<span class="f">${p.fuels}</span></td><td>${fmt(p.share300)}%</td><td>${d}</td>
+        <td>${fmt(p.hi300)}</td><td>${fmt(p.avail)}</td><td>${fmt(p.hi5000)}</td><td>${fmt(p.le0)}</td>
+        <td>${p.pivotal == null ? "–" : p.pivotal ? `<span class="up">${p.pivotal}/${DATA.n_peak}</span>` : "0"}</td></tr>`;
+    }).join("") + "</tbody>";
+}
+
+function fuel(r){
+  kill("fuel");
+  const labels = Object.keys(r.by_fuel.rows);
+  const bands = r.by_fuel.labels;
+  const colors = ["--b0","--b1","--b2","--b3","--b4","--b5","--b6"].map(css);
+  charts.fuel = new Chart(document.getElementById("fuel"), {
+    type: "bar",
+    data: { labels, datasets: bands.map((b, i) => ({ label: b, data: labels.map(f => r.by_fuel.rows[f][i]),
+      backgroundColor: colors[i], borderColor: css("--surface"), borderWidth: {left: 1, right: 1}, borderSkipped: false, borderRadius: 2 })) },
+    options: { indexAxis: "y", responsive: true, maintainAspectRatio: false, animation: false,
+      scales: { x: { stacked: true, title: { display: true, text: "Average MW" }, grid: { color: css("--grid") } },
+                y: { stacked: true, grid: { display: false } } },
+      plugins: { legend: { display: false }, tooltip: { ...tooltipStyle(), callbacks: { label: i => ` ${i.dataset.label}: ${fmt(i.raw)} MW` } } } }
+  });
+  document.getElementById("fuelLegend").innerHTML = bands.map((b,i) => `<span><i style="background:${colors[i]}"></i>${b}</span>`).join("");
+}
+
+function series(r){
+  kill("series");
+  const labels = r.series.map(s => s.t);
+  document.getElementById("seriesSub").textContent = r.stack_fit_pct == null ? "" :
+    `Where the region's own offers cross its dispatched MW. They line up with spot in ${r.stack_fit_pct}% of intervals; gaps usually mean imports, network constraints or FCAS set the price. Y-axis clipped at $1,000.`;
+  const clip = v => v == null ? null : Math.max(-200, Math.min(1000, v));
+  charts.series = new Chart(document.getElementById("series"), {
+    type: "line",
+    data: { labels, datasets: [
+      { label: "Spot (RRP)", data: r.series.map(s => clip(s.rrp)), raw: r.series.map(s => s.rrp), borderColor: css("--s1"), borderWidth: 2, pointRadius: 0, pointHitRadius: 6 },
+      { label: "Stack-implied", data: r.series.map(s => clip(s.impl)), raw: r.series.map(s => s.impl), borderColor: css("--s2"), borderWidth: 2, pointRadius: 0, pointHitRadius: 6 },
+    ]},
+    options: { responsive: true, maintainAspectRatio: false, animation: false,
+      interaction: { mode: "index", intersect: false },
+      scales: { x: { ticks: { maxTicksLimit: 8 }, grid: { display: false } },
+                y: { min: -200, max: 1000, grid: { color: css("--grid") }, ticks: { callback: v => "$" + fmt(v) } } },
+      plugins: { legend: { display: false }, tooltip: { ...tooltipStyle(), callbacks: { label: i => ` ${i.dataset.label}: ${money(i.dataset.raw[i.dataIndex])}` } } } }
+  });
+  document.getElementById("seriesLegend").innerHTML =
+    `<span><i style="background:${css("--s1")}"></i>Spot (RRP)</span><span><i style="background:${css("--s2")}"></i>Stack-implied</span>`;
+}
+
+function render(){
+  base(); pills();
+  const r = DATA.regions[region];
+  reads(); tiles(r); forward(); curve(r); portfolios(r); fuel(r); series(r);
+}
+
+if (!DATA) {
+  document.querySelector("main").insertAdjacentHTML("beforeend", "<section class='empty'>No data yet.</section>");
+} else {
+  document.getElementById("meta").textContent =
+    `Trading day ${DATA.trading_day} · evening peak ${DATA.peak_window} NEM · updated ${DATA.generated || ""}` +
+    (DATA.availability_adjusted ? "" : " · volumes NOT availability-adjusted");
+  region = REGIONS.find(r => DATA.regions[r]);
+  document.getElementById("curveToggle").onclick = e => {
+    fullCurve = !fullCurve; e.target.textContent = fullCurve ? "Clip to $600" : "Show to price cap";
+    curve(DATA.regions[region]);
+  };
+  render();
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", render);
+}
+</script>
+</body>
+</html>

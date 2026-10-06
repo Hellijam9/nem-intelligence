@@ -1,0 +1,87 @@
+name: Bid stack analysis
+
+# Next-morning bid stack read: who priced aggressively yesterday, supply cushion, pivotal
+# portfolios, and a forward look at the next evening peaks. See scripts/bid_stack_analysis.py.
+#
+# Triggers mirror daily-morning.yml: the external cron-job.org "tick-daily" ping (05:30 NEM)
+# is primary; GitHub's own schedule is a fallback only (it fires late). Two fallbacks, at
+# ~06:30 and ~08:30 NEM, because Bidmove_Complete publishes anywhere from 04:59 to 05:21 NEM
+# and the script exits quietly (without marking the day done) if a file isn't there yet.
+# The script's own state/bidstack_state.json guard makes any repeat same-day firing a no-op.
+on:
+  repository_dispatch:
+    types: [tick-daily]
+  schedule:
+    - cron: "33 20 * * *"
+    - cron: "33 22 * * *"
+  workflow_dispatch:
+    inputs:
+      backfill_days:
+        description: "Seed the baseline from this many past days first (0 = no backfill)"
+        default: "0"
+
+concurrency:
+  group: bid-stack
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      NTFY_TOPICS_JSON: ${{ secrets.NTFY_TOPICS_JSON }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install -r requirements.txt
+
+      - name: Backfill baseline (manual runs only)
+        if: github.event_name == 'workflow_dispatch' && inputs.backfill_days != '0'
+        run: python scripts/bid_stack_analysis.py ${{ inputs.backfill_days }} --backfill
+
+      - name: Analyse yesterday's bids
+        run: |
+          # After 08:00 NEM, publish even if the next-day dispatch file is late (volumes then untrimmed, flagged on the page).
+          HOUR=$(date -u -d '+10 hours' +%H)
+          if [ "$HOUR" -ge 8 ]; then python scripts/bid_stack_analysis.py --allow-partial; else python scripts/bid_stack_analysis.py; fi
+
+      - name: Commit dashboard and state
+        id: commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add state/bidstack_history.csv state/bidstack_state.json state/aemo_units_meta.json registry/aemo_units.csv docs/bidstack 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "Update bid stack [skip ci]"
+            for i in 1 2 3; do
+              git pull --rebase origin main && git push && break
+              echo "Push attempt $i failed, retrying..."
+              git rebase --abort 2>/dev/null || true
+              sleep 5
+            done
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Publishes docs/ to GitHub Pages. Needs Settings -> Pages -> Source: "GitHub Actions"
+      # (one-off). Until that's set these steps fail softly and the run still succeeds.
+      # Deploys every run so the page always matches docs/ on main.
+      - uses: actions/upload-pages-artifact@v3
+        continue-on-error: true
+        with:
+          path: docs
+      - uses: actions/deploy-pages@v4
+        continue-on-error: true
