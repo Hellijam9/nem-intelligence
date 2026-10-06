@@ -27,6 +27,9 @@ Method (sourced, not invented)
   * Offer prices are at the connection point; they're referred to the regional
     reference node by dividing by the unit's transmission loss factor (this is why
     some band-10 prices exceed the market price cap in the raw file).
+  * Fuel, region, station and loss factor come from AEMO's own unit registration (MMSDM
+    archive: GENUNITS.CO2E_ENERGY_SOURCE via DUALLOC, DUDETAILSUMMARY), cached in
+    registry/aemo_units.csv. Units AEMO hasn't classified yet show as "Unclassified".
   * Only ENERGY bids in the GEN direction are counted (bidirectional batteries'
     LOAD side and scheduled loads are demand, not supply).
   * Pivotal supplier test: a simplified AER PST - portfolio P is pivotal in region R
@@ -295,28 +298,153 @@ def load_predispatch() -> tuple[pd.DataFrame, pd.DataFrame] | None:
 # Registry
 # ---------------------------------------------------------------------------
 
-CP_REGION = {"N": "NSW1", "Q": "QLD1", "V": "VIC1", "S": "SA1", "T": "TAS1"}
+# AEMO's own unit registration, from the monthly MMSDM archive on NEMWeb (the same source
+# UNSW-CEEM's tools fall back to - AEMO's registration spreadsheet is Cloudflare-blocked for
+# CI runners). Fuel comes from GENUNITS.CO2E_ENERGY_SOURCE (a closed AEMO vocabulary, mapped
+# explicitly below), joined DUID -> GENSETID via DUALLOC; region, participant, station and the
+# current transmission loss factor come from DUDETAILSUMMARY. Nothing is inferred from names:
+# a unit AEMO hasn't classified yet (newer than the latest monthly archive) is "Unclassified".
+MMSDM_BASE = "https://www.nemweb.com.au/Data_Archive/Wholesale_Electricity/MMSDM/"
+AEMO_UNITS_CACHE = nw.REGISTRY_DIR / "aemo_units.csv"
+AEMO_UNITS_META = "aemo_units_meta.json"
+ENERGY_SOURCE_FUEL = {
+    "black coal": "Black Coal",
+    "brown coal": "Brown Coal",
+    "natural gas (pipeline)": "Gas",
+    "coal seam methane": "Gas",
+    "coal mine waste gas": "Gas",
+    "ethane": "Gas",
+    "hydro": "Hydro",
+    "battery storage": "Battery",
+    "wind": "Wind",
+    "solar": "Solar",
+    "diesel oil": "Diesel",
+    "kerosene - non aviation": "Diesel",
+    "landfill biogas methane": "Bioenergy",
+    "biomass and industrial materials": "Bioenergy",
+    "bagasse": "Bioenergy",
+    "other biofuels": "Bioenergy",
+    "primary solid biomass fuels": "Bioenergy",
+    "other solid fossil fuels": "Other",
+}
+CP_REGION = {"N": "NSW1", "Q": "QLD1", "V": "VIC1", "S": "SA1", "T": "TAS1"}  # AEMO TNI code convention
 
 
-def infer_fuel(duid: str) -> str:
-    """Last-resort fuel guess from AEMO's DUID naming habits, only for units missing from registry/."""
-    d = duid.upper()
-    if d.startswith("DR"):                      # wholesale demand response units (DRXN..., DRVI...)
-        return "Demand response"
-    if re.search(r"BES|BAT|BESS|BS\d|^ERB|RB\d$|BA\d", d):
-        return "Battery"
-    if re.search(r"PHG|PSH|HYD", d):
-        return "Hydro"
-    if re.search(r"SF|SOL|PV\d", d):
-        return "Solar"
-    if re.search(r"WF|WND|WIND", d):
-        return "Wind"
-    return "Other"
+def _links(url: str) -> list[str]:
+    import requests
+    r = requests.get(url, headers=nw.HTTP_HEADERS, timeout=nw.CONFIG["request_timeout_seconds"])
+    r.raise_for_status()
+    return re.findall(r'href="([^"]+)"', r.text, re.I)
+
+
+def _latest_mmsdm_data_dir() -> tuple[str, str]:
+    from urllib.parse import urljoin
+    years = sorted(h for h in _links(MMSDM_BASE) if re.search(r"/\d{4}/$", h))
+    for y in reversed(years):
+        yurl = urljoin(MMSDM_BASE, y)
+        months = sorted(h for h in _links(yurl) if re.search(r"MMSDM_\d{4}_\d{2}/$", h))
+        for m in reversed(months):
+            data = urljoin(yurl, m) + "MMSDM_Historical_Data_SQLLoader/DATA/"
+            try:
+                files = _links(data)
+            except Exception:
+                continue
+            if any("DUDETAILSUMMARY" in f for f in files):
+                return data, re.search(r"MMSDM_(\d{4}_\d{2})", m).group(1)
+    raise RuntimeError("no MMSDM DATA directory found")
+
+
+def _mmsdm_table(data_url: str, table: str) -> pd.DataFrame:
+    from urllib.parse import urljoin
+    files = _links(data_url)
+    pat = re.compile(rf"(%23|#){table}(%23|#)FILE\d+", re.I)
+    picks = [f for f in files if pat.search(f)]
+    if not picks:
+        raise RuntimeError(f"{table} not in {data_url}")
+    frames = []
+    for f in picks:
+        tables = nw.parse_mms_zip(nw.download_bytes(urljoin(data_url, f)))
+        frames.append(nw.get_table(tables, table))
+    return pd.concat(frames, ignore_index=True)
+
+
+def build_aemo_units() -> pd.DataFrame:
+    data_url, month = _latest_mmsdm_data_dir()
+    log(f"refreshing AEMO unit registration from MMSDM {month}")
+    today = datetime.now(nw.NEM_TZ).strftime("%Y/%m/%d %H:%M:%S")
+
+    dus = _mmsdm_table(data_url, "DUDETAILSUMMARY")
+    cur = dus[(dus["START_DATE"] <= today) & (dus["END_DATE"] > today)]
+    dus = pd.concat([cur, dus[~dus["DUID"].isin(cur["DUID"])]]).sort_values("START_DATE").drop_duplicates("DUID", keep="last")
+    dus = dus[["DUID", "REGIONID", "PARTICIPANTID", "STATIONID", "DISPATCHTYPE", "SCHEDULE_TYPE",
+               "TRANSMISSIONLOSSFACTOR", "END_DATE"]]
+
+    dual = _mmsdm_table(data_url, "DUALLOC")
+    dual["VERSIONNO"] = pd.to_numeric(dual["VERSIONNO"], errors="coerce")
+    latest = dual.groupby("DUID")["EFFECTIVEDATE"].transform("max")
+    dual = dual[dual["EFFECTIVEDATE"] == latest]
+    dual = dual[dual["VERSIONNO"] == dual.groupby("DUID")["VERSIONNO"].transform("max")][["DUID", "GENSETID"]]
+
+    gen = _mmsdm_table(data_url, "GENUNITS")[["GENSETID", "CO2E_ENERGY_SOURCE", "REGISTEREDCAPACITY", "GENSETTYPE"]]
+    gen["REGISTEREDCAPACITY"] = pd.to_numeric(gen["REGISTEREDCAPACITY"], errors="coerce").fillna(0)
+    g = dual.merge(gen, on="GENSETID", how="left")
+    g = g[g["CO2E_ENERGY_SOURCE"].fillna("").str.strip() != ""]
+    # A DUID can span several gensets; take the energy source carrying the most registered MW.
+    g = (g.groupby(["DUID", "CO2E_ENERGY_SOURCE"], as_index=False)["REGISTEREDCAPACITY"].sum()
+         .sort_values("REGISTEREDCAPACITY").drop_duplicates("DUID", keep="last"))
+
+    st = _mmsdm_table(data_url, "STATION")[["STATIONID", "STATIONNAME"]].drop_duplicates("STATIONID", keep="last")
+    pa = _mmsdm_table(data_url, "PARTICIPANT")
+    pa = pa[["PARTICIPANTID", "NAME"]].drop_duplicates("PARTICIPANTID", keep="last").rename(columns={"NAME": "PARTICIPANTNAME"})
+
+    out = (dus.merge(g[["DUID", "CO2E_ENERGY_SOURCE"]], on="DUID", how="left")
+              .merge(st, on="STATIONID", how="left").merge(pa, on="PARTICIPANTID", how="left"))
+    out["AEMO_FUEL"] = out["CO2E_ENERGY_SOURCE"].str.strip().str.lower().map(ENERGY_SOURCE_FUEL)
+    unmapped = sorted(set(out.loc[out["CO2E_ENERGY_SOURCE"].notna() & out["AEMO_FUEL"].isna(), "CO2E_ENERGY_SOURCE"]))
+    if unmapped:
+        log(f"WARNING: new AEMO energy-source values not mapped yet (shown as Unclassified): {unmapped}")
+    out["MMSDM_MONTH"] = month
+    return out
+
+
+def load_aemo_units() -> pd.DataFrame | None:
+    """Cached in registry/aemo_units.csv; refreshed when AEMO publishes a newer monthly archive."""
+    meta = nw.read_state(AEMO_UNITS_META, default={}) or {}
+    cached = None
+    if AEMO_UNITS_CACHE.exists():
+        try:
+            cached = pd.read_csv(AEMO_UNITS_CACHE, dtype=str)
+        except Exception:
+            cached = None
+    stale = cached is None or meta.get("checked") != datetime.now(nw.NEM_TZ).strftime("%Y-%m-%d")
+    if stale:
+        try:
+            _, month = _latest_mmsdm_data_dir()
+            if cached is None or month != meta.get("month"):
+                fresh = build_aemo_units()
+                fresh.to_csv(AEMO_UNITS_CACHE, index=False)
+                cached = fresh.astype(str).replace({"nan": np.nan, "None": np.nan})
+            nw.write_state(AEMO_UNITS_META, {"month": month, "checked": datetime.now(nw.NEM_TZ).strftime("%Y-%m-%d")})
+        except Exception as exc:
+            log(f"WARNING: AEMO unit registration refresh failed ({exc}) - using cached copy" if cached is not None
+                else f"WARNING: AEMO unit registration unavailable ({exc})")
+    return cached
 
 
 def registry_table(day_df: pd.DataFrame, disp: pd.DataFrame | None) -> pd.DataFrame:
     reg = nw.load_registry()
+    aemo = load_aemo_units()
     base = pd.DataFrame({"DUID": day_df["DUID"], "PARTICIPANTID": day_df["PARTICIPANTID"]})
+    base = base[~base["DUID"].str.startswith("DG_")]   # AEMO dummy generators, not real supply
+
+    if aemo is not None:
+        a = aemo[["DUID", "REGIONID", "STATIONNAME", "AEMO_FUEL", "TRANSMISSIONLOSSFACTOR", "PARTICIPANTNAME"]]
+        base = base.merge(a.rename(columns={"REGIONID": "A_REGION", "STATIONNAME": "A_STATION",
+                                            "TRANSMISSIONLOSSFACTOR": "A_TLF"}), on="DUID", how="left")
+    else:
+        for c in ["A_REGION", "A_STATION", "AEMO_FUEL", "A_TLF", "PARTICIPANTNAME"]:
+            base[c] = np.nan
+
     if reg.fuel_info is not None:
         fi = reg.fuel_info.drop_duplicates("DUID", keep="last")[
             ["DUID", "REGIONID", "PORTFOLIO", "STATIONNAME", "FUEL", "TransmissionLossFactor"]]
@@ -329,37 +457,46 @@ def registry_table(day_df: pd.DataFrame, disp: pd.DataFrame | None) -> pd.DataFr
         base = base.merge(di[["DUID", "REGION", "UNIT_NAME"]], on="DUID", how="left")
         base["REGIONID"] = base["REGIONID"].fillna(base["REGION"].astype(str).str.upper().str.rstrip("1") + "1")
         base["STATIONNAME"] = base["STATIONNAME"].fillna(base["UNIT_NAME"])
-    # Units newer than the registry files: region from the connection point (AEMO TNI codes start
-    # with the region letter), fuel guessed from the DUID, portfolio = trading participant.
-    base["INFERRED"] = base["REGIONID"].isna() | ~base["REGIONID"].isin(REGIONS)
+
+    # AEMO's registration is the authority; the hand-kept registry/ files fill gaps only.
+    base["REGIONID"] = base["A_REGION"].where(base["A_REGION"].isin(REGIONS), base["REGIONID"])
+    base["FUEL"] = base["AEMO_FUEL"].fillna(base["FUEL"])
+    base["STATIONNAME"] = base["A_STATION"].fillna(base["STATIONNAME"])
+    base["TLF"] = pd.to_numeric(base["A_TLF"], errors="coerce").fillna(
+        pd.to_numeric(base["TransmissionLossFactor"], errors="coerce"))
+
+    # Region only (never fuel) for units newer than both sources: AEMO's transmission node codes
+    # begin with the region letter.
+    base["INFERRED"] = ~base["REGIONID"].isin(REGIONS)
     if disp is not None and "CONNECTIONPOINTID" in disp.columns:
         cp = disp.drop_duplicates("DUID").set_index("DUID")["CONNECTIONPOINTID"].astype(str).str[:1].map(CP_REGION)
         base.loc[base["INFERRED"], "REGIONID"] = base.loc[base["INFERRED"], "DUID"].map(cp)
-    base.loc[base["INFERRED"] & base["FUEL"].isna(), "FUEL"] = base.loc[base["INFERRED"] & base["FUEL"].isna(), "DUID"].map(infer_fuel)
-    base = base[~base["DUID"].str.startswith("DG_")]   # AEMO dummy generators, not real supply
+
     if reg.owner_capacity is not None and "Owner" in reg.owner_capacity.columns:
         base = base.merge(reg.owner_capacity[["DUID", "Owner"]], on="DUID", how="left")
     else:
         base["Owner"] = np.nan
     # Portfolio = trading brand (AGL, Origin Energy, CS Energy...), the level at which bidding
-    # strategy is actually set. Legal-entity Owner and raw PARTICIPANTID are fallbacks only.
-    # A new unit traded by a participant that already trades registered units inherits that brand
-    # (e.g. AGL's Liddell battery bids under an AGL participant ID).
+    # strategy is set. A unit traded under a participant ID that already trades branded units
+    # inherits that brand; otherwise AEMO's registered participant name, then the legal owner.
     brand = (base.dropna(subset=["PORTFOLIO"]).groupby("PARTICIPANTID")["PORTFOLIO"]
              .agg(lambda x: x.value_counts().index[0]))
-    owner = (base["Owner"].astype("string")
-             .str.replace(r"\s+as (the )?trustee.*$", "", regex=True, case=False)
-             .str.replace(r"\s+(Pty\.? ?Ltd\.?|Pty Limited|Limited|Ltd)\s*$", "", regex=True, case=False))
+    tidy = lambda s: (s.astype("string")
+                      .str.replace(r"\s+as (the )?trustee.*$", "", regex=True, case=False)
+                      .str.replace(r"\s+(Pty\.? ?Ltd\.?|Pty Limited|Limited|Ltd)\s*$", "", regex=True, case=False)
+                      .str.strip())
     base["PORTFOLIO"] = (base["PORTFOLIO"].fillna(base["PARTICIPANTID"].map(brand))
-                         .fillna(owner).fillna(base["PARTICIPANTID"]))
-    base["FUEL"] = base["FUEL"].fillna("Other")
+                         .fillna(tidy(base["PARTICIPANTNAME"])).fillna(tidy(base["Owner"]))
+                         .fillna(base["PARTICIPANTID"]))
+    base["FUEL"] = base["FUEL"].fillna("Unclassified")
     base["STATIONNAME"] = base["STATIONNAME"].fillna(base["DUID"])
-    base["TLF"] = pd.to_numeric(base["TransmissionLossFactor"], errors="coerce").fillna(1.0)
+    base["TLF"] = base["TLF"].fillna(1.0)
     base.loc[(base["TLF"] < 0.5) | (base["TLF"] > 1.5), "TLF"] = 1.0
-    inferred = base[base["INFERRED"] & base["REGIONID"].isin(REGIONS)]
-    if len(inferred):
-        log(f"NOTE: {len(inferred)} DUIDs missing from registry/ - region from connection point, fuel guessed: "
-            + ", ".join(f"{r.DUID}({r.FUEL})" for r in inferred.itertuples()))
+
+    uncl = base[base["FUEL"] == "Unclassified"]
+    if len(uncl):
+        log(f"NOTE: {len(uncl)} DUIDs not yet fuel-classified by AEMO (shown as Unclassified): "
+            + ", ".join(sorted(uncl["DUID"])))
     return base[["DUID", "REGIONID", "PORTFOLIO", "STATIONNAME", "FUEL", "TLF", "INFERRED"]]
 
 

@@ -136,7 +136,7 @@ details summary { cursor: pointer; color: var(--ink); font-weight: 600; }
       <p>Band volumes are trimmed from the top band down to each unit's dispatch availability (the approach used by UNSW-CEEM's NEM bidding dashboard), so wind and solar count only what the weather allowed. Fixed loads count as priced below $0 and offers are summed per price range and averaged over intervals, following the AER's wholesale market performance methods. Prices are referred to the regional reference node using each unit's transmission loss factor. Only energy offers in the generating direction are counted.</p>
       <p>Pivotal test: simplified AER pivotal supplier test - regional available capacity minus the portfolio's own, plus interconnector import capability, compared with regional total demand. Forced interconnector flows aren't netted off, so treat it as a screen, not a finding.</p>
       <p>Not a price-setter analysis. AEMO's price-setter files arrive about a month late, and a single-region stack ignores interconnectors, network constraints and FCAS co-optimisation. The stack-implied price is only a check on the stack.</p>
-      <p>Portfolios use the trading-brand name from the registry file (e.g. AGL, Origin Energy, CS Energy), so they're only as current as that file.</p>
+      <p>Fuel type, region, station and loss factor come from AEMO's own unit registration (the monthly MMSDM archive: GENUNITS energy source, DUDETAILSUMMARY), refreshed when AEMO publishes a new month. Units registered since the latest archive show as "Unclassified" rather than being guessed. Portfolios use the trading-brand name from the registry file (e.g. AGL, Origin Energy, CS Energy), falling back to AEMO's registered participant name.</p>
     </details>
   </section>
 </main>

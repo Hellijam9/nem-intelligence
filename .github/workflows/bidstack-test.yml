@@ -2,20 +2,34 @@ name: bid stack test (branch only)
 on:
   push:
     branches: [bid-stack]
-    paths: ["scratch/*.py", ".github/workflows/bidstack-test.yml"]
+    paths: ["scripts/bid_stack*", ".github/workflows/bidstack-test.yml"]
 permissions:
   contents: write
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: "3.12"}
       - run: pip install -r requirements.txt
-      - run: python scratch/probe.py > scratch/out.txt 2>&1 || true
+      - run: |
+          mkdir -p scratch
+          ( rm -f state/bidstack_history.csv state/bidstack_state.json; python scripts/bid_stack_analysis.py 20 --backfill && python scripts/bid_stack_analysis.py --force --no-push ) > scratch/out.txt 2>&1 || echo "EXIT $?" >> scratch/out.txt
+          python - >> scratch/out.txt 2>&1 <<'PY'
+          import pandas as pd
+          a = pd.read_csv("registry/aemo_units.csv", dtype=str)
+          print("aemo_units rows", len(a), "fuel counts", a["AEMO_FUEL"].value_counts(dropna=False).to_dict())
+          r = pd.read_csv("registry/Scheduled+Plant+Information+Fuel(-2).csv", dtype=str)
+          m = r.merge(a, on="DUID", how="inner")
+          m["F2"] = m["FUEL"]
+          diff = m[(m["AEMO_FUEL"].notna()) & (m["F2"] != m["AEMO_FUEL"])]
+          print("registry vs AEMO fuel disagreements:", len(diff))
+          print(diff[["DUID", "STATIONNAME_x", "F2", "AEMO_FUEL", "CO2E_ENERGY_SOURCE"]].to_string()[:4000])
+          PY
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -f scratch/out.txt && git commit -m "probe output [skip ci]" && git push
+          git add -f scratch/out.txt docs/bidstack state/bidstack_history.csv state/bidstack_state.json state/aemo_units_meta.json registry/aemo_units.csv
+          git commit -m "bid stack test output [skip ci]" && git push
