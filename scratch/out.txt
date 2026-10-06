@@ -1,7 +1,7 @@
 [bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20260916_0000000538280364.zip
 [bid_stack] bids: 477 DUIDs with energy price bands, 137376 per-interval volume rows
 [bid_stack] dispatch: 164448 unit-interval rows
-[bid_stack] NOTE: 28 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): DRVIOT06, DRVIOT07, DRXNAD01, DRXNAE01, DRXNDA01, DRXNDA02, DRXNDA03, DRXNDA04, DRXNDB04, DRXNDE01, DRXNDJ01, DRXNDW01, DRXNFF01, DRXNFS01, DRXNQX01, DRXNSS01, DRXNTM02, DRXNVS01, DRXQDA01, DRXQQE01, DRXSQS01, DRXVAE01, DRXVDJ01, DRXVDP01, DRXVDX01, DRXVQP01, DRXVQX01, DRXVQX02
+[bid_stack] refreshing AEMO unit registration from MMSDM 2026_08
 [bid_stack] stack: 130795 unit-interval-band rows from 137376 unit-intervals
 [bid_stack] backfilled 20260916
 [bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20260917_0000000538455384.zip
@@ -97,13 +97,13 @@
 [bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20261005_0000000541385589.zip
 [bid_stack] bids: 478 DUIDs with energy price bands, 137424 per-interval volume rows
 [bid_stack] dispatch: 164496 unit-interval rows
-[bid_stack] NOTE: 29 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): DRVIOT06, DRVIOT07, DRXNAD01, DRXNAE01, DRXNDA01, DRXNDA02, DRXNDA03, DRXNDA04, DRXNDB04, DRXNDE01, DRXNDJ01, DRXNDW01, DRXNFF01, DRXNFS01, DRXNQX01, DRXNSS01, DRXNTM02, DRXNVS01, DRXQDA01, DRXQQE01, DRXSQS01, DRXVAE01, DRXVDJ01, DRXVDP01, DRXVDX01, DRXVQP01, DRXVQX01, DRXVQX02, UWF1
+[bid_stack] NOTE: 1 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): UWF1
 [bid_stack] stack: 120017 unit-interval-band rows from 137424 unit-intervals
 [bid_stack] backfilled 20261005
 [bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20261006_0000000541557678.zip
 [bid_stack] bids: 478 DUIDs with energy price bands, 137664 per-interval volume rows
 [bid_stack] dispatch: 164736 unit-interval rows
-[bid_stack] NOTE: 29 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): DRVIOT06, DRVIOT07, DRXNAD01, DRXNAE01, DRXNDA01, DRXNDA02, DRXNDA03, DRXNDA04, DRXNDB04, DRXNDE01, DRXNDJ01, DRXNDW01, DRXNFF01, DRXNFS01, DRXNQX01, DRXNSS01, DRXNTM02, DRXNVS01, DRXQDA01, DRXQQE01, DRXSQS01, DRXVAE01, DRXVDJ01, DRXVDP01, DRXVDX01, DRXVQP01, DRXVQX01, DRXVQX02, UWF1
+[bid_stack] NOTE: 1 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): UWF1
 [bid_stack] stack: 127257 unit-interval-band rows from 137664 unit-intervals
 [bid_stack] interconnector limits: 42 peak intervals
 [bid_stack] dashboard written: /home/runner/work/nem-intelligence/nem-intelligence/docs/bidstack/index.html
@@ -119,11 +119,22 @@ TAS: peak 18:50 | sub-$300 headroom 489MW | most $300+: Hydro Tas 167MW
 - QLD: Origin Energy priced 24pp more of its capacity at $300+ than its 20-day norm (100% of 456MW).
 - QLD: Supernode Operations priced 12pp more of its capacity at $300+ than its 20-day norm (22% of 513MW).
 - VIC: Snowy Hydro priced 11pp more of its capacity at $300+ than its 20-day norm (92% of 1,673MW).
-aemo_units rows 1017 fuel counts {nan: 286, 'Solar': 133, 'Gas': 110, 'Wind': 109, 'Battery': 96, 'Hydro': 90, 'Black Coal': 66, 'Bioenergy': 51, 'Diesel': 40, 'Brown Coal': 35, 'Other': 1}
-registry vs AEMO fuel disagreements: 5
-         DUID     STATIONNAME_x      F2 AEMO_FUEL       CO2E_ENERGY_SOURCE
-12      HVGTS  Hunter Valley GT   Other    Diesel  Kerosene - non aviation
-202  MSTUART1         Mt Stuart   Other    Diesel  Kerosene - non aviation
-203  MSTUART2         Mt Stuart   Other    Diesel  Kerosene - non aviation
-204  MSTUART3         Mt Stuart   Other    Diesel  Kerosene - non aviation
-284  BOLIVPS1           Bolivar  Diesel       Gas   Natural Gas (Pipeline)
+aemo_units rows 1017 fuel counts {'Demand response': 170, 'Solar': 133, nan: 116, 'Gas': 110, 'Wind': 109, 'Battery': 96, 'Hydro': 90, 'Black Coal': 66, 'Bioenergy': 51, 'Liquid fuel': 40, 'Brown Coal': 35, 'Other': 1}
+registry vs AEMO fuel disagreements: 16
+         DUID               STATIONNAME_x      F2    AEMO_FUEL       CO2E_ENERGY_SOURCE
+12      HVGTS            Hunter Valley GT   Other  Liquid fuel  Kerosene - non aviation
+100      HEZ1        Hunter Economic Zone  Diesel  Liquid fuel               Diesel oil
+202  MSTUART1                   Mt Stuart   Other  Liquid fuel  Kerosene - non aviation
+203  MSTUART2                   Mt Stuart   Other  Liquid fuel  Kerosene - non aviation
+204  MSTUART3                   Mt Stuart   Other  Liquid fuel  Kerosene - non aviation
+223  MACKAYGT                   Mackay GT  Diesel  Liquid fuel               Diesel oil
+276     POR01                Port Lincoln  Diesel  Liquid fuel               Diesel oil
+277     POR03                Port Lincoln  Diesel  Liquid fuel               Diesel oil
+278     SNUG1                    Snuggery  Diesel  Liquid fuel               Diesel oil
+284  BOLIVPS1                     Bolivar  Diesel          Gas   Natural Gas (Pipeline)
+302  SNAPPER1               Snapper Point  Diesel  Liquid fuel               Diesel oil
+320    SATGN1  Temporary Generation North  Diesel  Liquid fuel               Diesel oil
+321    SATGS1  Temporary Generation South  Diesel  Liquid fuel               Diesel oil
+322   ANGAST1                    Angaston  Diesel  Liquid fuel               Diesel oil
+323  LONSDALE                    Lonsdale  Diesel  Liquid fuel               Diesel oil
+324   PTSTAN1                Port Stanvac  Diesel  Liquid fuel               Diesel oil
