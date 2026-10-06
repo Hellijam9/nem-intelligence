@@ -5,8 +5,8 @@
     "V-S-MNSP1": true,
     "V-SA": false,
     "VIC1-NSW1": false,
-    "NSW1-QLD1": false,
+    "NSW1-QLD1": true,
     "NSW1-SA1": true
   },
-  "last_settlementdate": "2026/10/07 08:10:00"
+  "last_settlementdate": "2026/10/07 08:15:00"
 }
