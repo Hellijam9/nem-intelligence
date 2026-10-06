@@ -1,149 +1,109 @@
 [bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20260916_0000000538280364.zip
 [bid_stack] bids: 477 DUIDs with energy price bands, 137376 per-interval volume rows
 [bid_stack] dispatch: 164448 unit-interval rows
-[bid_stack] refreshing AEMO unit registration from MMSDM 2026_08
 [bid_stack] NOTE: 28 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): DRVIOT06, DRVIOT07, DRXNAD01, DRXNAE01, DRXNDA01, DRXNDA02, DRXNDA03, DRXNDA04, DRXNDB04, DRXNDE01, DRXNDJ01, DRXNDW01, DRXNFF01, DRXNFS01, DRXNQX01, DRXNSS01, DRXNTM02, DRXNVS01, DRXQDA01, DRXQQE01, DRXSQS01, DRXVAE01, DRXVDJ01, DRXVDP01, DRXVDX01, DRXVQP01, DRXVQX01, DRXVQX02
-[bid_stack] NOTE: 5 DUIDs have no region in registry/ and were excluded: ['DG_NSW1', 'DG_QLD1', 'DG_SA1', 'DG_TAS1', 'DG_VIC1']
 [bid_stack] stack: 130795 unit-interval-band rows from 137376 unit-intervals
 [bid_stack] backfilled 20260916
 [bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20260917_0000000538455384.zip
 [bid_stack] bids: 477 DUIDs with energy price bands, 137376 per-interval volume rows
 [bid_stack] dispatch: 164448 unit-interval rows
-[bid_stack] NOTE: 28 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): DRVIOT06, DRVIOT07, DRXNAD01, DRXNAE01, DRXNDA01, DRXNDA02, DRXNDA03, DRXNDA04, DRXNDB04, DRXNDE01, DRXNDJ01, DRXNDW01, DRXNFF01, DRXNFS01, DRXNQX01, DRXNSS01, DRXNTM02, DRXNVS01, DRXQDA01, DRXQQE01, DRXSQS01, DRXVAE01, DRXVDJ01, DRXVDP01, DRXVDX01, DRXVQP01, DRXVQX01, DRXVQX02
-[bid_stack] NOTE: 5 DUIDs have no region in registry/ and were excluded: ['DG_NSW1', 'DG_QLD1', 'DG_SA1', 'DG_TAS1', 'DG_VIC1']
 [bid_stack] stack: 126845 unit-interval-band rows from 137376 unit-intervals
 [bid_stack] backfilled 20260917
 [bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20260918_0000000538635247.zip
 [bid_stack] bids: 477 DUIDs with energy price bands, 137376 per-interval volume rows
 [bid_stack] dispatch: 164448 unit-interval rows
-[bid_stack] NOTE: 28 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): DRVIOT06, DRVIOT07, DRXNAD01, DRXNAE01, DRXNDA01, DRXNDA02, DRXNDA03, DRXNDA04, DRXNDB04, DRXNDE01, DRXNDJ01, DRXNDW01, DRXNFF01, DRXNFS01, DRXNQX01, DRXNSS01, DRXNTM02, DRXNVS01, DRXQDA01, DRXQQE01, DRXSQS01, DRXVAE01, DRXVDJ01, DRXVDP01, DRXVDX01, DRXVQP01, DRXVQX01, DRXVQX02
-[bid_stack] NOTE: 5 DUIDs have no region in registry/ and were excluded: ['DG_NSW1', 'DG_QLD1', 'DG_SA1', 'DG_TAS1', 'DG_VIC1']
 [bid_stack] stack: 130759 unit-interval-band rows from 137376 unit-intervals
 [bid_stack] backfilled 20260918
 [bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20260919_0000000538808991.zip
 [bid_stack] bids: 477 DUIDs with energy price bands, 137376 per-interval volume rows
 [bid_stack] dispatch: 164448 unit-interval rows
-[bid_stack] NOTE: 28 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): DRVIOT06, DRVIOT07, DRXNAD01, DRXNAE01, DRXNDA01, DRXNDA02, DRXNDA03, DRXNDA04, DRXNDB04, DRXNDE01, DRXNDJ01, DRXNDW01, DRXNFF01, DRXNFS01, DRXNQX01, DRXNSS01, DRXNTM02, DRXNVS01, DRXQDA01, DRXQQE01, DRXSQS01, DRXVAE01, DRXVDJ01, DRXVDP01, DRXVDX01, DRXVQP01, DRXVQX01, DRXVQX02
-[bid_stack] NOTE: 5 DUIDs have no region in registry/ and were excluded: ['DG_NSW1', 'DG_QLD1', 'DG_SA1', 'DG_TAS1', 'DG_VIC1']
 [bid_stack] stack: 125063 unit-interval-band rows from 137376 unit-intervals
 [bid_stack] backfilled 20260919
 [bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20260920_0000000538985001.zip
 [bid_stack] bids: 477 DUIDs with energy price bands, 137376 per-interval volume rows
 [bid_stack] dispatch: 164448 unit-interval rows
-[bid_stack] NOTE: 28 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): DRVIOT06, DRVIOT07, DRXNAD01, DRXNAE01, DRXNDA01, DRXNDA02, DRXNDA03, DRXNDA04, DRXNDB04, DRXNDE01, DRXNDJ01, DRXNDW01, DRXNFF01, DRXNFS01, DRXNQX01, DRXNSS01, DRXNTM02, DRXNVS01, DRXQDA01, DRXQQE01, DRXSQS01, DRXVAE01, DRXVDJ01, DRXVDP01, DRXVDX01, DRXVQP01, DRXVQX01, DRXVQX02
-[bid_stack] NOTE: 5 DUIDs have no region in registry/ and were excluded: ['DG_NSW1', 'DG_QLD1', 'DG_SA1', 'DG_TAS1', 'DG_VIC1']
 [bid_stack] stack: 122933 unit-interval-band rows from 137376 unit-intervals
 [bid_stack] backfilled 20260920
 [bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20260921_0000000539164011.zip
 [bid_stack] bids: 477 DUIDs with energy price bands, 137376 per-interval volume rows
 [bid_stack] dispatch: 164448 unit-interval rows
-[bid_stack] NOTE: 28 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): DRVIOT06, DRVIOT07, DRXNAD01, DRXNAE01, DRXNDA01, DRXNDA02, DRXNDA03, DRXNDA04, DRXNDB04, DRXNDE01, DRXNDJ01, DRXNDW01, DRXNFF01, DRXNFS01, DRXNQX01, DRXNSS01, DRXNTM02, DRXNVS01, DRXQDA01, DRXQQE01, DRXSQS01, DRXVAE01, DRXVDJ01, DRXVDP01, DRXVDX01, DRXVQP01, DRXVQX01, DRXVQX02
-[bid_stack] NOTE: 5 DUIDs have no region in registry/ and were excluded: ['DG_NSW1', 'DG_QLD1', 'DG_SA1', 'DG_TAS1', 'DG_VIC1']
 [bid_stack] stack: 123997 unit-interval-band rows from 137376 unit-intervals
 [bid_stack] backfilled 20260921
 [bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20260922_0000000539338336.zip
 [bid_stack] bids: 477 DUIDs with energy price bands, 137376 per-interval volume rows
 [bid_stack] dispatch: 164448 unit-interval rows
-[bid_stack] NOTE: 28 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): DRVIOT06, DRVIOT07, DRXNAD01, DRXNAE01, DRXNDA01, DRXNDA02, DRXNDA03, DRXNDA04, DRXNDB04, DRXNDE01, DRXNDJ01, DRXNDW01, DRXNFF01, DRXNFS01, DRXNQX01, DRXNSS01, DRXNTM02, DRXNVS01, DRXQDA01, DRXQQE01, DRXSQS01, DRXVAE01, DRXVDJ01, DRXVDP01, DRXVDX01, DRXVQP01, DRXVQX01, DRXVQX02
-[bid_stack] NOTE: 5 DUIDs have no region in registry/ and were excluded: ['DG_NSW1', 'DG_QLD1', 'DG_SA1', 'DG_TAS1', 'DG_VIC1']
 [bid_stack] stack: 125591 unit-interval-band rows from 137376 unit-intervals
 [bid_stack] backfilled 20260922
 [bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20260923_0000000539508591.zip
 [bid_stack] bids: 477 DUIDs with energy price bands, 137376 per-interval volume rows
 [bid_stack] dispatch: 164448 unit-interval rows
-[bid_stack] NOTE: 28 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): DRVIOT06, DRVIOT07, DRXNAD01, DRXNAE01, DRXNDA01, DRXNDA02, DRXNDA03, DRXNDA04, DRXNDB04, DRXNDE01, DRXNDJ01, DRXNDW01, DRXNFF01, DRXNFS01, DRXNQX01, DRXNSS01, DRXNTM02, DRXNVS01, DRXQDA01, DRXQQE01, DRXSQS01, DRXVAE01, DRXVDJ01, DRXVDP01, DRXVDX01, DRXVQP01, DRXVQX01, DRXVQX02
-[bid_stack] NOTE: 5 DUIDs have no region in registry/ and were excluded: ['DG_NSW1', 'DG_QLD1', 'DG_SA1', 'DG_TAS1', 'DG_VIC1']
 [bid_stack] stack: 116637 unit-interval-band rows from 137376 unit-intervals
 [bid_stack] backfilled 20260923
 [bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20260924_0000000539679898.zip
 [bid_stack] bids: 477 DUIDs with energy price bands, 137376 per-interval volume rows
 [bid_stack] dispatch: 164448 unit-interval rows
-[bid_stack] NOTE: 28 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): DRVIOT06, DRVIOT07, DRXNAD01, DRXNAE01, DRXNDA01, DRXNDA02, DRXNDA03, DRXNDA04, DRXNDB04, DRXNDE01, DRXNDJ01, DRXNDW01, DRXNFF01, DRXNFS01, DRXNQX01, DRXNSS01, DRXNTM02, DRXNVS01, DRXQDA01, DRXQQE01, DRXSQS01, DRXVAE01, DRXVDJ01, DRXVDP01, DRXVDX01, DRXVQP01, DRXVQX01, DRXVQX02
-[bid_stack] NOTE: 5 DUIDs have no region in registry/ and were excluded: ['DG_NSW1', 'DG_QLD1', 'DG_SA1', 'DG_TAS1', 'DG_VIC1']
 [bid_stack] stack: 125588 unit-interval-band rows from 137376 unit-intervals
 [bid_stack] backfilled 20260924
 [bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20260925_0000000539813103.zip
 [bid_stack] bids: 477 DUIDs with energy price bands, 137376 per-interval volume rows
 [bid_stack] dispatch: 164448 unit-interval rows
-[bid_stack] NOTE: 28 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): DRVIOT06, DRVIOT07, DRXNAD01, DRXNAE01, DRXNDA01, DRXNDA02, DRXNDA03, DRXNDA04, DRXNDB04, DRXNDE01, DRXNDJ01, DRXNDW01, DRXNFF01, DRXNFS01, DRXNQX01, DRXNSS01, DRXNTM02, DRXNVS01, DRXQDA01, DRXQQE01, DRXSQS01, DRXVAE01, DRXVDJ01, DRXVDP01, DRXVDX01, DRXVQP01, DRXVQX01, DRXVQX02
-[bid_stack] NOTE: 5 DUIDs have no region in registry/ and were excluded: ['DG_NSW1', 'DG_QLD1', 'DG_SA1', 'DG_TAS1', 'DG_VIC1']
 [bid_stack] stack: 126050 unit-interval-band rows from 137376 unit-intervals
 [bid_stack] backfilled 20260925
 [bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20260926_0000000539935112.zip
 [bid_stack] bids: 477 DUIDs with energy price bands, 137376 per-interval volume rows
 [bid_stack] dispatch: 164448 unit-interval rows
-[bid_stack] NOTE: 28 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): DRVIOT06, DRVIOT07, DRXNAD01, DRXNAE01, DRXNDA01, DRXNDA02, DRXNDA03, DRXNDA04, DRXNDB04, DRXNDE01, DRXNDJ01, DRXNDW01, DRXNFF01, DRXNFS01, DRXNQX01, DRXNSS01, DRXNTM02, DRXNVS01, DRXQDA01, DRXQQE01, DRXSQS01, DRXVAE01, DRXVDJ01, DRXVDP01, DRXVDX01, DRXVQP01, DRXVQX01, DRXVQX02
-[bid_stack] NOTE: 5 DUIDs have no region in registry/ and were excluded: ['DG_NSW1', 'DG_QLD1', 'DG_SA1', 'DG_TAS1', 'DG_VIC1']
 [bid_stack] stack: 128735 unit-interval-band rows from 137376 unit-intervals
 [bid_stack] backfilled 20260926
 [bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20260927_0000000540061322.zip
 [bid_stack] bids: 477 DUIDs with energy price bands, 137376 per-interval volume rows
 [bid_stack] dispatch: 164448 unit-interval rows
-[bid_stack] NOTE: 28 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): DRVIOT06, DRVIOT07, DRXNAD01, DRXNAE01, DRXNDA01, DRXNDA02, DRXNDA03, DRXNDA04, DRXNDB04, DRXNDE01, DRXNDJ01, DRXNDW01, DRXNFF01, DRXNFS01, DRXNQX01, DRXNSS01, DRXNTM02, DRXNVS01, DRXQDA01, DRXQQE01, DRXSQS01, DRXVAE01, DRXVDJ01, DRXVDP01, DRXVDX01, DRXVQP01, DRXVQX01, DRXVQX02
-[bid_stack] NOTE: 5 DUIDs have no region in registry/ and were excluded: ['DG_NSW1', 'DG_QLD1', 'DG_SA1', 'DG_TAS1', 'DG_VIC1']
 [bid_stack] stack: 128231 unit-interval-band rows from 137376 unit-intervals
 [bid_stack] backfilled 20260927
 [bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20260928_0000000540185705.zip
 [bid_stack] bids: 477 DUIDs with energy price bands, 137376 per-interval volume rows
 [bid_stack] dispatch: 164448 unit-interval rows
-[bid_stack] NOTE: 28 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): DRVIOT06, DRVIOT07, DRXNAD01, DRXNAE01, DRXNDA01, DRXNDA02, DRXNDA03, DRXNDA04, DRXNDB04, DRXNDE01, DRXNDJ01, DRXNDW01, DRXNFF01, DRXNFS01, DRXNQX01, DRXNSS01, DRXNTM02, DRXNVS01, DRXQDA01, DRXQQE01, DRXSQS01, DRXVAE01, DRXVDJ01, DRXVDP01, DRXVDX01, DRXVQP01, DRXVQX01, DRXVQX02
-[bid_stack] NOTE: 5 DUIDs have no region in registry/ and were excluded: ['DG_NSW1', 'DG_QLD1', 'DG_SA1', 'DG_TAS1', 'DG_VIC1']
 [bid_stack] stack: 126803 unit-interval-band rows from 137376 unit-intervals
 [bid_stack] backfilled 20260928
 [bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20260929_0000000540337221.zip
 [bid_stack] bids: 477 DUIDs with energy price bands, 137376 per-interval volume rows
 [bid_stack] dispatch: 164448 unit-interval rows
-[bid_stack] NOTE: 28 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): DRVIOT06, DRVIOT07, DRXNAD01, DRXNAE01, DRXNDA01, DRXNDA02, DRXNDA03, DRXNDA04, DRXNDB04, DRXNDE01, DRXNDJ01, DRXNDW01, DRXNFF01, DRXNFS01, DRXNQX01, DRXNSS01, DRXNTM02, DRXNVS01, DRXQDA01, DRXQQE01, DRXSQS01, DRXVAE01, DRXVDJ01, DRXVDP01, DRXVDX01, DRXVQP01, DRXVQX01, DRXVQX02
-[bid_stack] NOTE: 5 DUIDs have no region in registry/ and were excluded: ['DG_NSW1', 'DG_QLD1', 'DG_SA1', 'DG_TAS1', 'DG_VIC1']
 [bid_stack] stack: 124677 unit-interval-band rows from 137376 unit-intervals
 [bid_stack] backfilled 20260929
 [bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20260930_0000000540513461.zip
 [bid_stack] bids: 477 DUIDs with energy price bands, 137376 per-interval volume rows
 [bid_stack] dispatch: 164448 unit-interval rows
-[bid_stack] NOTE: 28 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): DRVIOT06, DRVIOT07, DRXNAD01, DRXNAE01, DRXNDA01, DRXNDA02, DRXNDA03, DRXNDA04, DRXNDB04, DRXNDE01, DRXNDJ01, DRXNDW01, DRXNFF01, DRXNFS01, DRXNQX01, DRXNSS01, DRXNTM02, DRXNVS01, DRXQDA01, DRXQQE01, DRXSQS01, DRXVAE01, DRXVDJ01, DRXVDP01, DRXVDX01, DRXVQP01, DRXVQX01, DRXVQX02
-[bid_stack] NOTE: 5 DUIDs have no region in registry/ and were excluded: ['DG_NSW1', 'DG_QLD1', 'DG_SA1', 'DG_TAS1', 'DG_VIC1']
 [bid_stack] stack: 127523 unit-interval-band rows from 137376 unit-intervals
 [bid_stack] backfilled 20260930
 [bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20261001_0000000540695909.zip
 [bid_stack] bids: 477 DUIDs with energy price bands, 137376 per-interval volume rows
 [bid_stack] dispatch: 164448 unit-interval rows
-[bid_stack] NOTE: 28 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): DRVIOT06, DRVIOT07, DRXNAD01, DRXNAE01, DRXNDA01, DRXNDA02, DRXNDA03, DRXNDA04, DRXNDB04, DRXNDE01, DRXNDJ01, DRXNDW01, DRXNFF01, DRXNFS01, DRXNQX01, DRXNSS01, DRXNTM02, DRXNVS01, DRXQDA01, DRXQQE01, DRXSQS01, DRXVAE01, DRXVDJ01, DRXVDP01, DRXVDX01, DRXVQP01, DRXVQX01, DRXVQX02
-[bid_stack] NOTE: 5 DUIDs have no region in registry/ and were excluded: ['DG_NSW1', 'DG_QLD1', 'DG_SA1', 'DG_TAS1', 'DG_VIC1']
 [bid_stack] stack: 126415 unit-interval-band rows from 137376 unit-intervals
 [bid_stack] backfilled 20261001
 [bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20261002_0000000540875768.zip
 [bid_stack] bids: 477 DUIDs with energy price bands, 137376 per-interval volume rows
 [bid_stack] dispatch: 164448 unit-interval rows
-[bid_stack] NOTE: 28 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): DRVIOT06, DRVIOT07, DRXNAD01, DRXNAE01, DRXNDA01, DRXNDA02, DRXNDA03, DRXNDA04, DRXNDB04, DRXNDE01, DRXNDJ01, DRXNDW01, DRXNFF01, DRXNFS01, DRXNQX01, DRXNSS01, DRXNTM02, DRXNVS01, DRXQDA01, DRXQQE01, DRXSQS01, DRXVAE01, DRXVDJ01, DRXVDP01, DRXVDX01, DRXVQP01, DRXVQX01, DRXVQX02
-[bid_stack] NOTE: 5 DUIDs have no region in registry/ and were excluded: ['DG_NSW1', 'DG_QLD1', 'DG_SA1', 'DG_TAS1', 'DG_VIC1']
 [bid_stack] stack: 130280 unit-interval-band rows from 137376 unit-intervals
 [bid_stack] backfilled 20261002
 [bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20261003_0000000541054592.zip
 [bid_stack] bids: 477 DUIDs with energy price bands, 137376 per-interval volume rows
 [bid_stack] dispatch: 164448 unit-interval rows
-[bid_stack] NOTE: 28 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): DRVIOT06, DRVIOT07, DRXNAD01, DRXNAE01, DRXNDA01, DRXNDA02, DRXNDA03, DRXNDA04, DRXNDB04, DRXNDE01, DRXNDJ01, DRXNDW01, DRXNFF01, DRXNFS01, DRXNQX01, DRXNSS01, DRXNTM02, DRXNVS01, DRXQDA01, DRXQQE01, DRXSQS01, DRXVAE01, DRXVDJ01, DRXVDP01, DRXVDX01, DRXVQP01, DRXVQX01, DRXVQX02
-[bid_stack] NOTE: 5 DUIDs have no region in registry/ and were excluded: ['DG_NSW1', 'DG_QLD1', 'DG_SA1', 'DG_TAS1', 'DG_VIC1']
 [bid_stack] stack: 131523 unit-interval-band rows from 137376 unit-intervals
 [bid_stack] backfilled 20261003
 [bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20261004_0000000541215950.zip
 [bid_stack] bids: 477 DUIDs with energy price bands, 137376 per-interval volume rows
 [bid_stack] dispatch: 164448 unit-interval rows
-[bid_stack] NOTE: 28 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): DRVIOT06, DRVIOT07, DRXNAD01, DRXNAE01, DRXNDA01, DRXNDA02, DRXNDA03, DRXNDA04, DRXNDB04, DRXNDE01, DRXNDJ01, DRXNDW01, DRXNFF01, DRXNFS01, DRXNQX01, DRXNSS01, DRXNTM02, DRXNVS01, DRXQDA01, DRXQQE01, DRXSQS01, DRXVAE01, DRXVDJ01, DRXVDP01, DRXVDX01, DRXVQP01, DRXVQX01, DRXVQX02
-[bid_stack] NOTE: 5 DUIDs have no region in registry/ and were excluded: ['DG_NSW1', 'DG_QLD1', 'DG_SA1', 'DG_TAS1', 'DG_VIC1']
 [bid_stack] stack: 124835 unit-interval-band rows from 137376 unit-intervals
 [bid_stack] backfilled 20261004
 [bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20261005_0000000541385589.zip
 [bid_stack] bids: 478 DUIDs with energy price bands, 137424 per-interval volume rows
 [bid_stack] dispatch: 164496 unit-interval rows
 [bid_stack] NOTE: 29 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): DRVIOT06, DRVIOT07, DRXNAD01, DRXNAE01, DRXNDA01, DRXNDA02, DRXNDA03, DRXNDA04, DRXNDB04, DRXNDE01, DRXNDJ01, DRXNDW01, DRXNFF01, DRXNFS01, DRXNQX01, DRXNSS01, DRXNTM02, DRXNVS01, DRXQDA01, DRXQQE01, DRXSQS01, DRXVAE01, DRXVDJ01, DRXVDP01, DRXVDX01, DRXVQP01, DRXVQX01, DRXVQX02, UWF1
-[bid_stack] NOTE: 5 DUIDs have no region in registry/ and were excluded: ['DG_NSW1', 'DG_QLD1', 'DG_SA1', 'DG_TAS1', 'DG_VIC1']
 [bid_stack] stack: 120017 unit-interval-band rows from 137424 unit-intervals
 [bid_stack] backfilled 20261005
 [bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20261006_0000000541557678.zip
 [bid_stack] bids: 478 DUIDs with energy price bands, 137664 per-interval volume rows
 [bid_stack] dispatch: 164736 unit-interval rows
 [bid_stack] NOTE: 29 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): DRVIOT06, DRVIOT07, DRXNAD01, DRXNAE01, DRXNDA01, DRXNDA02, DRXNDA03, DRXNDA04, DRXNDB04, DRXNDE01, DRXNDJ01, DRXNDW01, DRXNFF01, DRXNFS01, DRXNQX01, DRXNSS01, DRXNTM02, DRXNVS01, DRXQDA01, DRXQQE01, DRXSQS01, DRXVAE01, DRXVDJ01, DRXVDP01, DRXVDX01, DRXVQP01, DRXVQX01, DRXVQX02, UWF1
-[bid_stack] NOTE: 5 DUIDs have no region in registry/ and were excluded: ['DG_NSW1', 'DG_QLD1', 'DG_SA1', 'DG_TAS1', 'DG_VIC1']
 [bid_stack] stack: 127257 unit-interval-band rows from 137664 unit-intervals
 [bid_stack] interconnector limits: 42 peak intervals
 [bid_stack] dashboard written: /home/runner/work/nem-intelligence/nem-intelligence/docs/bidstack/index.html
