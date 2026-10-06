@@ -202,10 +202,10 @@ function forward(){
   const rows = (DATA.forward || []).filter(f => f.region === region);
   const el = document.getElementById("fwd");
   if (!rows.length) { el.innerHTML = `<tr><td class="empty">Predispatch didn't cover an upcoming evening peak at run time.</td></tr>`; return; }
-  el.innerHTML = `<thead><tr><th>Peak</th><th>Demand</th><th>Predispatch</th><th>Sub-$300 headroom</th><th>Cushion</th><th>Wind+solar (yday)</th></tr></thead><tbody>` +
+  el.innerHTML = `<thead><tr><th>Peak</th><th>Sub-$300 headroom</th><th>Demand</th><th>Predispatch</th><th>Cushion</th><th>Wind+solar (yday)</th></tr></thead><tbody>` +
     rows.map(f => `<tr><td>${f.date} ${f.time}${f.pivotal.length ? `<span class="f">Pivotal: ${f.pivotal.map(p => p.portfolio).join(", ")}</span>` : ""}</td>
+      <td class="${f.cheap_headroom != null && f.cheap_headroom < 300 ? "up" : ""}">${f.cheap_headroom == null ? "–" : fmt(f.cheap_headroom) + " MW"}</td>
       <td>${fmt(f.demand)}</td><td>${money(f.pd_rrp)}</td>
-      <td class="${f.cheap_headroom != null && f.cheap_headroom < 300 ? "up" : ""}">${f.cheap_headroom == null ? "–" : fmt(f.cheap_headroom)}</td>
       <td>${f.cushion_pct == null ? "–" : fmt(f.cushion_pct,1)+"%"}</td><td>${fmt(f.vre)}</td></tr>`).join("") + "</tbody>";
 }
 
@@ -231,7 +231,7 @@ function curve(r){
     options: { responsive: true, maintainAspectRatio: false, animation: false,
       interaction: { mode: "nearest", intersect: false, axis: "x" },
       scales: {
-        x: { type: "linear", title: { display: true, text: "Cumulative MW offered" }, grid: { color: css("--grid") } },
+        x: { type: "linear", min: 0, max: pts.length ? Math.ceil(pts[pts.length-1].mw / 500) * 500 : undefined, title: { display: true, text: "Cumulative MW offered" }, grid: { color: css("--grid") } },
         y: { min: ymin, max: ymax, title: { display: true, text: "$/MWh (RRN)" }, grid: { color: css("--grid") },
              ticks: { callback: v => "$" + fmt(v) } },
       },
@@ -245,12 +245,13 @@ function curve(r){
 function portfolios(r){
   const el = document.getElementById("port");
   if (!r.portfolios.length) { el.innerHTML = `<tr><td class="empty">No dispatchable portfolios above 50 MW.</td></tr>`; return; }
-  el.innerHTML = `<thead><tr><th>Portfolio</th><th>Avail MW</th><th>$300+ MW</th><th>$300+ share</th><th>Δ vs norm</th><th>$1k+ MW</th><th>$5k+ MW</th><th>Below $0</th><th>Pivotal</th></tr></thead><tbody>` +
-    r.portfolios.map(p => {
+  const rows = r.portfolios.filter(p => p.hi300 > 0 || p.pivotal || p.avail >= 300).slice(0, 14);
+  el.innerHTML = `<thead><tr><th>Portfolio</th><th>$300+ share</th><th>Δ vs norm</th><th>$300+ MW</th><th>Avail MW</th><th>$5k+ MW</th><th>Below $0</th><th>Pivotal</th></tr></thead><tbody>` +
+    rows.map(p => {
       const d = p.delta == null ? `<span class="f">building</span>` :
         `<span class="${p.delta >= 10 ? "up" : p.delta <= -10 ? "down" : ""}">${p.delta > 0 ? "+" : ""}${fmt(p.delta)}pp</span>`;
-      return `<tr><td>${p.portfolio}<span class="f">${p.fuels}</span></td><td>${fmt(p.avail)}</td><td>${fmt(p.hi300)}</td>
-        <td>${fmt(p.share300)}%</td><td>${d}</td><td>${fmt(p.hi1000)}</td><td>${fmt(p.hi5000)}</td><td>${fmt(p.le0)}</td>
+      return `<tr><td>${p.portfolio}<span class="f">${p.fuels}</span></td><td>${fmt(p.share300)}%</td><td>${d}</td>
+        <td>${fmt(p.hi300)}</td><td>${fmt(p.avail)}</td><td>${fmt(p.hi5000)}</td><td>${fmt(p.le0)}</td>
         <td>${p.pivotal == null ? "–" : p.pivotal ? `<span class="up">${p.pivotal}/${DATA.n_peak}</span>` : "0"}</td></tr>`;
     }).join("") + "</tbody>";
 }

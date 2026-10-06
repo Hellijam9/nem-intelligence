@@ -8,6 +8,7 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -15,7 +16,7 @@ jobs:
       - run: pip install -r requirements.txt
       - run: |
           mkdir -p scratch
-          ( /usr/bin/time -v python scripts/bid_stack_analysis.py --force --no-push ) > scratch/test_log.txt 2>&1 || echo "EXIT $?" >> scratch/test_log.txt
+          ( rm -f state/bidstack_history.csv; python scripts/bid_stack_analysis.py 20 --backfill && /usr/bin/time -v python scripts/bid_stack_analysis.py --force --no-push ) > scratch/test_log.txt 2>&1 || echo "EXIT $?" >> scratch/test_log.txt
       - run: |
           pip install playwright && python -m playwright install --with-deps chromium
           python scratch/shot.py >> scratch/test_log.txt 2>&1 || true

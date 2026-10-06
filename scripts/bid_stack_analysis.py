@@ -318,7 +318,12 @@ def registry_table(day_df: pd.DataFrame, disp: pd.DataFrame | None) -> pd.DataFr
         base["Owner"] = np.nan
     # Portfolio = trading brand (AGL, Origin Energy, CS Energy...), the level at which bidding
     # strategy is actually set. Legal-entity Owner and raw PARTICIPANTID are fallbacks only.
-    base["PORTFOLIO"] = base["PORTFOLIO"].fillna(base["Owner"]).fillna(base["PARTICIPANTID"])
+    # A new unit traded by a participant that already trades registered units inherits that brand
+    # (e.g. AGL's Liddell battery bids under an AGL participant ID).
+    brand = (base.dropna(subset=["PORTFOLIO"]).groupby("PARTICIPANTID")["PORTFOLIO"]
+             .agg(lambda x: x.value_counts().index[0]))
+    base["PORTFOLIO"] = (base["PORTFOLIO"].fillna(base["Owner"])
+                         .fillna(base["PARTICIPANTID"].map(brand)).fillna(base["PARTICIPANTID"]))
     base["FUEL"] = base["FUEL"].fillna("Other")
     base["STATIONNAME"] = base["STATIONNAME"].fillna(base["DUID"])
     base["TLF"] = pd.to_numeric(base["TransmissionLossFactor"], errors="coerce").fillna(1.0)
@@ -456,7 +461,7 @@ def fmt_mw(x: float) -> str:
     return f"{x:,.0f}MW"
 
 
-def analyse(day_str: str):
+def analyse(day_str: str, backfill: bool = False):
     day = datetime.strptime(day_str, "%Y%m%d")
     day_df, per = load_bids(day_str)
     disp = load_dispatch(day_str)
@@ -474,7 +479,8 @@ def analyse(day_str: str):
     n_peak = len(peak_times)
     regions_peak = regions[peak_mask(regions["T"], day)] if regions is not None else None
 
-    impcap = load_ic_limits([pd.Timestamp(t).to_pydatetime() for t in peak_times])
+    # Backfilled days are past the ~2-day DispatchIS window, so no interconnector limits for them.
+    impcap = None if backfill else load_ic_limits([pd.Timestamp(t).to_pydatetime() for t in peak_times])
     cushion, piv = pivotal_and_cushion(stack_peak, regions_peak, impcap)
 
     # ---- portfolio aggressiveness (evening peak, averaged per interval) ----
@@ -512,11 +518,12 @@ def analyse(day_str: str):
         base = base[base["date"].isin(last_dates)]
         b = base.groupby(["region", "portfolio"]).agg(
             b_avail=("avail_mw", "mean"), b_hi300=("hi300_mw", "mean"), b_hi1000=("hi1000_mw", "mean"),
-            b_piv=("pivotal_frac", "mean"), b_days=("date", "nunique")).reset_index()
+            b_hi5000=("hi5000_mw", "mean"), b_piv=("pivotal_frac", "mean"), b_days=("date", "nunique")).reset_index()
         b["b_share300"] = b["b_hi300"] / b["b_avail"].replace(0, np.nan) * 100
         port = port.merge(b, left_on=keys, right_on=["region", "portfolio"], how="left").drop(columns=["region", "portfolio"])
     else:
         port["b_share300"], port["b_days"], port["b_hi1000"], port["b_piv"] = np.nan, 0, np.nan, np.nan
+        port["b_hi5000"] = np.nan
     if "b_piv" not in port.columns:
         port["b_piv"] = np.nan
     port["delta_share300"] = np.where(port["b_days"].fillna(0) >= MIN_BASELINE_DAYS,
@@ -548,7 +555,7 @@ def analyse(day_str: str):
 
         by_fuel = (s_pk.groupby(["FUEL", "BUCKET"], observed=False)["MW"].sum() / n_peak).unstack(fill_value=0)
         by_fuel = by_fuel.reindex(columns=BUCKET_LABELS, fill_value=0)
-        by_fuel = by_fuel[by_fuel.sum(axis=1) > 1].round(0)
+        by_fuel = by_fuel[by_fuel.sum(axis=1) >= 20].round(0)
 
         p = port[port["REGIONID"] == region].sort_values("hi300", ascending=False)
         ptable = [{
@@ -559,6 +566,7 @@ def analyse(day_str: str):
             "pivotal": None if pd.isna(r.PIVOTAL_N) else int(r.PIVOTAL_N),
             "shortfall": None if pd.isna(r.MAX_SHORTFALL) else round(r.MAX_SHORTFALL),
             "vre": round(r.vre),
+            "d_hi5000": None if not (r.b_days >= MIN_BASELINE_DAYS) or pd.isna(r.b_hi5000) else round(r.hi5000 - r.b_hi5000),
             "usually_pivotal": bool(r.b_days >= MIN_BASELINE_DAYS and r.b_piv >= 0.7) if not pd.isna(r.b_piv) else False,
         } for r in p.itertuples()]
 
@@ -626,11 +634,20 @@ def region_reads(region: str, r: dict, ptable: list[dict], n_peak: int) -> list[
             out.append({"region": region, "level": 2 if p["delta"] > 0 else 1, "text":
                 f"{name}: {p['portfolio']} priced {abs(p['delta']):.0f}pp {direction} of its capacity at $300+ "
                 f"than its {BASELINE_DAYS}-day norm ({p['share300']:.0f}% of {fmt_mw(p['avail'])})."})
-    top = [p for p in ptable if p["hi5000"] >= 100]
-    for p in sorted(top, key=lambda x: -x["hi5000"])[:2]:
-        out.append({"region": region, "level": 1, "text":
-            f"{name}: {p['portfolio']} had {fmt_mw(p['hi5000'])} sitting at $5,000+ through the evening "
-            f"({p['share300']:.0f}% of its dispatchable capacity at $300+)."})
+    # $5k+ volume: once a baseline exists, only call out a material change vs the portfolio's norm
+    # (Snowy parking hydro at the cap is normal; Snowy adding 500MW there is not).
+    moved = [p for p in ptable if p["d_hi5000"] is not None and abs(p["d_hi5000"]) >= 150]
+    for p in sorted(moved, key=lambda x: -abs(x["d_hi5000"]))[:2]:
+        verb = "added" if p["d_hi5000"] > 0 else "pulled"
+        out.append({"region": region, "level": 2 if p["d_hi5000"] > 0 else 1, "text":
+            f"{name}: {p['portfolio']} {verb} {fmt_mw(abs(p['d_hi5000']))} {'to' if p['d_hi5000'] > 0 else 'from'} "
+            f"$5,000+ bands vs its norm (now {fmt_mw(p['hi5000'])})."})
+    if all(p["d_hi5000"] is None for p in ptable):
+        top = [p for p in ptable if p["hi5000"] >= 100]
+        for p in sorted(top, key=lambda x: -x["hi5000"])[:2]:
+            out.append({"region": region, "level": 1, "text":
+                f"{name}: {p['portfolio']} had {fmt_mw(p['hi5000'])} sitting at $5,000+ through the evening "
+                f"({p['share300']:.0f}% of its dispatchable capacity at $300+). Baseline still building."})
     return out
 
 
@@ -748,6 +765,19 @@ def main() -> None:
     now = datetime.now(nw.NEM_TZ).replace(tzinfo=None)
     day = args[0] if args else (now - timedelta(days=1)).strftime("%Y%m%d")
     day_iso = f"{day[:4]}-{day[4:6]}-{day[6:]}"
+
+    if "--backfill" in sys.argv:
+        # Seed the per-portfolio baseline from the ~60 days AEMO keeps in CURRENT, oldest first.
+        n = int(args[0]) if args else BASELINE_DAYS
+        for k in range(n, 0, -1):
+            d = (now - timedelta(days=k + 1)).strftime("%Y%m%d")
+            try:
+                _, hist, _ = analyse(d, backfill=True)
+                hist.to_csv(HISTORY_FILE, index=False)
+                log(f"backfilled {d}")
+            except Exception as exc:
+                log(f"backfill {d} skipped: {exc}")
+        return
 
     state = nw.read_state(STATE_FILE, default={}) or {}
     if state.get("last_trading_day") == day_iso and not force:
