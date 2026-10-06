@@ -215,9 +215,11 @@ function curve(r){
   const sub = document.getElementById("curveSub");
   sub.textContent = `Availability-adjusted offers in ${region.replace("1","")} at ${r.peak_time}, cheapest first. Dashed line = MW actually dispatched from the region (${fmt(r.peak_dispgen)} MW); the rest of demand came from imports.`;
   const data = []; let prev = 0;
-  pts.forEach(p => { data.push({x: prev, y: p.p, o: p.o}); data.push({x: p.mw, y: p.p, o: p.o}); prev = p.mw; });
+  pts.forEach(pt => { data.push({x: prev, y: pt.p, p: pt.p, o: pt.o}); data.push({x: pt.mw, y: pt.p, p: pt.p, o: pt.o}); prev = pt.mw; });
   const ymax = fullCurve ? undefined : Math.max(600, (r.peak_rrp || 0) * 1.6);
   const ymin = fullCurve ? undefined : -150;
+  // Pin out-of-range steps to the chart edge so floor-priced and cap-priced volume stays visible.
+  if (!fullCurve) data.forEach(d => { d.y = Math.max(ymin, Math.min(ymax, d.y)); });
   const yvals = data.map(d => d.y);
   const lo = ymin ?? Math.min(...yvals), hi = ymax ?? Math.max(...yvals);
   charts.curve = new Chart(document.getElementById("curve"), {
@@ -231,12 +233,12 @@ function curve(r){
     options: { responsive: true, maintainAspectRatio: false, animation: false,
       interaction: { mode: "nearest", intersect: false, axis: "x" },
       scales: {
-        x: { type: "linear", min: 0, max: pts.length ? Math.ceil(pts[pts.length-1].mw / 500) * 500 : undefined, title: { display: true, text: "Cumulative MW offered" }, grid: { color: css("--grid") } },
+        x: { type: "linear", min: 0, ticks: { maxRotation: 0, maxTicksLimit: 6, callback: v => fmt(v) }, max: pts.length ? Math.ceil(pts[pts.length-1].mw / 500) * 500 : undefined, title: { display: true, text: "Cumulative MW offered" }, grid: { color: css("--grid") } },
         y: { min: ymin, max: ymax, title: { display: true, text: "$/MWh (RRN)" }, grid: { color: css("--grid") },
              ticks: { callback: v => "$" + fmt(v) } },
       },
       plugins: { legend: { display: false }, tooltip: { ...tooltipStyle(), filter: i => i.datasetIndex === 0,
-        callbacks: { title: i => `${fmt(i[0].raw.x)} MW`, label: i => ` ${money(i.raw.y)} - ${i.raw.o}` } } } }
+        callbacks: { title: i => `${fmt(i[0].raw.x)} MW`, label: i => ` ${money(i.raw.p)} - ${i.raw.o}` } } } }
   });
   document.getElementById("curveLegend").innerHTML =
     `<span><i style="background:${css("--s1")}"></i>Offers (y-axis ${fullCurve ? "full range" : "clipped - tap Show to price cap"})</span><span><i style="background:${css("--ink2")}"></i>Dispatched in region</span>`;
