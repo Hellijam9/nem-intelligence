@@ -1,7 +1,7 @@
 [bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20261005_0000000541385589.zip
 [bid_stack] bids: 478 DUIDs with energy price bands, 137424 per-interval volume rows
 [bid_stack] dispatch: 164496 unit-interval rows
-[bid_stack] NOTE: 73 DUIDs missing from registry/ - region from connection point, fuel guessed: DRXNAE01(Other), DRXNDE01(Other), DRXNSS01(Other), GESF1(Solar), GPWFWST1(Other), LANCSF1(Solar), QPSFB2(Other), SMFBESS2(Battery), SMTHBES1(Battery), BRDDBES1(Battery), BRNDBES1(Battery), BUNGAMB1(Other), DRXNDA03(Other), DRXNDA04(Other), DRXNVS01(Other), SNB02(Other), WOORB1(Other), DRVIOT06(Other), DRXNAD01(Other), DRXNDA01(Other), DRXNDA02(Other), DRXNFF01(Other), DRXVDP01(Other), NESBESS1(Battery), QPSFB1(Other), SNB01(Other), STABESS1(Battery), TRGBESS1(Battery), BRDDSF01(Solar), CGBESS01(Battery), DRXNDB04(Other), DRXVAE01(Other), DRXVDJ01(Other), DRXVQP01(Other), DRXVQX01(Other), LDBESS1(Battery), LGAPBS1(Battery), MRNBESS1(Battery), NESBESS2(Battery), ORABESS1(Battery), KIDSPHG1(Other), LIMBESS1(Battery), PLBESS1(Battery), SMFBESS1(Battery), TB3B1(Other), BUSF1(Solar), CRWARP1(Other), DRVIOT07(Other), DRXNDJ01(Other), DRXNDW01(Other), DRXNTM02(Other), DRXQDA01(Other), DRXSQS01(Other), GPWFWST2(Other), GUSF1(Solar), KIDSPHG2(Other), MULWASF1(Solar), WAMBOWF2(Wind), WDBESS2(Battery), DRXNFS01(Other), DRXNQX01(Other), DRXVDX01(Other), DRXVQX02(Other), ERB02(Other), GOESF1(Solar), MLB01(Other), SWANBBF1(Other), WOOLES1(Other), UWF1(Wind), DRXQQE01(Other), MREHA3(Other), MUCRKSF1(Solar), WANDSF2(Solar)
+[bid_stack] NOTE: 73 DUIDs missing from registry/ - region from connection point, fuel guessed: DRXNAE01(Demand response), DRXNDE01(Demand response), DRXNSS01(Demand response), GESF1(Solar), GPWFWST1(Wind), LANCSF1(Solar), QPSFB2(Solar), SMFBESS2(Battery), SMTHBES1(Battery), BRDDBES1(Battery), BRNDBES1(Battery), BUNGAMB1(Other), DRXNDA03(Demand response), DRXNDA04(Demand response), DRXNVS01(Demand response), SNB02(Other), WOORB1(Battery), DRVIOT06(Demand response), DRXNAD01(Demand response), DRXNDA01(Demand response), DRXNDA02(Demand response), DRXNFF01(Demand response), DRXVDP01(Demand response), NESBESS1(Battery), QPSFB1(Solar), SNB01(Other), STABESS1(Battery), TRGBESS1(Battery), BRDDSF01(Solar), CGBESS01(Battery), DRXNDB04(Demand response), DRXVAE01(Demand response), DRXVDJ01(Demand response), DRXVQP01(Demand response), DRXVQX01(Demand response), LDBESS1(Battery), LGAPBS1(Battery), MRNBESS1(Battery), NESBESS2(Battery), ORABESS1(Battery), KIDSPHG1(Hydro), LIMBESS1(Battery), PLBESS1(Battery), SMFBESS1(Battery), TB3B1(Other), BUSF1(Solar), CRWARP1(Other), DRVIOT07(Demand response), DRXNDJ01(Demand response), DRXNDW01(Demand response), DRXNTM02(Demand response), DRXQDA01(Demand response), DRXSQS01(Demand response), GPWFWST2(Wind), GUSF1(Solar), KIDSPHG2(Hydro), MULWASF1(Solar), WAMBOWF2(Wind), WDBESS2(Battery), DRXNFS01(Demand response), DRXNQX01(Demand response), DRXVDX01(Demand response), DRXVQX02(Demand response), ERB02(Battery), GOESF1(Solar), MLB01(Other), SWANBBF1(Other), WOOLES1(Other), UWF1(Wind), DRXQQE01(Demand response), MREHA3(Other), MUCRKSF1(Solar), WANDSF2(Solar)
 [bid_stack] NOTE: 6 DUIDs have no region in registry/ and were excluded: ['DG_NSW1', 'DG_QLD1', 'DG_SA1', 'DG_TAS1', 'DG_VIC1', 'WILLBES1']
 [bid_stack] stack: 120017 unit-interval-band rows from 137424 unit-intervals
 [bid_stack] interconnector limits: 42 peak intervals
@@ -19,20 +19,20 @@ TAS: peak 19:20 | sub-$300 headroom 629MW | most $300+: Hydro Tas 194MW
 - NSW: Origin Energy had 607MW sitting at $5,000+ through the evening (28% of its dispatchable capacity at $300+).
 - QLD: Origin Energy had 455MW sitting at $5,000+ through the evening (100% of its dispatchable capacity at $300+).
 	Command being timed: "python scripts/bid_stack_analysis.py --force --no-push"
-	User time (seconds): 11.56
+	User time (seconds): 11.51
 	System time (seconds): 0.22
-	Percent of CPU this job got: 36%
-	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:31.95
+	Percent of CPU this job got: 38%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:30.19
 	Average shared text size (kbytes): 0
 	Average unshared data size (kbytes): 0
 	Average stack size (kbytes): 0
 	Average total size (kbytes): 0
-	Maximum resident set size (kbytes): 309712
+	Maximum resident set size (kbytes): 309568
 	Average resident set size (kbytes): 0
 	Major (requiring I/O) page faults: 13
-	Minor (reclaiming a frame) page faults: 64795
-	Voluntary context switches: 3982
-	Involuntary context switches: 478
+	Minor (reclaiming a frame) page faults: 64151
+	Voluntary context switches: 3181
+	Involuntary context switches: 409
 	Swaps: 0
 	File system inputs: 4992
 	File system outputs: 832
@@ -41,3 +41,5 @@ TAS: peak 19:20 | sub-$300 headroom 629MW | most $300+: Hydro Tas 194MW
 	Signals delivered: 0
 	Page size (bytes): 4096
 	Exit status: 0
+light []
+dark []
