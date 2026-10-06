@@ -1,0 +1,19 @@
+[bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20261006_0000000541557678.zip
+[bid_stack] bids: 478 DUIDs with energy price bands, 137664 per-interval volume rows
+[bid_stack] dispatch: 164736 unit-interval rows
+[bid_stack] NOTE: 1 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): UWF1
+[bid_stack] stack: 127257 unit-interval-band rows from 137664 unit-intervals
+[bid_stack] interconnector limits: 42 peak intervals
+[bid_stack] dashboard written: /home/runner/work/nem-intelligence/nem-intelligence/docs/bidstack/index.html
+Bid stack 2026-10-06 (evening 17:00-20:30 NEM)
+NSW: peak 18:55 | sub-$300 headroom 1,890MW | most $300+: Snowy Hydro 1,865MW
+QLD: peak 18:30 | sub-$300 headroom 2,263MW | most $300+: Origin Energy 456MW
+VIC: peak 19:00 | sub-$300 headroom 2,788MW | most $300+: Snowy Hydro 1,532MW
+SA: peak 20:15 | sub-$300 headroom 1,315MW | most $300+: Origin Energy 291MW
+TAS: peak 18:50 | sub-$300 headroom 489MW | most $300+: Hydro Tas 167MW
+
+- NSW: Delta Electricity priced 14pp more of its capacity at $300+ than its 20-day norm (21% of 1,260MW).
+- NSW: Delta Electricity added 174MW to $5,000+ bands vs its norm (now 260MW).
+- QLD: Origin Energy priced 24pp more of its capacity at $300+ than its 20-day norm (100% of 456MW).
+- QLD: Supernode Operations priced 12pp more of its capacity at $300+ than its 20-day norm (22% of 513MW).
+- VIC: Snowy Hydro priced 11pp more of its capacity at $300+ than its 20-day norm (92% of 1,673MW).
