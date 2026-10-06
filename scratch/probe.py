@@ -2,30 +2,27 @@ import re, requests, io, zipfile, sys
 sys.path.insert(0, "scripts")
 import nemweb_common as nw
 H = nw.HTTP_HEADERS
-cands = [
- "https://www.nemweb.com.au/Reports/Current/NEMDE/",
- "https://www.nemweb.com.au/REPORTS/CURRENT/NEMDE/",
- "https://nemweb.com.au/Reports/Current/NEMDE/",
- "https://www.nemweb.com.au/Reports/Current/",
- "https://www.nemweb.com.au/Data_Archive/Wholesale_Electricity/NEMDE/2026/",
-]
-for u in cands:
-    try:
-        r = requests.get(u, headers=H, timeout=60)
-        hrefs = re.findall(r'href="([^"]+)"', r.text, re.I)
-        print("==", u, r.status_code, len(hrefs))
-        print("   ", [h for h in hrefs if "nemde" in h.lower() or "price" in h.lower() or u.endswith("2026/")][:60])
-    except Exception as e: print("ERR", u, e)
-# walk archive month
-for u in ["https://www.nemweb.com.au/Data_Archive/Wholesale_Electricity/NEMDE/2026/NEMDE_2026_10/",
-          "https://www.nemweb.com.au/Data_Archive/Wholesale_Electricity/NEMDE/2026/NEMDE_2026_09/"]:
-    try:
-        r = requests.get(u, headers=H, timeout=60)
-        hrefs = re.findall(r'href="([^"]+)"', r.text, re.I)
-        print("==", u, r.status_code, hrefs[-15:])
-        for h in hrefs:
-            if h.endswith("/") and len(h) > len(u.split("nemweb.com.au")[-1]):
-                r2 = requests.get(requests.compat.urljoin(u, h), headers=H, timeout=60)
-                h2 = re.findall(r'href="([^"]+)"', r2.text, re.I)
-                print("   sub", h, h2[-8:])
-    except Exception as e: print("ERR", u, e)
+def listing(u):
+    r = requests.get(u, headers=H, timeout=60)
+    return [h.rsplit("/",1)[-1] for h in re.findall(r'href="([^"]+)"', r.text, re.I)]
+a = listing("https://www.nemweb.com.au/REPORTS/ARCHIVE/DispatchIS_Reports/")
+print("archive dispatchis", len(a), a[-5:])
+p = [n for n in listing("https://www.nemweb.com.au/REPORTS/CURRENT/Predispatch_Reports/") if n.endswith("_LEGACY.zip")]
+print("predispatch", len(p), p[-2:])
+def show(b, label, want=None):
+    zf = zipfile.ZipFile(io.BytesIO(b))
+    names = zf.namelist(); print("--", label, len(b), names[:3], len(names))
+    inner = names[0]; data = zf.read(inner)
+    if inner.lower().endswith(".zip"):
+        zf2 = zipfile.ZipFile(io.BytesIO(data)); inner2 = zf2.namelist()[0]; data = zf2.read(inner2)
+    seen = {}
+    for line in data.decode("utf-8","replace").splitlines():
+        if line.startswith("I,"):
+            print("   ", line[:700])
+        elif line.startswith("D,"):
+            k = ",".join(line.split(",")[1:3]); seen[k] = seen.get(k,0)+1
+            if seen[k] == 1 and (want is None or any(w in k for w in want)): print("     D:", line[:400])
+    print("   counts", seen)
+dz = [n for n in a if "20261005" in n]
+if dz: show(requests.get("https://www.nemweb.com.au/REPORTS/ARCHIVE/DispatchIS_Reports/"+dz[0], headers=H, timeout=300).content, dz[0], ["INTERCONNECTORRES","REGIONSUM","PRICE"])
+show(requests.get("https://www.nemweb.com.au/REPORTS/CURRENT/Predispatch_Reports/"+p[-1], headers=H, timeout=300).content, p[-1], ["REGION","INTERCONNECTOR"])
