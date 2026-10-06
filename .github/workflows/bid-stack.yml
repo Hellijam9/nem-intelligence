@@ -58,6 +58,8 @@ jobs:
           set -o pipefail
           if [ "$HOUR" -ge 8 ]; then ARGS="--allow-partial"; else ARGS=""; fi
           python scripts/bid_stack_analysis.py $ARGS 2>&1 | tee state/bidstack_lastrun.log
+          # Surface the run's output as a job annotation (readable via the API without log access).
+          echo "::notice title=bid_stack output::$(grep -v '^\[bid_stack\] NOTE' state/bidstack_lastrun.log | tail -25 | sed ':a;N;$!ba;s/%/%25/g;s/\n/%0A/g')"
 
       - name: Commit dashboard and state
         id: commit
@@ -71,7 +73,8 @@ jobs:
           else
             git commit -m "Update bid stack [skip ci]"
             for i in 1 2 3; do
-              git pull --rebase origin main && git push && break
+              if OUT=$(git pull --rebase origin main 2>&1 && git push 2>&1); then break; fi
+              echo "::warning title=push attempt $i::$(echo "$OUT" | tail -5 | sed ':a;N;$!ba;s/\n/%0A/g')"
               echo "Push attempt $i failed, retrying..."
               git rebase --abort 2>/dev/null || true
               sleep 5
