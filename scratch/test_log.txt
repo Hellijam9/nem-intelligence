@@ -153,26 +153,26 @@ VIC: peak 19:05 | sub-$300 headroom 2,483MW | most $300+: Snowy Hydro 1,286MW
 SA: peak 19:30 | sub-$300 headroom 991MW | most $300+: Origin Energy 290MW
 TAS: peak 19:20 | sub-$300 headroom 629MW | most $300+: Hydro Tas 194MW
 
-- TAS Wed 07 Oct 19:30: Hydro Tas would be pivotal at forecast demand 1,269MW if offers match yesterday's (predispatch $126).
 - NSW: Snowy Hydro added 179MW to $5,000+ bands vs its norm (now 1,972MW).
 - QLD: Origin Energy priced 24pp more of its capacity at $300+ than its 20-day norm (100% of 455MW).
 - QLD: Supernode Operations priced 40pp more of its capacity at $300+ than its 20-day norm (48% of 513MW).
 - QLD: Supernode Operations added 204MW to $5,000+ bands vs its norm (now 222MW).
+- SA: Origin Energy priced 68pp more of its capacity at $300+ than its 20-day norm (100% of 290MW).
 	Command being timed: "python scripts/bid_stack_analysis.py --force --no-push"
-	User time (seconds): 11.45
-	System time (seconds): 0.24
-	Percent of CPU this job got: 47%
-	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:24.73
+	User time (seconds): 7.36
+	System time (seconds): 0.18
+	Percent of CPU this job got: 31%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:24.25
 	Average shared text size (kbytes): 0
 	Average unshared data size (kbytes): 0
 	Average stack size (kbytes): 0
 	Average total size (kbytes): 0
-	Maximum resident set size (kbytes): 310944
+	Maximum resident set size (kbytes): 311400
 	Average resident set size (kbytes): 0
 	Major (requiring I/O) page faults: 0
-	Minor (reclaiming a frame) page faults: 64783
-	Voluntary context switches: 3340
-	Involuntary context switches: 477
+	Minor (reclaiming a frame) page faults: 65311
+	Voluntary context switches: 4045
+	Involuntary context switches: 288
 	Swaps: 0
 	File system inputs: 0
 	File system outputs: 536
