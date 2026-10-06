@@ -276,11 +276,15 @@ CP_REGION = {"N": "NSW1", "Q": "QLD1", "V": "VIC1", "S": "SA1", "T": "TAS1"}
 def infer_fuel(duid: str) -> str:
     """Last-resort fuel guess from AEMO's DUID naming habits, only for units missing from registry/."""
     d = duid.upper()
-    if re.search(r"BES|BAT|BESS|BS\d|BA\d", d):
+    if d.startswith("DR"):                      # wholesale demand response units (DRXN..., DRVI...)
+        return "Demand response"
+    if re.search(r"BES|BAT|BESS|BS\d|^ERB|RB\d$|BA\d", d):
         return "Battery"
-    if re.search(r"SF\d|SOL|PV\d", d):
+    if re.search(r"PHG|PSH|HYD", d):
+        return "Hydro"
+    if re.search(r"SF|SOL|PV\d", d):
         return "Solar"
-    if re.search(r"WF\d|WND|WIND|W\d$", d):
+    if re.search(r"WF|WND|WIND", d):
         return "Wind"
     return "Other"
 

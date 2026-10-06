@@ -2,7 +2,7 @@ name: bid stack test (branch only)
 on:
   push:
     branches: [bid-stack]
-    paths: ["scripts/bid_stack*", ".github/workflows/bidstack-test.yml"]
+    paths: ["scripts/bid_stack*", "scratch/shot.py", ".github/workflows/bidstack-test.yml"]
 permissions:
   contents: write
 jobs:
@@ -17,7 +17,10 @@ jobs:
           mkdir -p scratch
           ( /usr/bin/time -v python scripts/bid_stack_analysis.py --force --no-push ) > scratch/test_log.txt 2>&1 || echo "EXIT $?" >> scratch/test_log.txt
       - run: |
+          pip install playwright && python -m playwright install --with-deps chromium
+          python scratch/shot.py >> scratch/test_log.txt 2>&1 || true
+      - run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -f scratch/test_log.txt docs/bidstack state/bidstack_history.csv state/bidstack_state.json 2>/dev/null || true
+          git add -f scratch/test_log.txt scratch/*.png docs/bidstack state/bidstack_history.csv state/bidstack_state.json 2>/dev/null || true
           git commit -m "bid stack test output [skip ci]" && git push
