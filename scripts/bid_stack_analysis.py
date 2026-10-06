@@ -421,7 +421,8 @@ def load_aemo_units() -> pd.DataFrame | None:
             cached = pd.read_csv(AEMO_UNITS_CACHE, dtype=str)
         except Exception:
             cached = None
-    stale = cached is None or meta.get("checked") != datetime.now(nw.NEM_TZ).strftime("%Y-%m-%d")
+    stale = (cached is None or meta.get("version") != AEMO_UNITS_VERSION
+             or meta.get("checked") != datetime.now(nw.NEM_TZ).strftime("%Y-%m-%d"))
     if stale:
         try:
             _, month = _latest_mmsdm_data_dir()
