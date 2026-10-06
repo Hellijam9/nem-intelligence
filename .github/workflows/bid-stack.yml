@@ -54,14 +54,17 @@ jobs:
         run: |
           # After 08:00 NEM, publish even if the next-day dispatch file is late (volumes then untrimmed, flagged on the page).
           HOUR=$(date -u -d '+10 hours' +%H)
-          if [ "$HOUR" -ge 8 ]; then python scripts/bid_stack_analysis.py --allow-partial; else python scripts/bid_stack_analysis.py; fi
+          # Output is kept in state/bidstack_lastrun.log so a run can be checked without the Actions UI.
+          set -o pipefail
+          if [ "$HOUR" -ge 8 ]; then ARGS="--allow-partial"; else ARGS=""; fi
+          python scripts/bid_stack_analysis.py $ARGS 2>&1 | tee state/bidstack_lastrun.log
 
       - name: Commit dashboard and state
         id: commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add state/bidstack_history.csv state/bidstack_state.json state/aemo_units_meta.json registry/aemo_units.csv docs/bidstack 2>/dev/null || true
+          git add state/bidstack_lastrun.log state/bidstack_history.csv state/bidstack_state.json state/aemo_units_meta.json registry/aemo_units.csv docs/bidstack 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "No changes to commit."
             echo "changed=false" >> "$GITHUB_OUTPUT"
