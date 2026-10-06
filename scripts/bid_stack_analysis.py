@@ -1001,8 +1001,16 @@ def main() -> None:
         topic = topics.get("bidstack") or topics.get("market_read")
         url = nw.CONFIG.get("bidstack_dashboard_url")
         if topic:
-            nw.push_ntfy(topic, summary + (f"\n\n{url}" if url else ""),
-                         title=f"Bid stack - {day_iso}", tags=["bar_chart"])
+            # The dashboard rides along as an .html attachment (same pattern as the morning recap),
+            # so it opens on the phone straight from the notification, Pages or not.
+            ranked = sorted(result["reads"], key=lambda x: -x["level"])
+            headline = ranked[0]["text"] if ranked else "No standout bidding moves."
+            ok = nw.push_ntfy_attachment(topic, f"bidstack-{day_iso}.html", out.read_text(),
+                                         short_message=f"Tap to open the dashboard. {headline}"[:300].replace("\n", " "),
+                                         title=f"Bid stack - {day_iso}", tags=["bar_chart"])
+            if not ok:
+                nw.push_ntfy(topic, summary + (f"\n\n{url}" if url else ""),
+                             title=f"Bid stack - {day_iso}", tags=["bar_chart"])
     nw.write_state(STATE_FILE, {"last_trading_day": day_iso, "generated": result["generated"]})
 
 
