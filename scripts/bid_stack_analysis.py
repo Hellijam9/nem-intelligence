@@ -739,18 +739,21 @@ def forward_look(stack: pd.DataFrame, trading_day: datetime) -> list[dict]:
     return out
 
 
-def forward_reads(fwd: list[dict]) -> list[dict]:
+def forward_reads(fwd: list[dict], usual: set) -> list[dict]:
     out = []
     for f in fwd:
+        f["pivotal"] = [p for p in f["pivotal"] if (f["region"], p["portfolio"]) not in usual] + \
+                       [dict(p, usual=True) for p in f["pivotal"] if (f["region"], p["portfolio"]) in usual]
+        unusual = [p for p in f["pivotal"] if not p.get("usual")]
         name = f["region"].rstrip("1")
         if f["cheap_headroom"] is not None and f["cheap_headroom"] < 300:
-            who = ", ".join(p["portfolio"] for p in f["pivotal"][:2])
+            who = ", ".join(p["portfolio"] for p in unusual[:2])
             out.append({"region": f["region"], "level": 3 if f["cheap_headroom"] < 0 else 2, "forward": True, "text":
                 f"{name} {f['date']} {f['time']}: forecast demand {fmt_mw(f['demand'])} vs yesterday's offers leaves "
                 f"{fmt_mw(f['cheap_headroom'])} of sub-$300 headroom (predispatch {f['pd_rrp']:,.0f}$/MWh)"
                 + (f"; pivotal: {who}." if who else ".")})
-        elif f["pivotal"]:
-            who = ", ".join(p["portfolio"] for p in f["pivotal"][:2])
+        elif unusual:
+            who = ", ".join(p["portfolio"] for p in unusual[:2])
             out.append({"region": f["region"], "level": 2, "forward": True, "text":
                 f"{name} {f['date']} {f['time']}: {who} would be pivotal at forecast demand {fmt_mw(f['demand'])} "
                 f"if offers match yesterday's (predispatch ${f['pd_rrp']:,.0f})."})
@@ -831,7 +834,8 @@ def main() -> None:
 
     fwd = forward_look(stack, datetime.strptime(day, "%Y%m%d"))
     result["forward"] = fwd
-    result["reads"] = forward_reads(fwd) + result["reads"]
+    usual = {(rg, p["portfolio"]) for rg, r in result["regions"].items() for p in r["portfolios"] if p["usually_pivotal"]}
+    result["reads"] = forward_reads(fwd, usual) + result["reads"]
     result["generated"] = now.strftime("%Y-%m-%d %H:%M NEM")
     if not result["availability_adjusted"]:
         result["reads"].insert(0, {"region": "NEM", "level": 1, "text":
