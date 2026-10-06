@@ -1,0 +1,10 @@
+LS https://www.nemweb.com.au/Data_Archive/Wholesale_Electricity/MMSDM/ 200
+['/Data_Archive/Wholesale_Electricity/MMSDM/2024/', '/Data_Archive/Wholesale_Electricity/MMSDM/2025/', '/Data_Archive/Wholesale_Electricity/MMSDM/2026/']
+LS https://www.nemweb.com.au/Data_Archive/Wholesale_Electricity/MMSDM/2026/ 200
+['/Data_Archive/Wholesale_Electricity/MMSDM/2026/MMSDM_2026_06/', '/Data_Archive/Wholesale_Electricity/MMSDM/2026/MMSDM_2026_07/', '/Data_Archive/Wholesale_Electricity/MMSDM/2026/MMSDM_2026_08/']
+LS https://www.nemweb.com.au/Data_Archive/Wholesale_Electricity/MMSDM/2026/MMSDM_2026_08/ 200
+['/Data_Archive/Wholesale_Electricity/MMSDM/2026', '/Data_Archive/Wholesale_Electricity/MMSDM/2026/MMSDM_2026_08/MMSDM_Historical_Data_SQLLoader/', '/Data_Archive/Wholesale_Electricity/MMSDM/2026/MMSDM_2026_08/AUTORUN.INF']
+LS https://www.nemweb.com.au/Data_Archive/Wholesale_Electricity/MMSDM/2026/MMSDM_2026_08/MMSDM_Historical_Data_SQLLoader/ 200
+['/Data_Archive/Wholesale_Electricity/MMSDM/2026/MMSDM_2026_08', '/Data_Archive/Wholesale_Electricity/MMSDM/2026/MMSDM_2026_08/MMSDM_Historical_Data_SQLLoader/BCP_DATA/', '/Data_Archive/Wholesale_Electricity/MMSDM/2026/MMSDM_2026_08/MMSDM_Historical_Data_SQLLoader/BCP_FMT/', '/Data_Archive/Wholesale_Electricity/MMSDM/2026/MMSDM_2026_08/MMSDM_Historical_Data_SQLLoader/CTL/', '/Data_Archive/Wholesale_Electricity/MMSDM/2026/MMSDM_2026_08/MMSDM_Historical_Data_SQLLoader/DATA/', '/Data_Archive/Wholesale_Electricity/MMSDM/2026/MMSDM_2026_08/MMSDM_Historical_Data_SQLLoader/DOCUMENTATION/', '/Data_Archive/Wholesale_Electricity/MMSDM/2026/MMSDM_2026_08/MMSDM_Historical_Data_SQLLoader/MYSQL/', '/Data_Archive/Wholesale_Electricity/MMSDM/2026/MMSDM_2026_08/MMSDM_Historical_Data_SQLLoader/P5MIN_ALL_DATA/', '/Data_Archive/Wholesale_Electricity/MMSDM/2026/MMSDM_2026_08/MMSDM_Historical_Data_SQLLoader/PREDISP_ALL_DATA/', '/Data_Archive/Wholesale_Electricity/MMSDM/2026/MMSDM_2026_08/MMSDM_Historical_Data_SQLLoader/UTILITIES/']
+LS https://www.nemweb.com.au/Data_Archive/Wholesale_Electricity/MMSDM/2026/MMSDM_2026_08/MMSDM_Historical_Data_SQLLoader/BCP_DATA/ 200
+
