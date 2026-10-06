@@ -64,6 +64,7 @@ BIDMOVE_URL = "https://www.nemweb.com.au/REPORTS/CURRENT/Bidmove_Complete/"
 NEXTDAY_URL = "https://www.nemweb.com.au/REPORTS/CURRENT/Next_Day_Dispatch/"
 PRICES_URL = "https://www.nemweb.com.au/REPORTS/CURRENT/Public_Prices/"
 DISPATCHIS_URL = "https://www.nemweb.com.au/REPORTS/CURRENT/DispatchIS_Reports/"
+ARCHIVE_DISPATCHIS_URL = "https://www.nemweb.com.au/REPORTS/ARCHIVE/DispatchIS_Reports/"
 PREDISPATCH_URL = "https://www.nemweb.com.au/REPORTS/CURRENT/Predispatch_Reports/"
 
 REGIONS = ["NSW1", "QLD1", "VIC1", "SA1", "TAS1"]
@@ -245,6 +246,30 @@ def load_ic_limits(peak_times: list[datetime]) -> pd.DataFrame | None:
     return import_capability(ic, "SETTLEMENTDATE")
 
 
+def load_ic_limits_archive(day: str, peak_times: list[datetime]) -> pd.DataFrame | None:
+    """Same limits from AEMO's daily DispatchIS archive bundle (a zip of the day's 5-min zips).
+    The archive lags ~2 days, so this serves backfills and late re-runs."""
+    url = find_file(ARCHIVE_DISPATCHIS_URL, rf"^PUBLIC_DISPATCHIS_{day}\.zip$")
+    if not url:
+        return None
+    wanted = {t.strftime("%Y%m%d%H%M") for t in peak_times}
+    frames = []
+    with zipfile.ZipFile(io.BytesIO(nw.download_bytes(url))) as outer:
+        for name in outer.namelist():
+            m = re.search(r"_(\d{12})_", name)
+            if not m or m.group(1) not in wanted:
+                continue
+            try:
+                t = nw.get_table(nw.parse_mms_zip(outer.read(name)), "DISPATCHINTERCONNECTORRES")
+                frames.append(t[t["INTERVENTION"].astype(str).str.strip() == "0"])
+            except Exception as exc:
+                log(f"WARNING: {name}: {exc}")
+    if not frames:
+        return None
+    ic = num(pd.concat(frames), ["IMPORTLIMIT", "EXPORTLIMIT"])
+    return import_capability(ic, "SETTLEMENTDATE")
+
+
 def load_predispatch() -> tuple[pd.DataFrame, pd.DataFrame] | None:
     try:
         url = nw.get_latest_files(PREDISPATCH_URL, r"^PUBLIC_PREDISPATCH_\d{12}_\d{14}_LEGACY\.zip$")[-1]
@@ -322,8 +347,11 @@ def registry_table(day_df: pd.DataFrame, disp: pd.DataFrame | None) -> pd.DataFr
     # (e.g. AGL's Liddell battery bids under an AGL participant ID).
     brand = (base.dropna(subset=["PORTFOLIO"]).groupby("PARTICIPANTID")["PORTFOLIO"]
              .agg(lambda x: x.value_counts().index[0]))
-    base["PORTFOLIO"] = (base["PORTFOLIO"].fillna(base["Owner"])
-                         .fillna(base["PARTICIPANTID"].map(brand)).fillna(base["PARTICIPANTID"]))
+    owner = (base["Owner"].astype("string")
+             .str.replace(r"\s+as (the )?trustee.*$", "", regex=True, case=False)
+             .str.replace(r"\s+(Pty\.? ?Ltd\.?|Pty Limited|Limited|Ltd)\s*$", "", regex=True, case=False))
+    base["PORTFOLIO"] = (base["PORTFOLIO"].fillna(base["PARTICIPANTID"].map(brand))
+                         .fillna(owner).fillna(base["PARTICIPANTID"]))
     base["FUEL"] = base["FUEL"].fillna("Other")
     base["STATIONNAME"] = base["STATIONNAME"].fillna(base["DUID"])
     base["TLF"] = pd.to_numeric(base["TransmissionLossFactor"], errors="coerce").fillna(1.0)
@@ -479,8 +507,15 @@ def analyse(day_str: str, backfill: bool = False):
     n_peak = len(peak_times)
     regions_peak = regions[peak_mask(regions["T"], day)] if regions is not None else None
 
-    # Backfilled days are past the ~2-day DispatchIS window, so no interconnector limits for them.
-    impcap = None if backfill else load_ic_limits([pd.Timestamp(t).to_pydatetime() for t in peak_times])
+    pt = [pd.Timestamp(t).to_pydatetime() for t in peak_times]
+    impcap = None if backfill else load_ic_limits(pt)
+    if impcap is None:
+        try:
+            impcap = load_ic_limits_archive(day_str, pt)
+        except Exception as exc:
+            log(f"WARNING: archive interconnector limits failed ({exc})")
+    if impcap is None:
+        log("WARNING: no interconnector limits - cushion and pivotal tests skipped")
     cushion, piv = pivotal_and_cushion(stack_peak, regions_peak, impcap)
 
     # ---- portfolio aggressiveness (evening peak, averaged per interval) ----
