@@ -92,6 +92,11 @@ jobs:
 
       # Bid stack dashboard as its own push, same time as the recap (bid_stack_analysis.py
       # itself runs ~05:30 NEM and only builds the page). Never blocks the recap commit.
+      # Catch-up: if bid-stack.yml's own early trigger missed (e.g. it fired before AEMO's
+      # Bidmove_Complete was published - happened 2026-10-08 once Sydney went onto AEDT and the
+      # 05:30 Sydney ping started landing at 04:30 NEM), build yesterday's read here. No-op when
+      # the day is already processed (bidstack_state.json guard).
+      - run: python scripts/bid_stack_analysis.py --allow-partial || true
       - run: python scripts/bid_stack_analysis.py --push-only || true
 
       - name: Commit and push state changes
@@ -99,6 +104,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add state/
+          [ -e docs/bidstack ] && git add docs/bidstack
           if git diff --cached --quiet; then
             echo "No state changes to commit."
           else

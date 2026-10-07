@@ -61,6 +61,15 @@ jobs:
           # Surface the run's output as a job annotation (readable via the API without log access).
           echo "::notice title=bid_stack output::$(grep -v '^\[bid_stack\] NOTE' state/bidstack_lastrun.log | tail -25 | sed ':a;N;$!ba;s/%/%25/g;s/\n/%0A/g')"
 
+      # Late run (after the 7:30am Sydney recap has already gone out): push the dashboard
+      # straight away instead of waiting for tomorrow's recap. push_latest() only pushes a
+      # given trading day once, so this can't double up with the recap's own push.
+      - name: Push now if the recap has already gone
+        run: |
+          if [ "$(TZ=Australia/Sydney date +%H%M)" -ge 0735 ]; then
+            python scripts/bid_stack_analysis.py --push-only || true
+          fi
+
       - name: Commit dashboard and state
         id: commit
         run: |
