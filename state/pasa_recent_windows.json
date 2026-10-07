@@ -3048,5 +3048,95 @@
     "start": "2026-11-06",
     "end": "2026-11-06",
     "found_at": "2026-10-06T05:24:12.524567"
+  },
+  {
+    "duid": "TUMUT3",
+    "station": "Tumut3",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": -300,
+    "start": "2026-11-23",
+    "end": "2026-12-07",
+    "found_at": "2026-10-07T04:01:09.036833"
+  },
+  {
+    "duid": "TUMUT3",
+    "station": "Tumut3",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": -300,
+    "start": "2026-12-10",
+    "end": "2026-12-11",
+    "found_at": "2026-10-07T04:01:09.036833"
+  },
+  {
+    "duid": "TUMUT3",
+    "station": "Tumut3",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": -300,
+    "start": "2027-01-26",
+    "end": "2027-01-28",
+    "found_at": "2026-10-07T04:01:09.036833"
+  },
+  {
+    "duid": "TUMUT3",
+    "station": "Tumut3",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": -300,
+    "start": "2027-03-30",
+    "end": "2027-03-31",
+    "found_at": "2026-10-07T04:01:09.036833"
+  },
+  {
+    "duid": "TUMUT3",
+    "station": "Tumut3",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": -300,
+    "start": "2027-04-05",
+    "end": "2027-04-23",
+    "found_at": "2026-10-07T04:01:09.036833"
+  },
+  {
+    "duid": "TUMUT3",
+    "station": "Tumut3",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": 300,
+    "start": "2027-02-15",
+    "end": "2027-02-15",
+    "found_at": "2026-10-07T04:01:09.036833"
+  },
+  {
+    "duid": "TUMUT3",
+    "station": "Tumut3",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": 300,
+    "start": "2027-02-20",
+    "end": "2027-02-21",
+    "found_at": "2026-10-07T04:01:09.036833"
+  },
+  {
+    "duid": "TUMUT3",
+    "station": "Tumut3",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": 300,
+    "start": "2027-03-01",
+    "end": "2027-03-01",
+    "found_at": "2026-10-07T04:01:09.036833"
+  },
+  {
+    "duid": "TUMUT3",
+    "station": "Tumut3",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": 300,
+    "start": "2027-03-12",
+    "end": "2027-03-15",
+    "found_at": "2026-10-07T04:01:09.036833"
   }
 ]
