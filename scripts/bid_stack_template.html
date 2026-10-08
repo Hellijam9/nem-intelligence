@@ -57,6 +57,9 @@ ul.reads li:first-child { border-top: 0; }
   border: 1px solid currentColor; }
 .l3 { color: var(--crit); } .l2 { color: var(--serious); } .l1 { color: var(--muted); }
 .fwd { font-size: 11px; color: var(--info); font-weight: 600; margin-right: 4px; }
+.bk { font-size: 11px; color: var(--muted); font-weight: 600; margin-right: 4px; text-transform: uppercase; letter-spacing: .02em; }
+.pills.blocks { position: static; margin-top: 0; padding-top: 0; }
+.pills.blocks button { font-size: 13px; padding: 5px 11px; }
 .chart { position: relative; height: 300px; }
 .chart.short { height: 240px; }
 .tablewrap { overflow-x: auto; }
@@ -82,10 +85,11 @@ details summary { cursor: pointer; color: var(--ink); font-weight: 600; }
     <p id="meta"></p>
   </header>
   <div class="pills" id="pills" role="group" aria-label="Region"></div>
+  <div class="pills blocks" id="blockPills" role="group" aria-label="Time of day"></div>
 
   <section id="readsSec">
     <h2>Key reads</h2>
-    <p class="sub">Ranked by severity. <span class="fwd">AHEAD</span> = forward look from the latest predispatch.</p>
+    <p class="sub">Whole trading day, ranked by severity. <span class="fwd">AHEAD</span> = forward look from the latest predispatch. Tap a time-of-day block to show only its reads.</p>
     <ul class="reads" id="reads"></ul>
   </section>
 
@@ -97,13 +101,13 @@ details summary { cursor: pointer; color: var(--ink); font-weight: 600; }
 
   <section id="fwdSec">
     <h2>Forward look</h2>
-    <p class="sub">Forecast evening-peak demand (predispatch) set against the offers each portfolio made for the same half-hour yesterday. Bids for these days aren't public yet, so this shows what happens if offers repeat.</p>
+    <p class="sub" id="fwdSub"></p>
     <div class="tablewrap"><table id="fwd"></table></div>
   </section>
 
   <section id="curveSec">
     <button class="toggle" id="curveToggle" type="button">Show to price cap</button>
-    <h2>Supply curve at the peak interval</h2>
+    <h2 id="curveTitle">Supply curve at the peak interval</h2>
     <p class="sub" id="curveSub"></p>
     <div class="chart"><canvas id="curve"></canvas></div>
     <div class="legend" id="curveLegend"></div>
@@ -111,13 +115,13 @@ details summary { cursor: pointer; color: var(--ink); font-weight: 600; }
 
   <section id="portSec">
     <h2>Who is pricing aggressively</h2>
-    <p class="sub">Dispatchable capacity (coal, gas, hydro, batteries, diesel) averaged over the evening peak, after trimming to real availability. Δ = change in share offered at $300+ vs the portfolio's own 20-day norm. Pivotal = intervals where demand could not be met without them.</p>
+    <p class="sub"><span id="portWin">Dispatchable capacity (coal, gas, hydro, batteries, diesel) averaged over the evening peak</span>, after trimming to real availability. Δ = change in share offered at $300+ vs the portfolio's own 20-day norm. Pivotal = intervals where demand could not be met without them.</p>
     <div class="tablewrap"><table id="port"></table></div>
   </section>
 
   <section id="fuelSec">
     <h2>Offers by price band and fuel</h2>
-    <p class="sub">Average MW offered across the evening peak.</p>
+    <p class="sub" id="fuelSub">Average MW offered across the evening peak.</p>
     <div class="chart short"><canvas id="fuel"></canvas></div>
     <div class="legend" id="fuelLegend"></div>
   </section>
@@ -132,6 +136,7 @@ details summary { cursor: pointer; color: var(--ink); font-weight: 600; }
   <section>
     <details>
       <summary>Method &amp; caveats</summary>
+      <p>Time-of-day blocks (interval-ending, NEM time): morning 04:00-09:00, daytime 09:00-17:00, evening peak 17:00-20:30, late evening 20:30-24:00, overnight 00:00-04:00 - together the full trading day. Each block is analysed on its own, with its own 20-day norms. Daytime and overnight focus on the cheapest interval; the others on the highest-demand interval. "At the floor" means offers at -$1,000 before loss-factor scaling. Storage charging = energy bids in the load direction (batteries, pumps); a charge bid at price P means "consume if the price is at or below P".</p>
       <p>Data: AEMO next-day public files - Bidmove_Complete (bid price bands and per-interval volumes), Next_Day_Dispatch (unit availability), Public_Prices (regional price and demand), DispatchIS (interconnector limits) and the latest Predispatch run.</p>
       <p>Band volumes are trimmed from the top band down to each unit's dispatch availability (the approach used by UNSW-CEEM's NEM bidding dashboard), so wind and solar count only what the weather allowed. Fixed loads count as priced below $0 and offers are summed per price range and averaged over intervals, following the AER's wholesale market performance methods. Prices are referred to the regional reference node using each unit's transmission loss factor. Only energy offers in the generating direction are counted.</p>
       <p>Pivotal test: simplified AER pivotal supplier test - regional available capacity minus the portfolio's own, plus interconnector import capability, compared with regional total demand. Forced interconnector flows aren't netted off, so treat it as a screen, not a finding.</p>
@@ -149,6 +154,9 @@ const fmt = (v, d=0) => v == null || Number.isNaN(v) ? "–" : Number(v).toLocal
 const money = v => v == null ? "–" : "$" + fmt(v, Math.abs(v) < 100 ? 2 : 0);
 const charts = {};
 let region = "NSW1";
+let block = "evening";
+let readsAll = true;
+const B = () => (DATA.blocks && DATA.blocks[block]) || {label: "Evening peak", window: DATA.peak_window, n: DATA.n_peak, regions: DATA.regions};
 let fullCurve = false;
 
 function kill(id){ if (charts[id]) { charts[id].destroy(); delete charts[id]; } }
@@ -166,46 +174,66 @@ function tooltipStyle(){
 function pills(){
   const el = document.getElementById("pills");
   el.innerHTML = "";
-  REGIONS.filter(r => DATA.regions[r]).forEach(r => {
+  REGIONS.filter(r => B().regions[r]).forEach(r => {
     const b = document.createElement("button");
     b.type = "button"; b.textContent = r.replace("1","");
     b.setAttribute("aria-pressed", r === region);
     b.onclick = () => { region = r; render(); };
     el.appendChild(b);
   });
+  const bp = document.getElementById("blockPills");
+  bp.innerHTML = "";
+  (DATA.block_order || []).forEach(k => {
+    const b = document.createElement("button");
+    b.type = "button"; b.textContent = DATA.blocks[k].label + " " + DATA.blocks[k].window;
+    b.setAttribute("aria-pressed", k === block);
+    b.onclick = () => { block = k; readsAll = false; if (!B().regions[region]) region = REGIONS.find(r => B().regions[r]); render(); };
+    bp.appendChild(b);
+  });
 }
 
 function reads(){
   const ul = document.getElementById("reads");
-  const items = DATA.reads.filter(x => x.region === region || x.region === "NEM")
+  const items = DATA.reads.filter(x => (x.region === region || x.region === "NEM") && (readsAll || !x.block || x.block === block))
     .sort((a,b) => (b.level - a.level) || ((b.forward?1:0) - (a.forward?1:0)));
   const names = {3: "Tight", 2: "Watch", 1: "Note"};
   ul.innerHTML = items.length ? items.map(x =>
     `<li><span class="tag l${x.level}">${names[x.level]}</span><span>${x.forward ? '<span class="fwd">AHEAD</span>' : ""}${x.text}</span></li>`
-  ).join("") : `<li class="empty">Nothing stood out in ${region.replace("1","")} - ample cheap supply and no pivotal portfolios.</li>`;
+  ).join("") : `<li class="empty">Nothing stood out in ${region.replace("1","")}${readsAll ? "" : " " + B().label.toLowerCase()} - ample cheap supply and no pivotal portfolios.</li>`;
+  if (!readsAll) ul.insertAdjacentHTML("beforeend", `<li><button class="toggle" type="button" id="allReads" style="float:none">Show reads for the whole day</button></li>`);
+  const a = document.getElementById("allReads"); if (a) a.onclick = () => { readsAll = true; reads(); };
 }
 
 function tiles(r){
-  document.getElementById("tilesTitle").textContent = `Evening peak - ${region.replace("1","")}`;
-  document.getElementById("tilesSub").textContent = `Highest-demand interval ending ${r.peak_time} on ${DATA.trading_day}.`;
+  const blk = B();
+  document.getElementById("tilesTitle").textContent = `${blk.label} ${blk.window} - ${region.replace("1","")}`;
+  document.getElementById("tilesSub").textContent = r.focus === "trough"
+    ? `Cheapest interval ended ${r.peak_time} on ${DATA.trading_day} (curve below is at that interval).`
+    : `Highest-demand interval ended ${r.peak_time} on ${DATA.trading_day}.`;
+  const floor = Object.entries(r.floor_by_fuel || {}).slice(0, 2).map(([f, v]) => `${f} ${fmt(v)}`).join(", ");
   const t = [
-    ["Demand", fmt(r.peak_demand)+" MW", `spot ${money(r.peak_rrp)}/MWh`],
-    ["Evening price", money(r.avg_rrp_peak), `avg · max ${money(r.max_rrp_peak)}`],
-    ["Sub-$300 headroom", r.cheap_headroom == null ? "–" : fmt(r.cheap_headroom)+" MW", `tightest ${r.min_cheap_headroom == null ? "–" : fmt(r.min_cheap_headroom)+" MW"}`],
-    ["Supply cushion", r.cushion_pct == null ? "–" : fmt(r.cushion_pct,1)+"%", `incl. ${fmt(r.peak_import_cap)} MW import capability`],
+    ["Demand", fmt(r.max_demand ?? r.peak_demand)+" MW", r.focus === "trough" ? `block max · ${fmt(r.peak_demand)} MW at ${r.peak_time}` : `spot ${money(r.peak_rrp)}/MWh at ${r.peak_time}`],
+    ["Price", money(r.avg_rrp_peak), `avg · max ${money(r.max_rrp_peak)} · min ${money(r.min_rrp)}`],
+    ["At or below $0", r.neg_frac == null ? "–" : fmt(r.neg_frac)+"%", "of intervals in this block"],
+    ["Sub-$300 headroom", r.min_cheap_headroom == null ? "–" : fmt(r.min_cheap_headroom)+" MW", r.tightest_time ? `tightest, at ${r.tightest_time}` : "tightest interval"],
+    ["Offered below $0", r.below0_mw == null ? "–" : fmt(r.below0_mw)+" MW", `${fmt(r.floor_mw)} MW at -$1,000${floor ? " · " + floor : ""}`],
+    ["Storage charge bids", r.charge_mw == null ? "–" : fmt(r.charge_mw)+" MW", `${fmt(r.charge_pos_mw)} MW even at prices ≥ $0`],
   ];
   document.getElementById("tiles").innerHTML = t.map(([k,v,n]) =>
     `<div class="tile"><div class="k">${k}</div><div class="v">${v}</div><div class="n">${n}</div></div>`).join("");
 }
 
 function forward(){
-  const rows = (DATA.forward || []).filter(f => f.region === region);
+  const all = (DATA.forward || []).filter(f => f.region === region);
+  const hasBlocks = all.some(f => f.block);
+  const rows = hasBlocks ? all.filter(f => f.block === block) : all;
+  document.getElementById("fwdSub").textContent = `Highest forecast demand (predispatch) in each upcoming ${hasBlocks ? B().label.toLowerCase() : "evening peak"} block, set against the offers each portfolio made for the same half-hour yesterday. Bids for these days aren't public yet, so this shows what happens if offers repeat.`;
   const el = document.getElementById("fwd");
-  if (!rows.length) { el.innerHTML = `<tr><td class="empty">Predispatch didn't cover an upcoming evening peak at run time.</td></tr>`; return; }
-  el.innerHTML = `<thead><tr><th>Peak</th><th>Sub-$300 headroom</th><th>Demand</th><th>Predispatch</th><th>Cushion</th><th>Wind+solar (yday)</th></tr></thead><tbody>` +
+  if (!rows.length) { el.innerHTML = `<tr><td class="empty">Predispatch didn't cover an upcoming ${B().label.toLowerCase()} at run time.</td></tr>`; return; }
+  el.innerHTML = `<thead><tr><th>Half-hour</th><th>Sub-$300 headroom</th><th>Demand</th><th>Predispatch</th><th>Block low</th><th>Cushion</th><th>Wind+solar (yday)</th></tr></thead><tbody>` +
     rows.map(f => `<tr><td>${f.date} ${f.time}${f.pivotal.length ? `<span class="f">Pivotal: ${f.pivotal.map(p => p.portfolio).join(", ")}</span>` : ""}</td>
       <td class="${f.cheap_headroom != null && f.cheap_headroom < 300 ? "up" : ""}">${f.cheap_headroom == null ? "–" : fmt(f.cheap_headroom) + " MW"}</td>
-      <td>${fmt(f.demand)}</td><td>${money(f.pd_rrp)}</td>
+      <td>${fmt(f.demand)}</td><td>${money(f.pd_rrp)}</td><td>${money(f.pd_min_rrp)}</td>
       <td>${f.cushion_pct == null ? "–" : fmt(f.cushion_pct,1)+"%"}</td><td>${fmt(f.vre)}</td></tr>`).join("") + "</tbody>";
 }
 
@@ -213,6 +241,7 @@ function curve(r){
   kill("curve");
   const pts = r.curve;
   const sub = document.getElementById("curveSub");
+  document.getElementById("curveTitle").textContent = r.focus === "trough" ? "Supply curve at the cheapest interval" : "Supply curve at the peak interval";
   sub.textContent = `Availability-adjusted offers in ${region.replace("1","")} at ${r.peak_time}, cheapest first. Dashed line = MW actually dispatched from the region (${fmt(r.peak_dispgen)} MW); the rest of demand came from imports.`;
   const data = []; let prev = 0;
   pts.forEach(pt => { data.push({x: prev, y: pt.p, p: pt.p, o: pt.o}); data.push({x: pt.mw, y: pt.p, p: pt.p, o: pt.o}); prev = pt.mw; });
@@ -245,6 +274,7 @@ function curve(r){
 }
 
 function portfolios(r){
+  document.getElementById("portWin").textContent = `Dispatchable capacity (coal, gas, hydro, batteries, diesel) averaged over ${B().label.toLowerCase()} ${B().window}`;
   const el = document.getElementById("port");
   if (!r.portfolios.length) { el.innerHTML = `<tr><td class="empty">No dispatchable portfolios above 50 MW.</td></tr>`; return; }
   const rows = r.portfolios.filter(p => p.hi300 > 0 || p.pivotal || p.avail >= 300).slice(0, 14);
@@ -254,12 +284,13 @@ function portfolios(r){
         `<span class="${p.delta >= 10 ? "up" : p.delta <= -10 ? "down" : ""}">${p.delta > 0 ? "+" : ""}${fmt(p.delta)}pp</span>`;
       return `<tr><td>${p.portfolio}<span class="f">${p.fuels}</span></td><td>${fmt(p.share300)}%</td><td>${d}</td>
         <td>${fmt(p.hi300)}</td><td>${fmt(p.avail)}</td><td>${fmt(p.hi5000)}</td><td>${fmt(p.le0)}</td>
-        <td>${p.pivotal == null ? "–" : p.pivotal ? `<span class="up">${p.pivotal}/${DATA.n_peak}</span>` : "0"}</td></tr>`;
+        <td>${p.pivotal == null ? "–" : p.pivotal ? `<span class="up">${p.pivotal}/${B().n}</span>` : "0"}</td></tr>`;
     }).join("") + "</tbody>";
 }
 
 function fuel(r){
   kill("fuel");
+  document.getElementById("fuelSub").textContent = `Average MW offered across ${B().label.toLowerCase()} ${B().window}.`;
   const labels = Object.keys(r.by_fuel.rows);
   const bands = r.by_fuel.labels;
   const colors = ["--b0","--b1","--b2","--b3","--b4","--b5","--b6"].map(css);
@@ -277,6 +308,8 @@ function fuel(r){
 
 function series(r){
   kill("series");
+  r = (DATA.day && DATA.day[region]) || r;
+  if (!r.series) return;
   const labels = r.series.map(s => s.t);
   document.getElementById("seriesSub").textContent = r.stack_fit_pct == null ? "" :
     `Where the region's own offers cross its dispatched MW. They line up with spot in ${r.stack_fit_pct}% of intervals; gaps usually mean imports, network constraints or FCAS set the price. Y-axis clipped at $1,000.`;
@@ -299,7 +332,7 @@ function series(r){
 
 function render(){
   base(); pills();
-  const r = DATA.regions[region];
+  const r = B().regions[region];
   reads(); tiles(r); forward(); curve(r); portfolios(r); fuel(r); series(r);
 }
 
@@ -307,12 +340,12 @@ if (!DATA) {
   document.querySelector("main").insertAdjacentHTML("beforeend", "<section class='empty'>No data yet.</section>");
 } else {
   document.getElementById("meta").textContent =
-    `Trading day ${DATA.trading_day} · evening peak ${DATA.peak_window} NEM · updated ${DATA.generated || ""}` +
+    `Trading day ${DATA.trading_day} · ${DATA.blocks ? "whole day 04:00-04:00" : "evening peak " + DATA.peak_window} NEM · updated ${DATA.generated || ""}` +
     (DATA.availability_adjusted ? "" : " · volumes NOT availability-adjusted");
-  region = REGIONS.find(r => DATA.regions[r]);
+  region = REGIONS.find(r => B().regions[r]);
   document.getElementById("curveToggle").onclick = e => {
     fullCurve = !fullCurve; e.target.textContent = fullCurve ? "Clip to $600" : "Show to price cap";
-    curve(DATA.regions[region]);
+    curve(B().regions[region]);
   };
   render();
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", render);
