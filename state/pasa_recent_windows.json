@@ -3148,5 +3148,85 @@
     "start": "2026-10-11",
     "end": "2026-10-11",
     "found_at": "2026-10-08T01:01:16.753462"
+  },
+  {
+    "duid": "DDPS1",
+    "station": "Darling Downs",
+    "owner": "Origin Energy Power Limited",
+    "region": "QLD1",
+    "delta": -630,
+    "start": "2027-08-26",
+    "end": "2027-08-31",
+    "found_at": "2026-10-08T04:00:59.285604"
+  },
+  {
+    "duid": "DDPS1",
+    "station": "Darling Downs",
+    "owner": "Origin Energy Power Limited",
+    "region": "QLD1",
+    "delta": -615,
+    "start": "2027-09-01",
+    "end": "2027-09-27",
+    "found_at": "2026-10-08T04:00:59.285604"
+  },
+  {
+    "duid": "DDPS1",
+    "station": "Darling Downs",
+    "owner": "Origin Energy Power Limited",
+    "region": "QLD1",
+    "delta": 586,
+    "start": "2027-04-01",
+    "end": "2027-04-30",
+    "found_at": "2026-10-08T04:00:59.285604"
+  },
+  {
+    "duid": "URANQ13",
+    "station": "Uranquinty",
+    "owner": "Origin Energy Uranquinty Power Pty Ltd",
+    "region": "NSW1",
+    "delta": -170,
+    "start": "2026-10-12",
+    "end": "2026-10-13",
+    "found_at": "2026-10-08T04:00:59.285604"
+  },
+  {
+    "duid": "DDPS1",
+    "station": "Darling Downs",
+    "owner": "Origin Energy Power Limited",
+    "region": "QLD1",
+    "delta": -158,
+    "start": "2027-07-16",
+    "end": "2027-07-24",
+    "found_at": "2026-10-08T04:00:59.285604"
+  },
+  {
+    "duid": "DDPS1",
+    "station": "Darling Downs",
+    "owner": "Origin Energy Power Limited",
+    "region": "QLD1",
+    "delta": 158,
+    "start": "2027-06-01",
+    "end": "2027-06-05",
+    "found_at": "2026-10-08T04:00:59.285604"
+  },
+  {
+    "duid": "DDPS1",
+    "station": "Darling Downs",
+    "owner": "Origin Energy Power Limited",
+    "region": "QLD1",
+    "delta": 154,
+    "start": "2027-05-28",
+    "end": "2027-05-31",
+    "found_at": "2026-10-08T04:00:59.285604"
+  },
+  {
+    "duid": "DDPS1",
+    "station": "Darling Downs",
+    "owner": "Origin Energy Power Limited",
+    "region": "QLD1",
+    "delta": 144,
+    "start": "2027-10-22",
+    "end": "2027-10-30",
+    "found_at": "2026-10-08T04:00:59.285604"
   }
 ]
