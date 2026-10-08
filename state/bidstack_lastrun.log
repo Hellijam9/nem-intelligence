@@ -1,1 +1,27 @@
-[bid_stack] already processed 2026-10-07 - skipping
+[bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20261007_0000000541734443.zip
+[bid_stack] bids: 478 DUIDs with energy price bands, 137664 per-interval volume rows; 100 DUIDs bidding to consume
+[bid_stack] dispatch: 164736 unit-interval rows
+[bid_stack] NOTE: 1 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): UWF1
+[bid_stack] stack: 124380 unit-interval-band rows from 137664 unit-intervals
+[bid_stack] load bids: 22572 unit-interval-band rows
+[bid_stack] interconnector limits: 83 peak intervals
+[bid_stack] dashboard written: /home/runner/work/nem-intelligence/nem-intelligence/docs/bidstack/index.html
+Bid stack 2026-10-07 (evening 17:00-20:30 NEM)
+NSW: peak 18:55 | sub-$300 headroom 2,120MW | most $300+: Snowy Hydro 2,055MW
+QLD: peak 18:00 | sub-$300 headroom 2,537MW | most $300+: Origin Energy 455MW
+VIC: peak 19:00 | sub-$300 headroom 2,480MW | most $300+: Snowy Hydro 1,137MW
+SA: peak 18:55 | sub-$300 headroom 927MW | most $300+: Origin Energy 215MW
+TAS: peak 18:35 | sub-$300 headroom 327MW | most $300+: Hydro Tas 180MW
+Daytime 09:00-17:00:
+NSW: <=$0 0% of intervals | 6,013MW below $0, 189MW at floor | charge bids 1,613MW
+QLD: <=$0 0% of intervals | 6,774MW below $0, 662MW at floor | charge bids 1,936MW
+VIC: <=$0 82% of intervals | 4,936MW below $0, 6MW at floor | charge bids 1,306MW
+SA: <=$0 94% of intervals | 608MW below $0, 8MW at floor | charge bids 881MW
+TAS: <=$0 81% of intervals | 516MW below $0, 63MW at floor | charge bids 0MW
+
+- TAS overnight: Hydro Tas was pivotal in 48/48 intervals (demand couldn't be met without it, up to 369MW short) - it had 813MW offered at $300+.
+- TAS Fri 09 Oct 04:00 (overnight): Hydro Tas would be pivotal at forecast demand 911MW if offers match yesterday's (predispatch -$2).
+- TAS Sat 10 Oct 01:00 (overnight): Hydro Tas would be pivotal at forecast demand 945MW if offers match yesterday's (predispatch $0).
+- NSW morning: Delta Electricity priced 15pp more of its capacity at $300+ than its 20-day norm (22% of 1,260MW).
+- SA morning: Origin Energy priced 28pp more of its capacity at $300+ than its 20-day norm (100% of 294MW).
+- SA morning: NEOEN priced 33pp more of its capacity at $300+ than its 20-day norm (92% of 245MW).
