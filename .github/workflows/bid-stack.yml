@@ -19,6 +19,10 @@ on:
       backfill_days:
         description: "Seed the baseline from this many past days first (0 = no backfill)"
         default: "0"
+      force:
+        description: "Rebuild yesterday's dashboard even if already processed"
+        type: boolean
+        default: false
 
 concurrency:
   group: bid-stack
@@ -57,6 +61,7 @@ jobs:
           # Output is kept in state/bidstack_lastrun.log so a run can be checked without the Actions UI.
           set -o pipefail
           if [ "$HOUR" -ge 8 ]; then ARGS="--allow-partial"; else ARGS=""; fi
+          if [ "${{ inputs.force }}" = "true" ]; then ARGS="$ARGS --force"; fi
           python scripts/bid_stack_analysis.py $ARGS 2>&1 | tee state/bidstack_lastrun.log
           # Surface the run's output as a job annotation (readable via the API without log access).
           echo "::notice title=bid_stack output::$(grep -v '^\[bid_stack\] NOTE' state/bidstack_lastrun.log | tail -25 | sed ':a;N;$!ba;s/%/%25/g;s/\n/%0A/g')"
