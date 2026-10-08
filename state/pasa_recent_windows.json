@@ -3248,5 +3248,15 @@
     "start": "2026-10-11",
     "end": "2026-11-06",
     "found_at": "2026-10-08T07:01:07.428448"
+  },
+  {
+    "duid": "LVES1",
+    "station": "Latrobe Valley BESS",
+    "owner": "Tilt Renewables Australia Pty Ltd",
+    "region": "VIC1",
+    "delta": -100,
+    "start": "2026-11-23",
+    "end": "2026-12-13",
+    "found_at": "2026-10-08T10:01:11.930481"
   }
 ]
