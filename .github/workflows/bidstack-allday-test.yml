@@ -6,6 +6,8 @@ jobs:
   run:
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -16,10 +18,9 @@ jobs:
           set -o pipefail
           python scripts/bid_stack_analysis.py --force --allow-partial 2>&1 | tee run.log
           echo "::notice title=summary::$(grep -vE "nemweb_common\]|WARNING: PUBLIC_DISPATCHIS" run.log | tail -45 | sed ':a;N;$!ba;s/%/%25/g;s/\n/%0A/g')"
-      - uses: actions/upload-artifact@v4
-        with:
-          name: bidstack-page
-          path: |
-            docs/bidstack/index.html
-            state/bidstack_region_history.csv
-            run.log
+      - name: Commit test output to this branch (for review)
+        run: |
+          mkdir -p testout && cp docs/bidstack/index.html run.log testout/ && cp docs/bidstack/data/*.json testout/
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f testout && git commit -qm "test output [skip ci]" && git push

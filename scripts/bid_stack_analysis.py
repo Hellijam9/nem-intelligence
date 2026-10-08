@@ -1106,7 +1106,10 @@ def forward_reads(fwd: list[dict], usual: set) -> list[dict]:
         unusual = [p for p in f["pivotal"] if not p.get("usual")]
         name = f["region"].rstrip("1")
         where = f"{name} {f['date']} {f['time']} ({f['block_label'].lower()})"
-        if f["cheap_headroom"] is not None and f["cheap_headroom"] < 300:
+        # Midday/overnight headroom depends on tomorrow's wind and solar, which yesterday's offers
+        # don't know - only flag it there when predispatch itself is pricing scarcity.
+        trough_ok = f["block"] not in TROUGH_BLOCKS or f["pd_rrp"] >= 150
+        if f["cheap_headroom"] is not None and f["cheap_headroom"] < 300 and trough_ok:
             who = ", ".join(p["portfolio"] for p in unusual[:2])
             out.append({"region": f["region"], "block": f["block"], "level": 3 if f["cheap_headroom"] < 0 else 2,
                         "forward": True, "text":
