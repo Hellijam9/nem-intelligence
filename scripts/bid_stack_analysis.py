@@ -267,7 +267,7 @@ def load_ic_limits(peak_times: list[datetime]) -> pd.DataFrame | None:
             log(f"WARNING: {u.rsplit('/', 1)[-1]}: {exc}")
             return None
 
-    with ThreadPoolExecutor(8) as pool:
+    with ThreadPoolExecutor(4) as pool:
         frames = [f for f in pool.map(fetch, picks) if f is not None and len(f)]
     if not frames:
         return None
@@ -794,15 +794,26 @@ def analyse(day_str: str, backfill: bool = False):
     if regions is not None:
         regions["T"] = pd.to_datetime(regions["INTERVAL_DATETIME"], format=TS_FMT)
 
+    # Interconnector limits: every 5-min interval in the evening peak, half-hourly elsewhere (each
+    # interval uses the limit at the end of its half-hour). Fetching all 288 DispatchIS files at
+    # once gets NEMWeb returning 403s, so the total stays close to the old evening-only load.
     all_times = [pd.Timestamp(t).to_pydatetime() for t in sorted(stack["T"].unique())]
-    impcap = None if backfill else load_ic_limits(all_times)
+    ev_start, ev_end = day + timedelta(minutes=1020), day + timedelta(minutes=1230)
+    src = {t: (t if ev_start < t <= ev_end else t + timedelta(minutes=(-t.minute) % 30)) for t in all_times}
+    fetch_times = sorted(set(src.values()))
+    impcap = None if backfill else load_ic_limits(fetch_times)
     if impcap is None:
         try:
-            impcap = load_ic_limits_archive(day_str, all_times)
+            impcap = load_ic_limits_archive(day_str, fetch_times)
         except Exception as exc:
             log(f"WARNING: archive interconnector limits failed ({exc})")
     if impcap is None:
         log("WARNING: no interconnector limits - cushion and pivotal tests skipped")
+    else:
+        m = pd.DataFrame({"INTERVAL_DATETIME": [t.strftime(TS_FMT) for t in src],
+                          "SRC": [v.strftime(TS_FMT) for v in src.values()]})
+        impcap = (m.merge(impcap.rename(columns={"INTERVAL_DATETIME": "SRC"}), on="SRC", how="inner")
+                  .drop(columns="SRC"))
 
     hist = read_history()
     hist = hist[hist["date"] != date_iso]
