@@ -3138,5 +3138,15 @@
     "start": "2027-03-12",
     "end": "2027-03-15",
     "found_at": "2026-10-07T04:01:09.036833"
+  },
+  {
+    "duid": "TARBESS1",
+    "station": "Tarong BESS",
+    "owner": "Stanwell Corporation Limited",
+    "region": "QLD1",
+    "delta": -150,
+    "start": "2026-10-11",
+    "end": "2026-10-11",
+    "found_at": "2026-10-08T01:01:16.753462"
   }
 ]
