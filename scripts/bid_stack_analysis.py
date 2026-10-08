@@ -1146,6 +1146,14 @@ def write_dashboard(result: dict) -> Path:
     return out
 
 
+BLOCK_PRIORITY = {"evening": 0, "late": 1, "morning": 2, "daytime": 3, "overnight": 4}
+
+
+def rank_reads(reads: list[dict]) -> list[dict]:
+    """Severity first; at equal severity the evening peak leads, then late evening."""
+    return sorted(reads, key=lambda x: (-x.get("level", 0), BLOCK_PRIORITY.get(x.get("block", "evening"), 5)))
+
+
 def ntfy_summary(result: dict) -> str:
     lines = [f"Bid stack {result['trading_day']} (evening {result['peak_window']} NEM)"]
     for region, r in result["regions"].items():
@@ -1164,7 +1172,7 @@ def ntfy_summary(result: dict) -> str:
                 continue
             lines.append(f"{region.rstrip('1')}: <=$0 {r['neg_frac']:.0f}% of intervals | "
                          f"{r['below0_mw']:,}MW below $0, {r['floor_mw']:,}MW at floor | charge bids {r['charge_mw']:,}MW")
-    ranked = sorted(result["reads"], key=lambda x: -x["level"])[:6]
+    ranked = rank_reads(result["reads"])[:6]
     if ranked:
         lines.append("")
         lines += [f"- {x['text']}" for x in ranked]
@@ -1201,7 +1209,7 @@ def push_latest() -> None:
         log("no bid stack ntfy topic configured - skipping push")
         return
     data = json.loads(data_path.read_text())
-    ranked = sorted(data.get("reads", []), key=lambda x: -x.get("level", 0))
+    ranked = rank_reads(data.get("reads", []))
     headline = ranked[0]["text"] if ranked else "No standout bidding moves."
     ok = nw.push_ntfy_attachment(topic, f"bidstack-{day}.html", page.read_text(),
                                  short_message=f"Tap to open. {headline}"[:300].replace("\n", " "),
