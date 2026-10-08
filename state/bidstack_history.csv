@@ -287,7 +287,7 @@ date,block,region,portfolio,avail_mw,hi300_mw,hi1000_mw,hi5000_mw,pivotal_frac
 2026-09-17,overnight,SA1,Pacific Hydro Clements Gap BESS,60.0,0.0,0.0,0.0,0.0
 2026-09-17,overnight,SA1,Snowy Hydro,121.0,121.0,121.0,121.0,0.0
 2026-09-17,overnight,TAS1,Aurora Energy,78.0,78.0,78.0,78.0,0.0
-2026-09-17,overnight,TAS1,Hydro Tas,1523.2,578.3,578.3,578.3,0.0
+2026-09-17,overnight,TAS1,Hydro Tas,1523.2,578.3,578.3,578.3,1.0
 2026-09-17,overnight,VIC1,AGL,2363.0,682.0,382.0,123.0,0.0
 2026-09-17,overnight,VIC1,Alinta Energy,1165.0,0.0,0.0,0.0,0.0
 2026-09-17,overnight,VIC1,ENGIE,52.0,0.0,0.0,0.0,0.0
@@ -533,7 +533,7 @@ date,block,region,portfolio,avail_mw,hi300_mw,hi1000_mw,hi5000_mw,pivotal_frac
 2026-09-18,overnight,SA1,Origin Energy,136.8,136.8,136.8,136.8,0.0
 2026-09-18,overnight,SA1,Snowy Hydro,121.0,121.0,121.0,121.0,0.0
 2026-09-18,overnight,TAS1,Aurora Energy,103.0,103.0,103.0,103.0,0.0
-2026-09-18,overnight,TAS1,Hydro Tas,1444.5,1092.6,0.0,0.0,0.0
+2026-09-18,overnight,TAS1,Hydro Tas,1444.5,1092.6,0.0,0.0,1.0
 2026-09-18,overnight,VIC1,AGL,1839.0,979.0,400.0,192.0,0.0
 2026-09-18,overnight,VIC1,Alinta Energy,1168.0,0.0,0.0,0.0,0.0
 2026-09-18,overnight,VIC1,ENGIE,150.0,56.2,56.2,56.2,0.0
@@ -763,7 +763,7 @@ date,block,region,portfolio,avail_mw,hi300_mw,hi1000_mw,hi5000_mw,pivotal_frac
 2026-09-19,overnight,SA1,Origin Energy,165.0,165.0,165.0,165.0,0.0
 2026-09-19,overnight,SA1,Snowy Hydro,121.0,121.0,121.0,121.0,0.0
 2026-09-19,overnight,TAS1,Aurora Energy,78.0,78.0,78.0,78.0,0.0
-2026-09-19,overnight,TAS1,Hydro Tas,1448.6,0.0,0.0,0.0,0.0
+2026-09-19,overnight,TAS1,Hydro Tas,1448.6,0.0,0.0,0.0,1.0
 2026-09-19,overnight,VIC1,AGL,1802.2,583.5,363.2,155.2,0.0
 2026-09-19,overnight,VIC1,Alinta Energy,1160.0,0.0,0.0,0.0,0.0
 2026-09-19,overnight,VIC1,Energy Australia,1037.0,387.0,369.0,369.0,0.0
@@ -999,7 +999,7 @@ date,block,region,portfolio,avail_mw,hi300_mw,hi1000_mw,hi5000_mw,pivotal_frac
 2026-09-20,overnight,SA1,Pacific Hydro Clements Gap BESS,60.0,0.0,0.0,0.0,0.0
 2026-09-20,overnight,SA1,Snowy Hydro,121.0,121.0,121.0,121.0,0.0
 2026-09-20,overnight,TAS1,Aurora Energy,53.0,53.0,53.0,53.0,0.0
-2026-09-20,overnight,TAS1,Hydro Tas,1447.8,0.0,0.0,0.0,0.0
+2026-09-20,overnight,TAS1,Hydro Tas,1447.8,0.0,0.0,0.0,1.0
 2026-09-20,overnight,VIC1,AGL,1869.7,879.0,359.0,150.0,0.0
 2026-09-20,overnight,VIC1,Alinta Energy,1080.0,0.0,0.0,0.0,0.0
 2026-09-20,overnight,VIC1,ENGIE,150.0,0.0,0.0,0.0,0.0
@@ -1256,7 +1256,7 @@ date,block,region,portfolio,avail_mw,hi300_mw,hi1000_mw,hi5000_mw,pivotal_frac
 2026-09-21,overnight,SA1,Pacific Hydro Clements Gap BESS,60.0,0.0,0.0,0.0,0.0
 2026-09-21,overnight,SA1,Snowy Hydro,112.0,112.0,112.0,112.0,0.0
 2026-09-21,overnight,TAS1,Aurora Energy,238.0,30.0,30.0,30.0,0.0
-2026-09-21,overnight,TAS1,Hydro Tas,1402.9,502.1,0.0,0.0,0.0
+2026-09-21,overnight,TAS1,Hydro Tas,1402.9,502.1,0.0,0.0,1.0
 2026-09-21,overnight,VIC1,AGL,2330.2,706.3,356.3,147.3,0.0
 2026-09-21,overnight,VIC1,Alinta Energy,1165.0,0.0,0.0,0.0,0.0
 2026-09-21,overnight,VIC1,ENGIE,150.0,0.0,0.0,0.0,0.0
@@ -1508,7 +1508,7 @@ date,block,region,portfolio,avail_mw,hi300_mw,hi1000_mw,hi5000_mw,pivotal_frac
 2026-09-22,overnight,SA1,Pacific Hydro Clements Gap BESS,60.0,0.0,0.0,0.0,0.0
 2026-09-22,overnight,SA1,Snowy Hydro,112.0,112.0,112.0,112.0,0.0
 2026-09-22,overnight,TAS1,Aurora Energy,286.0,161.0,161.0,161.0,0.0
-2026-09-22,overnight,TAS1,Hydro Tas,1522.8,369.9,239.9,239.9,0.0
+2026-09-22,overnight,TAS1,Hydro Tas,1522.8,369.9,239.9,239.9,1.0
 2026-09-22,overnight,VIC1,AGL,2359.0,709.0,359.0,150.0,0.0
 2026-09-22,overnight,VIC1,Alinta Energy,1158.0,0.0,0.0,0.0,0.0
 2026-09-22,overnight,VIC1,ENGIE,150.0,3.1,3.1,3.1,0.0
@@ -1749,7 +1749,7 @@ date,block,region,portfolio,avail_mw,hi300_mw,hi1000_mw,hi5000_mw,pivotal_frac
 2026-09-23,overnight,SA1,Origin Energy,353.3,165.0,165.0,165.0,0.0
 2026-09-23,overnight,SA1,Snowy Hydro,112.0,112.0,112.0,112.0,0.0
 2026-09-23,overnight,TAS1,Aurora Energy,286.0,161.0,161.0,161.0,0.0
-2026-09-23,overnight,TAS1,Hydro Tas,1563.4,347.4,0.0,0.0,0.0
+2026-09-23,overnight,TAS1,Hydro Tas,1563.4,347.4,0.0,0.0,1.0
 2026-09-23,overnight,VIC1,AGL,2014.0,409.0,359.0,150.0,0.0
 2026-09-23,overnight,VIC1,Alinta Energy,1145.8,0.0,0.0,0.0,0.0
 2026-09-23,overnight,VIC1,ENGIE,51.0,6.5,0.0,0.0,0.0
@@ -1996,7 +1996,7 @@ date,block,region,portfolio,avail_mw,hi300_mw,hi1000_mw,hi5000_mw,pivotal_frac
 2026-09-24,overnight,SA1,Pacific Hydro Clements Gap BESS,60.0,17.5,0.0,0.0,0.0
 2026-09-24,overnight,SA1,Snowy Hydro,112.0,112.0,112.0,112.0,0.0
 2026-09-24,overnight,TAS1,Aurora Energy,311.0,186.0,186.0,186.0,0.0
-2026-09-24,overnight,TAS1,Hydro Tas,1561.2,601.5,0.0,0.0,0.0
+2026-09-24,overnight,TAS1,Hydro Tas,1561.2,601.5,0.0,0.0,1.0
 2026-09-24,overnight,VIC1,AGL,2346.5,709.0,359.0,150.0,0.0
 2026-09-24,overnight,VIC1,Alinta Energy,1152.0,0.0,0.0,0.0,0.0
 2026-09-24,overnight,VIC1,ENGIE,150.0,0.0,0.0,0.0,0.0
@@ -2250,7 +2250,7 @@ date,block,region,portfolio,avail_mw,hi300_mw,hi1000_mw,hi5000_mw,pivotal_frac
 2026-09-25,overnight,SA1,Snowy Hydro,112.0,112.0,112.0,112.0,0.0
 2026-09-25,overnight,SA1,Zen Energy,111.0,111.0,74.0,37.0,0.0
 2026-09-25,overnight,TAS1,Aurora Energy,311.0,186.0,186.0,186.0,0.0
-2026-09-25,overnight,TAS1,Hydro Tas,1538.0,338.5,37.2,37.2,0.0
+2026-09-25,overnight,TAS1,Hydro Tas,1538.0,338.5,37.2,37.2,1.0
 2026-09-25,overnight,VIC1,AGL,2359.0,671.0,321.0,112.0,0.0
 2026-09-25,overnight,VIC1,Alinta Energy,1152.0,0.0,0.0,0.0,0.0
 2026-09-25,overnight,VIC1,ENGIE,141.5,0.3,0.3,0.3,0.0
@@ -2500,7 +2500,7 @@ date,block,region,portfolio,avail_mw,hi300_mw,hi1000_mw,hi5000_mw,pivotal_frac
 2026-09-26,overnight,SA1,Pacific Hydro Clements Gap BESS,60.0,0.0,0.0,0.0,0.0
 2026-09-26,overnight,SA1,Snowy Hydro,66.0,66.0,66.0,66.0,0.0
 2026-09-26,overnight,TAS1,Aurora Energy,311.0,186.0,186.0,186.0,0.0
-2026-09-26,overnight,TAS1,Hydro Tas,1443.9,0.0,0.0,0.0,0.0
+2026-09-26,overnight,TAS1,Hydro Tas,1443.9,0.0,0.0,0.0,1.0
 2026-09-26,overnight,VIC1,AGL,2293.0,643.0,293.0,84.0,0.0
 2026-09-26,overnight,VIC1,Alinta Energy,1152.0,0.0,0.0,0.0,0.0
 2026-09-26,overnight,VIC1,ENGIE,150.0,1.0,1.0,1.0,0.0
@@ -2749,7 +2749,7 @@ date,block,region,portfolio,avail_mw,hi300_mw,hi1000_mw,hi5000_mw,pivotal_frac
 2026-09-27,overnight,SA1,Pacific Hydro Clements Gap BESS,60.0,0.0,0.0,0.0,0.0
 2026-09-27,overnight,SA1,Snowy Hydro,66.0,66.0,66.0,66.0,0.0
 2026-09-27,overnight,TAS1,Aurora Energy,311.0,186.0,186.0,186.0,0.0
-2026-09-27,overnight,TAS1,Hydro Tas,1443.4,195.8,0.0,0.0,0.0
+2026-09-27,overnight,TAS1,Hydro Tas,1443.4,195.8,0.0,0.0,1.0
 2026-09-27,overnight,VIC1,AGL,2263.0,593.8,243.8,85.8,0.0
 2026-09-27,overnight,VIC1,Alinta Energy,1152.0,0.0,0.0,0.0,0.0
 2026-09-27,overnight,VIC1,ENGIE,150.0,1.0,1.0,1.0,0.0
@@ -2995,7 +2995,7 @@ date,block,region,portfolio,avail_mw,hi300_mw,hi1000_mw,hi5000_mw,pivotal_frac
 2026-09-28,overnight,SA1,Origin Energy,112.1,112.1,112.1,112.1,0.0
 2026-09-28,overnight,SA1,Snowy Hydro,66.0,66.0,66.0,66.0,0.0
 2026-09-28,overnight,TAS1,Aurora Energy,311.0,186.0,186.0,186.0,0.0
-2026-09-28,overnight,TAS1,Hydro Tas,1498.2,69.2,0.0,0.0,0.0
+2026-09-28,overnight,TAS1,Hydro Tas,1498.2,69.2,0.0,0.0,1.0
 2026-09-28,overnight,VIC1,AGL,2245.5,586.0,542.2,384.2,0.0
 2026-09-28,overnight,VIC1,Alinta Energy,1154.0,0.0,0.0,0.0,0.0
 2026-09-28,overnight,VIC1,Energy Australia,1375.0,385.0,369.0,369.0,0.0
@@ -3238,7 +3238,7 @@ date,block,region,portfolio,avail_mw,hi300_mw,hi1000_mw,hi5000_mw,pivotal_frac
 2026-09-29,overnight,SA1,Pacific Hydro Clements Gap BESS,60.0,0.0,0.0,0.0,0.0
 2026-09-29,overnight,SA1,Snowy Hydro,66.0,66.0,66.0,66.0,0.0
 2026-09-29,overnight,TAS1,Aurora Energy,103.0,103.0,103.0,103.0,0.0
-2026-09-29,overnight,TAS1,Hydro Tas,1498.2,907.9,0.0,0.0,0.0
+2026-09-29,overnight,TAS1,Hydro Tas,1498.2,907.9,0.0,0.0,1.0
 2026-09-29,overnight,VIC1,AGL,2145.8,692.0,442.0,284.0,0.0
 2026-09-29,overnight,VIC1,Alinta Energy,1154.0,0.0,0.0,0.0,0.0
 2026-09-29,overnight,VIC1,ENGIE,150.0,6.2,6.2,6.2,0.0
@@ -3493,7 +3493,7 @@ date,block,region,portfolio,avail_mw,hi300_mw,hi1000_mw,hi5000_mw,pivotal_frac
 2026-09-30,overnight,SA1,Pacific Hydro Clements Gap BESS,60.0,0.0,0.0,0.0,0.0
 2026-09-30,overnight,SA1,Snowy Hydro,112.0,112.0,112.0,112.0,0.0
 2026-09-30,overnight,TAS1,Aurora Energy,103.0,103.0,103.0,103.0,0.0
-2026-09-30,overnight,TAS1,Hydro Tas,1810.6,505.4,0.0,0.0,0.0
+2026-09-30,overnight,TAS1,Hydro Tas,1810.6,505.4,0.0,0.0,1.0
 2026-09-30,overnight,VIC1,AGL,2159.4,492.0,442.0,284.0,0.0
 2026-09-30,overnight,VIC1,Alinta Energy,1132.5,0.0,0.0,0.0,0.0
 2026-09-30,overnight,VIC1,ENGIE,116.5,0.0,0.0,0.0,0.0
@@ -3746,7 +3746,7 @@ date,block,region,portfolio,avail_mw,hi300_mw,hi1000_mw,hi5000_mw,pivotal_frac
 2026-10-01,overnight,SA1,Pacific Hydro Clements Gap BESS,60.0,0.8,0.8,0.8,0.0
 2026-10-01,overnight,SA1,Snowy Hydro,122.0,122.0,122.0,122.0,0.0
 2026-10-01,overnight,TAS1,Aurora Energy,131.0,73.0,73.0,73.0,0.0
-2026-10-01,overnight,TAS1,Hydro Tas,1816.1,497.0,497.0,497.0,0.0
+2026-10-01,overnight,TAS1,Hydro Tas,1816.1,497.0,497.0,497.0,1.0
 2026-10-01,overnight,VIC1,AGL,2069.6,439.0,389.0,180.0,0.0
 2026-10-01,overnight,VIC1,Alinta Energy,1150.0,0.0,0.0,0.0,0.0
 2026-10-01,overnight,VIC1,ENGIE,143.1,3.1,3.1,3.1,0.0
@@ -3985,7 +3985,7 @@ date,block,region,portfolio,avail_mw,hi300_mw,hi1000_mw,hi5000_mw,pivotal_frac
 2026-10-02,overnight,SA1,Nexif Energy,120.0,120.0,120.0,30.0,0.0
 2026-10-02,overnight,SA1,Origin Energy,290.4,290.4,290.4,290.4,0.0
 2026-10-02,overnight,SA1,Snowy Hydro,122.0,122.0,122.0,122.0,0.0
-2026-10-02,overnight,TAS1,Hydro Tas,1731.8,1070.2,0.0,0.0,0.0
+2026-10-02,overnight,TAS1,Hydro Tas,1731.8,1070.2,0.0,0.0,1.0
 2026-10-02,overnight,VIC1,AGL,2181.0,1205.7,80.0,80.0,0.0
 2026-10-02,overnight,VIC1,Alinta Energy,1150.0,455.0,455.0,455.0,0.0
 2026-10-02,overnight,VIC1,Energy Australia,1354.0,384.0,369.0,369.0,0.0
@@ -4224,7 +4224,7 @@ date,block,region,portfolio,avail_mw,hi300_mw,hi1000_mw,hi5000_mw,pivotal_frac
 2026-10-03,overnight,SA1,Origin Energy,290.0,290.0,290.0,290.0,0.0
 2026-10-03,overnight,SA1,Pacific Hydro Clements Gap BESS,60.0,0.0,0.0,0.0,0.0
 2026-10-03,overnight,SA1,Snowy Hydro,122.0,122.0,122.0,122.0,0.0
-2026-10-03,overnight,TAS1,Hydro Tas,1819.4,642.4,0.0,0.0,0.0
+2026-10-03,overnight,TAS1,Hydro Tas,1819.4,642.4,0.0,0.0,1.0
 2026-10-03,overnight,VIC1,AGL,2147.9,499.8,80.8,80.8,0.0
 2026-10-03,overnight,VIC1,Alinta Energy,1150.0,0.0,0.0,0.0,0.0
 2026-10-03,overnight,VIC1,ENGIE,130.7,0.0,0.0,0.0,0.0
@@ -4478,7 +4478,7 @@ date,block,region,portfolio,avail_mw,hi300_mw,hi1000_mw,hi5000_mw,pivotal_frac
 2026-10-04,overnight,SA1,Pacific Hydro Clements Gap BESS,60.0,0.0,0.0,0.0,0.0
 2026-10-04,overnight,SA1,Snowy Hydro,122.0,122.0,122.0,122.0,0.0
 2026-10-04,overnight,TAS1,Aurora Energy,106.0,48.0,48.0,48.0,0.0
-2026-10-04,overnight,TAS1,Hydro Tas,1816.9,443.2,443.2,443.2,0.0
+2026-10-04,overnight,TAS1,Hydro Tas,1816.9,443.2,443.2,443.2,1.0
 2026-10-04,overnight,VIC1,AGL,2215.0,537.0,327.0,118.0,0.0
 2026-10-04,overnight,VIC1,Alinta Energy,1152.0,0.0,0.0,0.0,0.0
 2026-10-04,overnight,VIC1,ENGIE,150.0,18.8,0.0,0.0,0.0
@@ -4726,7 +4726,7 @@ date,block,region,portfolio,avail_mw,hi300_mw,hi1000_mw,hi5000_mw,pivotal_frac
 2026-10-05,overnight,SA1,Origin Energy,292.2,292.2,292.2,292.2,0.0
 2026-10-05,overnight,SA1,Snowy Hydro,122.0,122.0,122.0,122.0,0.0
 2026-10-05,overnight,TAS1,Aurora Energy,117.0,88.0,88.0,88.0,0.0
-2026-10-05,overnight,TAS1,Hydro Tas,1494.8,678.9,202.0,202.0,0.0
+2026-10-05,overnight,TAS1,Hydro Tas,1494.8,678.9,202.0,202.0,1.0
 2026-10-05,overnight,VIC1,AGL,2227.0,541.3,331.3,122.3,0.0
 2026-10-05,overnight,VIC1,Alinta Energy,1155.0,0.0,0.0,0.0,0.0
 2026-10-05,overnight,VIC1,Energy Australia,1360.2,369.2,369.0,369.0,0.0
