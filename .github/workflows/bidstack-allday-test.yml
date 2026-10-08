@@ -15,7 +15,7 @@ jobs:
         run: |
           set -o pipefail
           python scripts/bid_stack_analysis.py --force --allow-partial 2>&1 | tee run.log
-          echo "::notice title=summary::$(tail -40 run.log | sed ':a;N;$!ba;s/%/%25/g;s/\n/%0A/g')"
+          echo "::notice title=summary::$(grep -vE "nemweb_common\]|WARNING: PUBLIC_DISPATCHIS" run.log | tail -45 | sed ':a;N;$!ba;s/%/%25/g;s/\n/%0A/g')"
       - uses: actions/upload-artifact@v4
         with:
           name: bidstack-page
