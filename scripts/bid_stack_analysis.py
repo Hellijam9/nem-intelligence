@@ -277,23 +277,25 @@ def load_ic_limits(peak_times: list[datetime]) -> pd.DataFrame | None:
 
 
 def load_ic_limits_archive(day: str, peak_times: list[datetime]) -> pd.DataFrame | None:
-    """Same limits from AEMO's daily DispatchIS archive bundle (a zip of the day's 5-min zips).
-    The archive lags ~2 days, so this serves backfills and late re-runs."""
-    url = find_file(ARCHIVE_DISPATCHIS_URL, rf"^PUBLIC_DISPATCHIS_{day}\.zip$")
-    if not url:
-        return None
+    """Same limits from AEMO's daily DispatchIS archive bundles (a zip of each calendar day's 5-min
+    zips). The trading day runs past midnight, so the overnight block needs the next day's bundle
+    too. The archive lags ~2 days, so this serves backfills and late re-runs."""
     wanted = {t.strftime("%Y%m%d%H%M") for t in peak_times}
     frames = []
-    with zipfile.ZipFile(io.BytesIO(nw.download_bytes(url))) as outer:
-        for name in outer.namelist():
-            m = re.search(r"_(\d{12})_", name)
-            if not m or m.group(1) not in wanted:
-                continue
-            try:
-                t = nw.get_table(nw.parse_mms_zip(outer.read(name)), "DISPATCHINTERCONNECTORRES")
-                frames.append(t[t["INTERVENTION"].astype(str).str.strip() == "0"])
-            except Exception as exc:
-                log(f"WARNING: {name}: {exc}")
+    for d in sorted({w[:8] for w in wanted}):
+        url = find_file(ARCHIVE_DISPATCHIS_URL, rf"^PUBLIC_DISPATCHIS_{d}\.zip$")
+        if not url:
+            continue
+        with zipfile.ZipFile(io.BytesIO(nw.download_bytes(url))) as outer:
+            for name in outer.namelist():
+                m = re.search(r"_(\d{12})_", name)
+                if not m or m.group(1) not in wanted:
+                    continue
+                try:
+                    t = nw.get_table(nw.parse_mms_zip(outer.read(name)), "DISPATCHINTERCONNECTORRES")
+                    frames.append(t[t["INTERVENTION"].astype(str).str.strip() == "0"])
+                except Exception as exc:
+                    log(f"WARNING: {name}: {exc}")
     if not frames:
         return None
     ic = num(pd.concat(frames), ["IMPORTLIMIT", "EXPORTLIMIT"])
@@ -975,7 +977,7 @@ def region_reads(region: str, r: dict, ptable: list[dict], n: int, block: str = 
             f"without it, up to {fmt_mw(p['shortfall'])} short) - it had {fmt_mw(p['hi300'])} offered at $300+.")
     thr = 10 if ev else 15
     for p in ptable:
-        if p["delta"] is not None and abs(p["delta"]) >= thr and p["avail"] >= 200:
+        if p["delta"] is not None and abs(p["delta"]) >= thr and p["avail"] >= (200 if ev else 300):
             direction = "more" if p["delta"] > 0 else "less"
             add(2 if p["delta"] > 0 else 1,
                 f"{name} {lbl}: {p['portfolio']} priced {abs(p['delta']):.0f}pp {direction} of its capacity at $300+ "
@@ -1006,10 +1008,13 @@ def negative_reads(region: str, r: dict, block: str, rb: pd.DataFrame) -> list[d
     if nf is None:
         return out
     add = lambda level, text: out.append({"region": region, "block": block, "level": level, "text": text})
+    nb = rb["date"].nunique() if len(rb) else 0
+    bn = rb["neg_frac"].mean() if nb >= MIN_BASELINE_DAYS else math.nan
+    norm = "" if pd.isna(bn) else f", vs a {bn:.0f}% norm"
     if nf >= 10:
         floor_bits = ", ".join(f"{f} {fmt_mw(v)}" for f, v in list(r["floor_by_fuel"].items())[:3])
         coal = sum(v for f, v in r["below0_by_fuel"].items() if "Coal" in f)
-        text = (f"{name} {lbl}: spot at or below $0 in {nf:.0f}% of intervals (low {fmt_px(r['min_rrp'])}). "
+        text = (f"{name} {lbl}: spot at or below $0 in {nf:.0f}% of intervals{norm} (low {fmt_px(r['min_rrp'])}). "
                 f"{fmt_mw(r['below0_mw'])} offered below $0, {fmt_mw(r['floor_mw'])} of it at the -$1,000 floor"
                 + (f" ({floor_bits})" if floor_bits else "") + ".")
         if coal >= 100:
@@ -1018,7 +1023,6 @@ def negative_reads(region: str, r: dict, block: str, rb: pd.DataFrame) -> list[d
             text += (f" Storage bid to charge {fmt_mw(r['charge_mw'])}, {fmt_mw(r['charge_pos_mw'])} of it "
                      f"even at positive prices.")
         add(1, text)
-    nb = rb["date"].nunique() if len(rb) else 0
     if nb >= MIN_BASELINE_DAYS:
         bf = float(rb["floor_mw"].mean())
         d = r["floor_mw"] - bf
@@ -1029,9 +1033,9 @@ def negative_reads(region: str, r: dict, block: str, rb: pd.DataFrame) -> list[d
                 f"{BASELINE_DAYS}-day norm ({fmt_mw(r['floor_mw'])} vs {fmt_mw(bf)}) - "
                 + ("more volume runs at any price, so surplus intervals clear deeper negative."
                    if more else "less must-run volume, so negatives should be shallower or rarer."))
-        bn = rb["neg_frac"].mean()
-        if not pd.isna(bn) and abs(nf - bn) >= 15:
-            add(1, f"{name} {lbl}: at or below $0 in {nf:.0f}% of intervals vs a {bn:.0f}% norm.")
+        if nf < 10 and not pd.isna(bn) and bn - nf >= 15:
+            add(1, f"{name} {lbl}: at or below $0 in only {nf:.0f}% of intervals vs a {bn:.0f}% norm "
+                   f"(low {fmt_px(r['min_rrp'])}).")
         bc = rb["charge_mw"].mean()
         if not pd.isna(bc) and abs(r["charge_mw"] - bc) >= max(150, 0.3 * bc) and block in TROUGH_BLOCKS:
             add(1, f"{name} {lbl}: storage bid to charge {fmt_mw(r['charge_mw'])} vs a {fmt_mw(bc)} norm.")
