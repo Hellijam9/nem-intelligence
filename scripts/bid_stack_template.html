@@ -105,6 +105,12 @@ details summary { cursor: pointer; color: var(--ink); font-weight: 600; }
     <div class="tablewrap"><table id="fwd"></table></div>
   </section>
 
+  <section id="weekSec">
+    <h2>Week ahead (7-day predispatch)</h2>
+    <p class="sub">AEMO's 7-day predispatch by trading day. Beyond the next day the bids are AEMO's assumptions, not lodged offers - read it as indicative.</p>
+    <div class="tablewrap"><table id="week"></table></div>
+  </section>
+
   <section id="curveSec">
     <button class="toggle" id="curveToggle" type="button">Show to price cap</button>
     <h2 id="curveTitle">Supply curve at the peak interval</h2>
@@ -136,6 +142,7 @@ details summary { cursor: pointer; color: var(--ink); font-weight: 600; }
   <section>
     <details>
       <summary>Method &amp; caveats</summary>
+      <p>Forward look: AEMO publishes each unit's bids only the day after, but predispatch is solved on the bids already lodged for the coming intervals. Its price sensitivities re-solve it with demand shifted up or down (by region: NSW/VIC/QLD ±100, ±200, ±500, +1,000 MW; SA ±50, ±100, ±200, +500; TAS ±50, ±100, ±150, +300), so they show the real shape of the stack without naming who is where. Names come from yesterday's published offers, capped at the latest ST PASA unit availability.</p>
       <p>Time-of-day blocks (interval-ending, NEM time): morning 04:00-09:00, daytime 09:00-17:00, evening peak 17:00-20:30, late evening 20:30-24:00, overnight 00:00-04:00 - together the full trading day. Each block is analysed on its own, with its own 20-day norms. Daytime and overnight focus on the cheapest interval; the others on the highest-demand interval. "At the floor" means offers at -$1,000 before loss-factor scaling. Storage charging = energy bids in the load direction (batteries, pumps); a charge bid at price P means "consume if the price is at or below P".</p>
       <p>Data: AEMO next-day public files - Bidmove_Complete (bid price bands and per-interval volumes), Next_Day_Dispatch (unit availability), Public_Prices (regional price and demand), DispatchIS (interconnector limits) and the latest Predispatch run.</p>
       <p>Band volumes are trimmed from the top band down to each unit's dispatch availability (the approach used by UNSW-CEEM's NEM bidding dashboard), so wind and solar count only what the weather allowed. Fixed loads count as priced below $0 and offers are summed per price range and averaged over intervals, following the AER's wholesale market performance methods. Prices are referred to the regional reference node using each unit's transmission loss factor. Only energy offers in the generating direction are counted.</p>
@@ -151,7 +158,7 @@ const DATA = /*__DATA__*/null;
 const REGIONS = ["NSW1","QLD1","VIC1","SA1","TAS1"];
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const fmt = (v, d=0) => v == null || Number.isNaN(v) ? "–" : Number(v).toLocaleString("en-AU", {maximumFractionDigits: d, minimumFractionDigits: d});
-const money = v => v == null ? "–" : "$" + fmt(v, Math.abs(v) < 100 ? 2 : 0);
+const money = v => v == null ? "–" : (v < 0 ? "-$" : "$") + fmt(Math.abs(v), Math.abs(v) < 100 ? 2 : 0);
 const charts = {};
 let region = "NSW1";
 let block = "evening";
@@ -227,14 +234,37 @@ function forward(){
   const all = (DATA.forward || []).filter(f => f.region === region);
   const hasBlocks = all.some(f => f.block);
   const rows = hasBlocks ? all.filter(f => f.block === block) : all;
-  document.getElementById("fwdSub").textContent = `Highest forecast demand (predispatch) in each upcoming ${hasBlocks ? B().label.toLowerCase() : "evening peak"} block, set against the offers each portfolio made for the same half-hour yesterday. Bids for these days aren't public yet, so this shows what happens if offers repeat.`;
+  const ladder = rows.some(f => f.ladder && Object.keys(f.ladder).length);
+  document.getElementById("fwdSub").textContent = ladder
+    ? `Each upcoming ${B().label.toLowerCase()} at its highest-demand half-hour. Price columns are AEMO's predispatch price sensitivities - the price if demand comes in that many MW higher or lower, solved on the bids actually lodged for that interval, so they show how steep the real stack is around the forecast. Cushion = predispatch available generation plus import capability above demand. Sub-$300 headroom and pivotal names use yesterday's offers, capped at today's ST PASA unit availability with wind and solar set to the predispatch forecast.`
+    : `Highest forecast demand (predispatch) in each upcoming block, set against yesterday's offers.`;
   const el = document.getElementById("fwd");
   if (!rows.length) { el.innerHTML = `<tr><td class="empty">Predispatch didn't cover an upcoming ${B().label.toLowerCase()} at run time.</td></tr>`; return; }
-  el.innerHTML = `<thead><tr><th>Half-hour</th><th>Sub-$300 headroom</th><th>Demand</th><th>Predispatch</th><th>Block low</th><th>Cushion</th><th>Wind+solar (yday)</th></tr></thead><tbody>` +
-    rows.map(f => `<tr><td>${f.date} ${f.time}${f.pivotal.length ? `<span class="f">Pivotal: ${f.pivotal.map(p => p.portfolio).join(", ")}</span>` : ""}</td>
+  const offs = [...new Set(rows.flatMap(f => Object.keys(f.ladder || {}).map(Number)))].sort((a,b) => a-b);
+  const pc = v => v == null ? "–" : `<span class="${v >= 1000 ? "up" : v >= 300 ? "up" : ""}" style="${v >= 1000 ? "font-weight:600" : ""}">${money(v)}</span>`;
+  const sign = o => (o > 0 ? "+" : "−") + fmt(Math.abs(o));
+  el.innerHTML = `<thead><tr><th>Half-hour</th><th>Demand</th><th>Predispatch</th>${offs.map(o => `<th>${sign(o)} MW</th>`).join("")}<th>Cushion</th><th>Sub-$300 headroom</th><th>Wind+solar fcst</th></tr></thead><tbody>` +
+    rows.map(f => {
+      const notes = [];
+      if (f.pivotal.length) notes.push("Pivotal: " + f.pivotal.map(p => p.portfolio + (p.usual ? " (usual)" : "")).join(", "));
+      if ((f.pasa_out || []).length) notes.push("PASA down: " + f.pasa_out.map(u => `${u.unit} ${fmt(u.from)}→${fmt(u.to)}`).join(", "));
+      if ((f.pasa_back || []).length) notes.push("PASA up: " + f.pasa_back.map(u => `${u.unit} ${fmt(u.from)}→${fmt(u.to)}`).join(", "));
+      return `<tr><td>${f.date} ${f.time}${notes.map(n => `<span class="f">${n}</span>`).join("")}</td>
+      <td>${fmt(f.demand)}</td><td>${pc(f.pd_rrp)}</td>${offs.map(o => `<td>${pc((f.ladder || {})[String(o)])}</td>`).join("")}
+      <td>${f.pd_cushion == null ? "–" : fmt(f.pd_cushion) + " MW"}</td>
       <td class="${f.cheap_headroom != null && f.cheap_headroom < 300 ? "up" : ""}">${f.cheap_headroom == null ? "–" : fmt(f.cheap_headroom) + " MW"}</td>
-      <td>${fmt(f.demand)}</td><td>${money(f.pd_rrp)}</td><td>${money(f.pd_min_rrp)}</td>
-      <td>${f.cushion_pct == null ? "–" : fmt(f.cushion_pct,1)+"%"}</td><td>${fmt(f.vre)}</td></tr>`).join("") + "</tbody>";
+      <td>${fmt(f.vre)}<span class="f">yday ${fmt(f.vre_yday)}</span></td></tr>`;
+    }).join("") + "</tbody>";
+}
+
+function week(){
+  const rows = (DATA.week || []).filter(w => w.region === region);
+  const sec = document.getElementById("weekSec");
+  sec.style.display = rows.length ? "" : "none";
+  if (!rows.length) return;
+  const pc = v => v == null ? "–" : `<span class="${v >= 300 ? "up" : ""}">${money(v)}</span>`;
+  document.getElementById("week").innerHTML = `<thead><tr><th>Trading day</th><th>Evening max</th><th>Evening avg</th><th>Daytime low</th><th>Daytime avg</th></tr></thead><tbody>` +
+    rows.map(w => `<tr><td>${w.date}</td><td>${pc(w.evening_max)}</td><td>${pc(w.evening_avg)}</td><td>${money(w.day_min)}</td><td>${money(w.day_avg)}</td></tr>`).join("") + "</tbody>";
 }
 
 function curve(r){
@@ -333,7 +363,7 @@ function series(r){
 function render(){
   base(); pills();
   const r = B().regions[region];
-  reads(); tiles(r); forward(); curve(r); portfolios(r); fuel(r); series(r);
+  reads(); tiles(r); forward(); week(); curve(r); portfolios(r); fuel(r); series(r);
 }
 
 if (!DATA) {

@@ -1,10 +1,11 @@
-name: bid stack probe (branch only)
+name: bid stack test (branch only)
 on:
   push:
     branches: [bidstack-allday]
 jobs:
   run:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     permissions:
       contents: write
     steps:
@@ -12,8 +13,14 @@ jobs:
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
       - run: pip install -r requirements.txt
-      - run: python probe/probe.py > probe/out.txt 2>&1 || true
-      - run: |
+      - name: Run analysis for yesterday (no push, no state commit)
+        run: |
+          set -o pipefail
+          python scripts/bid_stack_analysis.py --force --allow-partial 2>&1 | tee run.log
+      - name: Keep output on this branch
+        if: always()
+        run: |
+          mkdir -p testout && cp run.log testout/ && cp docs/bidstack/index.html testout/ 2>/dev/null; cp docs/bidstack/data/*.json testout/ 2>/dev/null
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -f probe/out.txt && git commit -qm "probe output [skip ci]" && git pull -q --rebase && git push
+          git add -f testout && git commit -qm "test output [skip ci]" && git pull -q --rebase && git push
