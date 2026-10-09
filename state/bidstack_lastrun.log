@@ -1,1 +1,30 @@
-[bid_stack] already processed 2026-10-08 - skipping
+[bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20261008_0000000541913364.zip
+[bid_stack] bids: 479 DUIDs with energy price bands, 137712 per-interval volume rows; 100 DUIDs bidding to consume
+[bid_stack] dispatch: 164784 unit-interval rows
+[bid_stack] NOTE: 2 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): DRVISB01, UWF1
+[bid_stack] stack: 121078 unit-interval-band rows from 137712 unit-intervals
+[bid_stack] load bids: 21109 unit-interval-band rows
+[bid_stack] interconnector limits: 83 peak intervals
+[bid_stack] price sensitivities: PUBLIC_PREDISPATCH_SENSITIVITIES_20261009131409_0000000541972832.zip (78 half-hours)
+[bid_stack] ST PASA unit availability: PUBLIC_STPASA_DUIDAVAILABILITY_202610091300_0000000541970929.zip
+[bid_stack] forward look: 45 region-blocks
+[bid_stack] dashboard written: /home/runner/work/nem-intelligence/nem-intelligence/docs/bidstack/index.html
+Bid stack 2026-10-08 (evening 17:00-20:30 NEM)
+NSW: peak 18:50 | sub-$300 headroom 1,280MW | most $300+: Snowy Hydro 1,619MW
+QLD: peak 18:35 | sub-$300 headroom 2,241MW | most $300+: Origin Energy 455MW
+VIC: peak 19:05 | sub-$300 headroom 4,072MW | most $300+: Snowy Hydro 1,725MW
+SA: peak 19:25 | sub-$300 headroom 1,216MW | most $300+: ENGIE 247MW
+TAS: peak 19:10 | sub-$300 headroom 286MW | most $300+: Hydro Tas 842MW
+Daytime 09:00-17:00:
+NSW: <=$0 0% of intervals | 5,650MW below $0, 238MW at floor | charge bids 1,666MW
+QLD: <=$0 0% of intervals | 6,953MW below $0, 104MW at floor | charge bids 1,969MW
+VIC: <=$0 96% of intervals | 6,079MW below $0, 1MW at floor | charge bids 1,216MW
+SA: <=$0 100% of intervals | 992MW below $0, 46MW at floor | charge bids 645MW
+TAS: <=$0 88% of intervals | 407MW below $0, 68MW at floor | charge bids 0MW
+
+- NSW Sat 10 Oct 18:00 (evening peak): predispatch $536, but +500MW of demand takes it to $23,200 and +1000MW to $23,200 - the lodged bids go vertical just past forecast.
+- QLD Sat 10 Oct 18:30 (evening peak): predispatch $446, but +500MW of demand takes it to $9,756 and +1000MW to $21,313 - the lodged bids go vertical just past forecast.
+- SA Sat 10 Oct 20:00 (evening peak): predispatch already $1,001 on the lodged bids. 100MW less demand takes it to $790. Predispatch has SN_150_TEST violated, L_PEC_X_6C_6G_6H binding ($8,330,408). With 1,451MW of generation spare on paper, read it as a network limit, not the bids running out.
+- SA Sat 10 Oct 20:00 (evening peak): forecast demand 1,351MW vs yesterday's offers (capped at today's PASA, wind+solar at forecast 173MW) leaves 130MW of sub-$300 headroom.
+- NSW week ahead (7-day predispatch, indicative): evening highs Mon 12 $23,200, Tue 13 $23,200, Wed 14 $8,425, Thu 15 $15,000, Fri 16 $356.
+- QLD week ahead (7-day predispatch, indicative): evening highs Mon 12 $23,200, Tue 13 $22,819, Wed 14 $654.
