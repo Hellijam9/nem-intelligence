@@ -249,6 +249,7 @@ function forward(){
       if (f.pivotal.length) notes.push("Pivotal: " + f.pivotal.map(p => p.portfolio + (p.usual ? " (usual)" : "")).join(", "));
       if ((f.pasa_out || []).length) notes.push("PASA down: " + f.pasa_out.map(u => `${u.unit} ${fmt(u.from)}→${fmt(u.to)}`).join(", "));
       if ((f.pasa_back || []).length) notes.push("PASA up: " + f.pasa_back.map(u => `${u.unit} ${fmt(u.from)}→${fmt(u.to)}`).join(", "));
+      if ((f.constraints || []).length) notes.push("Constraints: " + f.constraints.map(c => `${c.id} ${c.violated ? "violated" : "$" + fmt(Math.abs(c.mv))}`).join(", "));
       return `<tr><td>${f.date} ${f.time}${notes.map(n => `<span class="f">${n}</span>`).join("")}</td>
       <td>${fmt(f.demand)}</td><td>${pc(f.pd_rrp)}</td>${offs.map(o => `<td>${pc((f.ladder || {})[String(o)])}</td>`).join("")}
       <td>${f.pd_cushion == null ? "–" : fmt(f.pd_cushion) + " MW"}</td>
