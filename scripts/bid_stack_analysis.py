@@ -327,6 +327,10 @@ def load_predispatch() -> tuple[pd.DataFrame, pd.DataFrame] | None:
         tables = nw.parse_mms_zip(nw.download_bytes(url))
         reg = nw.get_table(tables, "PDREGION")
         ic = nw.get_table(tables, "PDINT")
+        try:
+            cons = nw.get_table(tables, "PDCONS")
+        except Exception:
+            cons = None
     except Exception as exc:
         log(f"WARNING: predispatch unavailable ({exc}) - forward look skipped")
         return None
@@ -343,7 +347,29 @@ def load_predispatch() -> tuple[pd.DataFrame, pd.DataFrame] | None:
     ic = num(ic, ["IMPORTLIMIT", "EXPORTLIMIT"])
     reg["PERIOD"] = pd.to_datetime(reg["PERIODID"], format=TS_FMT)
     ic["PERIOD"] = pd.to_datetime(ic["PERIODID"], format=TS_FMT)
+    global PD_CONSTRAINTS
+    PD_CONSTRAINTS = None
+    if cons is not None and len(cons):
+        cons = num(pricing_run(cons), ["MARGINALVALUE", "VIOLATIONDEGREE"])
+        cons = cons[(cons["VIOLATIONDEGREE"].abs() > 0) | (cons["MARGINALVALUE"].abs() >= 1000)].copy()
+        cons["PERIOD"] = pd.to_datetime(cons["PERIODID"], format=TS_FMT)
+        PD_CONSTRAINTS = cons[["PERIOD", "CONSTRAINTID", "MARGINALVALUE", "VIOLATIONDEGREE"]]
     return reg, import_capability(ic, "PERIOD").rename(columns={"INTERVAL_DATETIME": "PERIOD"})
+
+
+PD_CONSTRAINTS = None   # binding (|marginal value| >= $1,000) or violated constraints in the latest predispatch
+
+
+def pd_constraints_at(period) -> list[dict]:
+    """Violated constraints first, then the highest-cost binding ones, for one predispatch half-hour."""
+    if PD_CONSTRAINTS is None:
+        return []
+    c = PD_CONSTRAINTS[PD_CONSTRAINTS["PERIOD"] == period].copy()
+    if c.empty:
+        return []
+    c["V"] = c["VIOLATIONDEGREE"].abs() > 0
+    c = c.assign(A=c["MARGINALVALUE"].abs()).sort_values(["V", "A"], ascending=False).head(3)
+    return [{"id": r.CONSTRAINTID.strip(), "mv": round(float(r.MARGINALVALUE)), "violated": bool(r.V)} for r in c.itertuples()]
 
 
 def _pricing_run(df: pd.DataFrame) -> pd.DataFrame:
@@ -1251,6 +1277,7 @@ def forward_look(stack: pd.DataFrame, trading_day: datetime) -> list[dict]:
                 "p300_at": _first_offset(lad, 300), "p1000_at": _first_offset(lad, 1000), "p5000_at": _first_offset(lad, 5000),
                 "low_time": low["PERIOD"].strftime("%H:%M"), "low_rrp": round(float(low["RRP"]), 2),
                 "low_neg_off": neg_off, "low_neg_rrp": None if neg_off is None else lad_low[neg_off],
+                "constraints": pd_constraints_at(period),
                 "pasa_out": sorted(out_units, key=lambda u: u["to"] - u["from"])[:6],
                 "pasa_back": sorted(back_units, key=lambda u: u["from"] - u["to"])[:4],
             })
@@ -1300,25 +1327,44 @@ def forward_reads(fwd: list[dict], usual: set, week: list[dict] | None = None) -
         small, medium = CLIFF_STEPS.get(f["region"], (200, 500))
 
         # 1. Stack shape from AEMO's price sensitivities - the bids actually lodged for that interval.
+        # When predispatch says there is plenty of generation on paper, a high price is usually a
+        # network constraint binding or violated in that run, not the offer stack running out.
+        cons = f.get("constraints") or []
+        spare = f.get("pd_cushion")
+        net = spare is not None and spare >= 0.15 * f["demand"] and cons
+        why = ""
+        if cons:
+            why = " Predispatch has " + ", ".join(
+                f"{c['id']} {'violated' if c['violated'] else 'binding'}" + ("" if c["violated"] else f" (${abs(c['mv']):,})")
+                for c in cons[:2]) + "."
+        if net:
+            why += f" With {fmt_mw(spare)} of generation spare on paper, read it as a network limit, not the bids running out."
         cliff = False
+        lo = -small
         if lad and f["pd_rrp"] < 1000 and f["p1000_at"] is not None and f["p1000_at"] <= medium:
             o = f["p1000_at"]
             nxt = max(lad)
-            add(f, 3 if o <= small else 2,
+            add(f, 3 if o <= small and not net else 2,
                 f"{where}: predispatch {fmt_px(f['pd_rrp'])}, but +{o}MW of demand takes it to {fmt_px(lad[o])}"
                 + (f" and +{nxt}MW to {fmt_px(lad[nxt])}" if nxt != o else "")
-                + " - the lodged bids go vertical just past forecast.")
+                + ("." if net else " - the lodged bids go vertical just past forecast.") + why)
             cliff = True
         elif lad and f["pd_rrp"] < 300 and f["p300_at"] is not None and f["p300_at"] <= small:
             o = f["p300_at"]
-            add(f, 2, f"{where}: predispatch {fmt_px(f['pd_rrp'])}; +{o}MW of demand lifts it to {fmt_px(lad[o])}.")
+            add(f, 2, f"{where}: predispatch {fmt_px(f['pd_rrp'])}; +{o}MW of demand lifts it to {fmt_px(lad[o])}." + why)
             cliff = True
         elif f["pd_rrp"] >= 300:
-            add(f, 3 if f["pd_rrp"] >= 1000 else 2,
-                f"{where}: predispatch already {fmt_px(f['pd_rrp'])} on the lodged bids"
-                + (f" (+{small}MW: {fmt_px(lad[small])})" if small in lad else "") + ".")
+            relief = ""
+            if lo in lad:
+                relief = (f" Still {fmt_px(lad[lo])} with {small}MW less demand." if lad[lo] >= 0.8 * f["pd_rrp"]
+                          else f" {small}MW less demand takes it to {fmt_px(lad[lo])}.")
+            add(f, (3 if f["pd_rrp"] >= 1000 else 2) - (1 if net else 0),
+                f"{where}: predispatch already {fmt_px(f['pd_rrp'])} on the lodged bids.{relief}{why}")
             cliff = True
-        if f["block"] in TROUGH_BLOCKS and f.get("low_neg_rrp") is not None and f["low_rrp"] <= 0 \
+        if f["block"] in TROUGH_BLOCKS and f["low_rrp"] <= -900:
+            add(f, 1, f"{name} {f['date']} {f['low_time']} ({f['block_label'].lower()}): predispatch at the "
+                      f"-$1,000 floor ({fmt_px(f['low_rrp'])}).")
+        elif f["block"] in TROUGH_BLOCKS and f.get("low_neg_rrp") is not None and f["low_rrp"] <= 0 \
                 and f["low_neg_rrp"] <= -500:
             add(f, 1, f"{name} {f['date']} {f['low_time']} ({f['block_label'].lower()}): predispatch "
                       f"{fmt_px(f['low_rrp'])}; {abs(f['low_neg_off'])}MW less demand (or more solar) takes it to "
@@ -1353,16 +1399,19 @@ def forward_reads(fwd: list[dict], usual: set, week: list[dict] | None = None) -
                     f"{region.rstrip('1')} {date}: ST PASA has {fmt_mw(total)} less dispatchable capacity than was "
                     f"offered at the same times yesterday - {bits}."})
 
-    # 4. Week ahead (PD7Day) - beyond the predispatch horizon bids are AEMO's assumptions, so a note.
+    # 4. Week ahead (PD7Day), one read per region - beyond the predispatch horizon the bids are AEMO's
+    # assumptions, so it's indicative.
     near = {(f["region"], f["date"]) for f in fwd}
+    by_region = {}
     for w in week or []:
-        if (w["region"], w["date"]) in near or w["evening_max"] is None:
+        if (w["region"], w["date"]) in near or w["evening_max"] is None or w["evening_max"] < 300:
             continue
-        if w["evening_max"] >= 300:
-            out.append({"region": w["region"], "block": "evening", "level": 2 if w["evening_max"] >= 1000 else 1,
-                        "forward": True, "text":
-                        f"{w['region'].rstrip('1')} {w['date']} evening: 7-day predispatch up to {fmt_px(w['evening_max'])} "
-                        f"(avg {fmt_px(w['evening_avg'])}) - indicative, further out than lodged bids."})
+        by_region.setdefault(w["region"], []).append(w)
+    for region, ws in by_region.items():
+        top = max(w["evening_max"] for w in ws)
+        days = ", ".join(f"{w['date'][:6]} {fmt_px(w['evening_max'])}" for w in ws[:5])
+        out.append({"region": region, "block": "evening", "level": 2 if top >= 1000 else 1, "forward": True, "text":
+                    f"{region.rstrip('1')} week ahead (7-day predispatch, indicative): evening highs {days}."})
     return out
 
 
