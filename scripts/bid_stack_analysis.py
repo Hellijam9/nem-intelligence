@@ -74,6 +74,25 @@ PRICES_URL = "https://www.nemweb.com.au/REPORTS/CURRENT/Public_Prices/"
 DISPATCHIS_URL = "https://www.nemweb.com.au/REPORTS/CURRENT/DispatchIS_Reports/"
 ARCHIVE_DISPATCHIS_URL = "https://www.nemweb.com.au/REPORTS/ARCHIVE/DispatchIS_Reports/"
 PREDISPATCH_URL = "https://www.nemweb.com.au/REPORTS/CURRENT/Predispatch_Reports/"
+SENS_URL = "https://www.nemweb.com.au/REPORTS/CURRENT/Predispatch_Sensitivities/"
+STPASA_DUID_URL = "https://www.nemweb.com.au/REPORTS/CURRENT/STPASA_DUIDAvailability/"
+PD7DAY_URL = "https://www.nemweb.com.au/REPORTS/CURRENT/PD7Day/"
+
+# AEMO predispatch demand-sensitivity scenarios (PREDISPATCHSCENARIODEMAND, version effective
+# 2008-07-01 - checked against the MMSDM 2026_08 archive): scenario number for each demand offset
+# (MW) applied to ONE region. In PRICESENSITIVITIES, RRPEEPn is each region's price when predispatch
+# is re-solved with scenario n's demand - i.e. the real shape of the submitted offer stack around
+# the forecast, using the bids actually lodged for the coming day. Scenarios 25-28 move all
+# mainland regions together; 21-24 are unused.
+SCENARIOS = {
+    "NSW1": {100: 1, -100: 2, 200: 3, -200: 4, 500: 5, -500: 6, 1000: 7},
+    "VIC1": {100: 8, -100: 9, 200: 10, -200: 11, 500: 12, -500: 13, 1000: 14},
+    "QLD1": {100: 29, -100: 30, 200: 31, -200: 32, 500: 33, -500: 34, 1000: 35},
+    "SA1": {50: 15, -50: 16, 100: 17, -100: 18, 200: 19, -200: 20, 500: 43},
+    "TAS1": {50: 36, -50: 37, 100: 38, -100: 39, 150: 40, -150: 41, 300: 42},
+}
+# "Small" and "medium" upward steps per region, for calling a cliff (NSW/VIC/QLD +200/+500 etc.).
+CLIFF_STEPS = {"NSW1": (200, 500), "VIC1": (200, 500), "QLD1": (200, 500), "SA1": (100, 200), "TAS1": (100, 150)}
 
 REGIONS = ["NSW1", "QLD1", "VIC1", "SA1", "TAS1"]
 PEAK_START, PEAK_END = "17:00", "20:30"   # interval-ending times, NEM time, inclusive of end
@@ -316,11 +335,63 @@ def load_predispatch() -> tuple[pd.DataFrame, pd.DataFrame] | None:
             df = df[df["INTERVENTION"].astype(str).str.strip().isin(["", "0"])]
         return df.copy()
     reg, ic = pricing_run(reg), pricing_run(ic)
-    reg = num(reg, ["RRP", "TOTALDEMAND", "NETINTERCHANGE"])
+    for c in ["AVAILABLEGENERATION", "SS_SOLAR_AVAILABILITY", "SS_WIND_AVAILABILITY"]:
+        if c not in reg.columns:
+            reg[c] = np.nan
+    reg = num(reg, ["RRP", "TOTALDEMAND", "NETINTERCHANGE", "AVAILABLEGENERATION",
+                    "SS_SOLAR_AVAILABILITY", "SS_WIND_AVAILABILITY"])
     ic = num(ic, ["IMPORTLIMIT", "EXPORTLIMIT"])
     reg["PERIOD"] = pd.to_datetime(reg["PERIODID"], format=TS_FMT)
     ic["PERIOD"] = pd.to_datetime(ic["PERIODID"], format=TS_FMT)
     return reg, import_capability(ic, "PERIOD").rename(columns={"INTERVAL_DATETIME": "PERIOD"})
+
+
+def _pricing_run(df: pd.DataFrame) -> pd.DataFrame:
+    if "INTERVENTION" in df.columns:
+        df = df[df["INTERVENTION"].astype(str).str.strip().isin(["", "0"])]
+    return df.copy()
+
+
+def load_sensitivities() -> pd.DataFrame | None:
+    """Latest predispatch price sensitivities: one row per region x half-hour, RRPEEP1..43."""
+    try:
+        url = nw.get_latest_files(SENS_URL, r"^PUBLIC_PREDISPATCH_SENSITIVITIES_\d{14}_\d+\.zip$")[-1]
+        df = _pricing_run(nw.get_table(nw.parse_mms_zip(nw.download_bytes(url)), "PRICESENSITIVITIES"))
+    except Exception as exc:
+        log(f"WARNING: predispatch sensitivities unavailable ({exc})")
+        return None
+    cols = [c for c in df.columns if c.startswith("RRPEEP")]
+    df = num(df, cols)
+    df["PERIOD"] = pd.to_datetime(df["DATETIME"], format=TS_FMT)
+    log(f"price sensitivities: {url.rsplit('/', 1)[-1]} ({df['PERIOD'].nunique()} half-hours)")
+    return df[["REGIONID", "PERIOD"] + cols]
+
+
+def load_stpasa_duid() -> pd.DataFrame | None:
+    """Latest ST PASA unit availability (MW each unit can physically deliver, per half-hour, ~6 days)."""
+    try:
+        url = nw.get_latest_files(STPASA_DUID_URL, r"^PUBLIC_STPASA_DUIDAVAILABILITY_\d{12}_\d+\.zip$")[-1]
+        df = nw.get_table(nw.parse_mms_zip(nw.download_bytes(url)), "DUIDAVAILABILITY")
+    except Exception as exc:
+        log(f"WARNING: ST PASA unit availability unavailable ({exc})")
+        return None
+    df = num(df, ["GENERATION_PASA_AVAILABILITY"])
+    df["PERIOD"] = pd.to_datetime(df["INTERVAL_DATETIME"], format=TS_FMT)
+    log(f"ST PASA unit availability: {url.rsplit('/', 1)[-1]}")
+    return df[["DUID", "PERIOD", "GENERATION_PASA_AVAILABILITY"]]
+
+
+def load_pd7day() -> pd.DataFrame | None:
+    """Latest 7-day predispatch regional prices."""
+    try:
+        url = nw.get_latest_files(PD7DAY_URL, r"^PUBLIC_PD7DAY_\d{14}_\d+\.zip$")[-1]
+        df = _pricing_run(nw.get_table(nw.parse_mms_zip(nw.download_bytes(url)), "PRICESOLUTION"))
+    except Exception as exc:
+        log(f"WARNING: PD7Day unavailable ({exc})")
+        return None
+    df = num(df, ["RRP"])
+    df["PERIOD"] = pd.to_datetime(df["INTERVAL_DATETIME"], format=TS_FMT)
+    return df[["REGIONID", "PERIOD", "RRP"]]
 
 
 # ---------------------------------------------------------------------------
@@ -571,7 +642,7 @@ def build_stack(day_df, per, disp, reg) -> pd.DataFrame:
 
     n = len(df)
     parts = []
-    meta = df[["DUID", "INTERVAL_DATETIME", "REGIONID", "PORTFOLIO", "FUEL"]]
+    meta = df[["DUID", "INTERVAL_DATETIME", "REGIONID", "PORTFOLIO", "FUEL", "STATIONNAME"]]
     for k in range(10):
         m = adj[:, k] > 0
         p = meta[m].copy()
@@ -611,7 +682,7 @@ def build_load_stack(load_day, load_per, reg) -> pd.DataFrame:
     df = df.merge(reg, on="DUID", how="left")
     tlf = df["TLF"].fillna(1.0).to_numpy()
     prices = df[PRICES].to_numpy(dtype=float) / tlf[:, None]
-    meta = df[["DUID", "INTERVAL_DATETIME", "REGIONID", "PORTFOLIO", "FUEL"]]
+    meta = df[["DUID", "INTERVAL_DATETIME", "REGIONID", "PORTFOLIO", "FUEL", "STATIONNAME"]]
     parts = []
     for k in range(10):
         m = adj[:, k] > 0
@@ -1046,38 +1117,109 @@ def negative_reads(region: str, r: dict, block: str, rb: pd.DataFrame) -> list[d
 # Forward look - predispatch demand vs. yesterday's same-time offers
 # ---------------------------------------------------------------------------
 
+def _ladder(sens: pd.DataFrame | None, region: str, period) -> dict[int, float]:
+    """{demand offset MW: price} for one region/half-hour from the price sensitivities."""
+    if sens is None:
+        return {}
+    r = sens[(sens["REGIONID"] == region) & (sens["PERIOD"] == period)]
+    if r.empty:
+        return {}
+    r = r.iloc[-1]
+    out = {}
+    for off, sc in SCENARIOS.get(region, {}).items():
+        v = r.get(f"RRPEEP{sc}")
+        if v is not None and not pd.isna(v):
+            out[off] = round(float(v), 2)
+    return out
+
+
+def _first_offset(ladder: dict[int, float], level: float) -> int | None:
+    ups = sorted(o for o in ladder if o > 0)
+    return next((o for o in ups if ladder[o] >= level), None)
+
+
 def forward_look(stack: pd.DataFrame, trading_day: datetime) -> list[dict]:
-    """For each upcoming block in predispatch, the highest-demand half-hour set against the offers each
-    portfolio made for the same half-hour yesterday."""
+    """Every upcoming block in the latest predispatch, per region, at its highest-demand half-hour:
+
+      * AEMO's own view on the bids actually lodged for those intervals - predispatch price, total
+        available generation, the wind/solar forecast, and the price sensitivities (price if demand
+        comes in X MW higher or lower = the real shape of the stack around the forecast).
+      * Yesterday's offers per portfolio, re-shaped for the day ahead: each coal/gas/hydro/battery
+        unit capped at its latest ST PASA availability, wind and solar scaled to the predispatch
+        forecast - gives sub-$300 headroom and pivotal portfolios by name (the public
+        sensitivities don't say who sits where in the stack).
+      * Units whose ST PASA availability is well below what they offered at the same time yesterday.
+    """
     pd_data = load_predispatch()
     if pd_data is None:
         return []
     reg, ic = pd_data
+    sens = load_sensitivities()
+    pasa = load_stpasa_duid()
     now = datetime.now(nw.NEM_TZ).replace(tzinfo=None)
     reg = reg[reg["PERIOD"] > now].copy()
     reg["BLOCK"] = reg["PERIOD"].map(tod_block)
     reg["TDATE"] = (reg["PERIOD"] - timedelta(hours=4, minutes=1)).dt.date
-    out = []
+
     # yesterday's offers keyed by time of day (half-hour ending), averaged over the 5-min intervals
     st = stack.copy()
     st["HH"] = (st["T"] + pd.to_timedelta((-st["T"].dt.minute % 30), unit="m")).dt.strftime("%H:%M")
     n_per_hh = st.groupby("HH")["T"].nunique()
+    unit_hh = st.groupby(["DUID", "HH"])["MW"].sum()
+    units = st.drop_duplicates("DUID").set_index("DUID")[["REGIONID", "PORTFOLIO", "FUEL", "STATIONNAME"]]
     order = {k: i for i, (k, *_) in enumerate(BLOCKS)}
+
+    out = []
     for region in REGIONS:
         rr = reg[reg["REGIONID"] == region]
         if rr.empty:
             continue
         for (td, blk), g in rr.groupby(["TDATE", "BLOCK"]):
             row = g.loc[g["TOTALDEMAND"].idxmax()]
-            hh = row["PERIOD"].strftime("%H:%M")
-            s = st[(st["REGIONID"] == region) & (st["HH"] == hh)]
+            period = row["PERIOD"]
+            hh = period.strftime("%H:%M")
+            s = st[(st["REGIONID"] == region) & (st["HH"] == hh)].copy()
             if s.empty:
                 continue
             n = n_per_hh.get(hh, 1)
+            yday = (unit_hh.xs(hh, level="HH") / n) if hh in unit_hh.index.get_level_values("HH") else pd.Series(dtype=float)
+
+            # -- cap dispatchable units at today's ST PASA availability (reductions only) --
+            out_units, back_units = [], []
+            if pasa is not None:
+                pa = pasa[pasa["PERIOD"] == period].drop_duplicates("DUID", keep="last").set_index("DUID")["GENERATION_PASA_AVAILABILITY"]
+                ids = [d for d in s["DUID"].unique() if units.at[d, "FUEL"] not in VRE_FUELS]
+                factor = {}
+                for d in ids:
+                    y = float(yday.get(d, 0.0))
+                    if d not in pa.index or pd.isna(pa[d]):
+                        continue
+                    t = float(pa[d])
+                    if y > 0 and t < y:
+                        factor[d] = max(t, 0.0) / y
+                    if y - t >= 100:
+                        out_units.append({"unit": units.at[d, "STATIONNAME"], "duid": d,
+                                          "portfolio": units.at[d, "PORTFOLIO"], "from": round(y), "to": round(t)})
+                # units that offered little/nothing yesterday but PASA says are available today
+                reg_units = units[(units["REGIONID"] == region) & ~units["FUEL"].isin(VRE_FUELS)].index
+                for d in reg_units:
+                    if d in pa.index and not pd.isna(pa[d]) and float(pa[d]) - float(yday.get(d, 0.0)) >= 100:
+                        back_units.append({"unit": units.at[d, "STATIONNAME"], "duid": d,
+                                           "portfolio": units.at[d, "PORTFOLIO"],
+                                           "from": round(float(yday.get(d, 0.0))), "to": round(float(pa[d]))})
+                if factor:
+                    s["MW"] = s["MW"] * s["DUID"].map(factor).fillna(1.0)
+
+            # -- wind/solar scaled to the predispatch semi-scheduled forecast --
+            vre_mask = s["FUEL"].isin(VRE_FUELS)
+            vre_yday = s.loc[vre_mask, "MW"].sum() / n
+            vre_fc = row.get("SS_SOLAR_AVAILABILITY", np.nan) + row.get("SS_WIND_AVAILABILITY", np.nan)
+            if not pd.isna(vre_fc) and vre_yday > 0:
+                s.loc[vre_mask, "MW"] = s.loc[vre_mask, "MW"] * (vre_fc / vre_yday)
+
             avail = s["MW"].sum() / n
             avail300 = s[s["PRICE"] < 300]["MW"].sum() / n
-            vre = s[s["FUEL"].isin(VRE_FUELS)]["MW"].sum() / n
-            icr = ic[(ic["REGIONID"] == region) & (ic["PERIOD"] == row["PERIOD"])]
+            icr = ic[(ic["REGIONID"] == region) & (ic["PERIOD"] == period)]
             impcap = float(icr["IMPORTCAP"].iloc[0]) if len(icr) else math.nan
             demand = float(row["TOTALDEMAND"])
             own = s.groupby("PORTFOLIO")["MW"].sum() / n
@@ -1086,23 +1228,67 @@ def forward_look(stack: pd.DataFrame, trading_day: datetime) -> list[dict]:
                 for o, mw in own.sort_values(ascending=False).items():
                     if avail - mw + impcap < demand:
                         pivotal.append({"portfolio": o, "short": round(demand - (avail - mw + impcap))})
+
+            lad = _ladder(sens, region, period)
+            low = g.loc[g["RRP"].idxmin()]
+            lad_low = _ladder(sens, region, low["PERIOD"])
+            neg_off = min(lad_low) if lad_low else None
+            pd_avail = row.get("AVAILABLEGENERATION", np.nan)
             out.append({
                 "region": region, "block": blk, "block_label": BLOCK_LABEL.get(blk, blk),
-                "date": row["PERIOD"].strftime("%a %d %b"), "time": hh, "_sort": (td, order.get(blk, 9)),
+                "date": period.strftime("%a %d %b"), "time": hh, "_sort": (td, order.get(blk, 9)),
                 "demand": round(demand), "pd_rrp": round(float(row["RRP"]), 2), "pd_min_rrp": round(float(g["RRP"].min()), 2),
-                "avail": round(avail), "vre": round(vre), "import_cap": None if math.isnan(impcap) else round(impcap),
+                "pd_max_rrp": round(float(g["RRP"].max()), 2),
+                "pd_avail": None if pd.isna(pd_avail) else round(float(pd_avail)),
+                "pd_cushion": None if pd.isna(pd_avail) or math.isnan(impcap) else round(float(pd_avail) + impcap - demand),
+                "vre": round(vre_fc if not pd.isna(vre_fc) else vre_yday), "vre_yday": round(vre_yday),
+                "import_cap": None if math.isnan(impcap) else round(impcap),
+                "avail": round(avail),
                 "cushion_pct": None if math.isnan(impcap) else round((avail + impcap - demand) / demand * 100, 1),
                 "cheap_headroom": None if math.isnan(impcap) else round(avail300 + impcap - demand),
                 "pivotal": pivotal[:4],
+                "ladder": {str(k): v for k, v in sorted(lad.items())},
+                "p300_at": _first_offset(lad, 300), "p1000_at": _first_offset(lad, 1000), "p5000_at": _first_offset(lad, 5000),
+                "low_time": low["PERIOD"].strftime("%H:%M"), "low_rrp": round(float(low["RRP"]), 2),
+                "low_neg_off": neg_off, "low_neg_rrp": None if neg_off is None else lad_low[neg_off],
+                "pasa_out": sorted(out_units, key=lambda u: u["to"] - u["from"])[:6],
+                "pasa_back": sorted(back_units, key=lambda u: u["from"] - u["to"])[:4],
             })
     out.sort(key=lambda f: (f["region"], f["_sort"]))
     for f in out:
         f.pop("_sort")
+    log(f"forward look: {len(out)} region-blocks"
+        + ("" if sens is not None else " (no price sensitivities)") + ("" if pasa is not None else " (no ST PASA)"))
     return out
 
 
-def forward_reads(fwd: list[dict], usual: set) -> list[dict]:
+def week_ahead() -> list[dict]:
+    """PD7Day: per region and trading day, the evening-peak high and the daytime low."""
+    df = load_pd7day()
+    if df is None or df.empty:
+        return []
+    df = df.copy()
+    df["BLOCK"] = df["PERIOD"].map(tod_block)
+    df["TDATE"] = (df["PERIOD"] - timedelta(hours=4, minutes=1)).dt.date
     out = []
+    for (region, td), g in df[df["REGIONID"].isin(REGIONS)].groupby(["REGIONID", "TDATE"]):
+        ev, day = g[g["BLOCK"] == "evening"], g[g["BLOCK"] == "daytime"]
+        if ev.empty and day.empty:
+            continue
+        out.append({"region": region, "date": pd.Timestamp(td).strftime("%a %d %b"), "tdate": str(td),
+                    "evening_max": None if ev.empty else round(float(ev["RRP"].max()), 2),
+                    "evening_avg": None if ev.empty else round(float(ev["RRP"].mean()), 2),
+                    "day_min": None if day.empty else round(float(day["RRP"].min()), 2),
+                    "day_avg": None if day.empty else round(float(day["RRP"].mean()), 2),
+                    "max": round(float(g["RRP"].max()), 2)})
+    return sorted(out, key=lambda x: (x["region"], x["tdate"]))
+
+
+def forward_reads(fwd: list[dict], usual: set, week: list[dict] | None = None) -> list[dict]:
+    out = []
+    add = lambda f, level, text: out.append({"region": f["region"], "block": f.get("block"), "level": level,
+                                             "forward": True, "text": text})
+    pasa_seen = {}
     for f in fwd:
         key = lambda p: (f["block"], f["region"], p["portfolio"])
         f["pivotal"] = [p for p in f["pivotal"] if key(p) not in usual] + \
@@ -1110,21 +1296,73 @@ def forward_reads(fwd: list[dict], usual: set) -> list[dict]:
         unusual = [p for p in f["pivotal"] if not p.get("usual")]
         name = f["region"].rstrip("1")
         where = f"{name} {f['date']} {f['time']} ({f['block_label'].lower()})"
-        # Midday/overnight headroom depends on tomorrow's wind and solar, which yesterday's offers
-        # don't know - only flag it there when predispatch itself is pricing scarcity.
+        lad = {int(k): v for k, v in (f.get("ladder") or {}).items()}
+        small, medium = CLIFF_STEPS.get(f["region"], (200, 500))
+
+        # 1. Stack shape from AEMO's price sensitivities - the bids actually lodged for that interval.
+        cliff = False
+        if lad and f["pd_rrp"] < 1000 and f["p1000_at"] is not None and f["p1000_at"] <= medium:
+            o = f["p1000_at"]
+            nxt = max(lad)
+            add(f, 3 if o <= small else 2,
+                f"{where}: predispatch {fmt_px(f['pd_rrp'])}, but +{o}MW of demand takes it to {fmt_px(lad[o])}"
+                + (f" and +{nxt}MW to {fmt_px(lad[nxt])}" if nxt != o else "")
+                + " - the lodged bids go vertical just past forecast.")
+            cliff = True
+        elif lad and f["pd_rrp"] < 300 and f["p300_at"] is not None and f["p300_at"] <= small:
+            o = f["p300_at"]
+            add(f, 2, f"{where}: predispatch {fmt_px(f['pd_rrp'])}; +{o}MW of demand lifts it to {fmt_px(lad[o])}.")
+            cliff = True
+        elif f["pd_rrp"] >= 300:
+            add(f, 3 if f["pd_rrp"] >= 1000 else 2,
+                f"{where}: predispatch already {fmt_px(f['pd_rrp'])} on the lodged bids"
+                + (f" (+{small}MW: {fmt_px(lad[small])})" if small in lad else "") + ".")
+            cliff = True
+        if f["block"] in TROUGH_BLOCKS and f.get("low_neg_rrp") is not None and f["low_rrp"] <= 0 \
+                and f["low_neg_rrp"] <= -500:
+            add(f, 1, f"{name} {f['date']} {f['low_time']} ({f['block_label'].lower()}): predispatch "
+                      f"{fmt_px(f['low_rrp'])}; {abs(f['low_neg_off'])}MW less demand (or more solar) takes it to "
+                      f"{fmt_px(f['low_neg_rrp'])} - thin layer above the floor.")
+
+        # 2. Yesterday's offers re-shaped for the day ahead (PASA + wind/solar forecast) - who matters.
         trough_ok = f["block"] not in TROUGH_BLOCKS or f["pd_rrp"] >= 150
         if f["cheap_headroom"] is not None and f["cheap_headroom"] < 300 and trough_ok:
             who = ", ".join(p["portfolio"] for p in unusual[:2])
-            out.append({"region": f["region"], "block": f["block"], "level": 3 if f["cheap_headroom"] < 0 else 2,
-                        "forward": True, "text":
-                f"{where}: forecast demand {fmt_mw(f['demand'])} vs yesterday's offers leaves "
-                f"{fmt_mw(f['cheap_headroom'])} of sub-$300 headroom (predispatch {fmt_px(f['pd_rrp'])})"
-                + (f"; pivotal: {who}." if who else ".")})
-        elif unusual:
+            add(f, 3 if f["cheap_headroom"] < 0 and not cliff else 2,
+                f"{where}: forecast demand {fmt_mw(f['demand'])} vs yesterday's offers (capped at today's PASA, "
+                f"wind+solar at forecast {fmt_mw(f['vre'])}) leaves {fmt_mw(f['cheap_headroom'])} of sub-$300 headroom"
+                + (f"; pivotal: {who}." if who else "."))
+        elif unusual and trough_ok:
             who = ", ".join(p["portfolio"] for p in unusual[:2])
-            out.append({"region": f["region"], "block": f["block"], "level": 2, "forward": True, "text":
-                f"{where}: {who} would be pivotal at forecast demand {fmt_mw(f['demand'])} "
-                f"if offers match yesterday's (predispatch {fmt_px(f['pd_rrp'])})."})
+            add(f, 2, f"{where}: {who} would be pivotal at forecast demand {fmt_mw(f['demand'])} "
+                      f"if offers match yesterday's (predispatch {fmt_px(f['pd_rrp'])}).")
+
+        # 3. Units PASA says are short vs what they offered yesterday - one read per region and day.
+        k = (f["region"], f["date"])
+        for u in f.get("pasa_out", []):
+            cur = pasa_seen.setdefault(k, {})
+            if u["duid"] not in cur or (u["from"] - u["to"]) > (cur[u["duid"]]["from"] - cur[u["duid"]]["to"]):
+                cur[u["duid"]] = u
+    for (region, date), units in pasa_seen.items():
+        us = sorted(units.values(), key=lambda u: u["to"] - u["from"])
+        total = sum(u["from"] - u["to"] for u in us)
+        if total < 150:
+            continue
+        bits = ", ".join(f"{u['unit']} ({u['duid']}) {u['from']:,}->{u['to']:,}MW" for u in us[:4])
+        out.append({"region": region, "block": None, "level": 2 if total >= 500 else 1, "forward": True, "text":
+                    f"{region.rstrip('1')} {date}: ST PASA has {fmt_mw(total)} less dispatchable capacity than was "
+                    f"offered at the same times yesterday - {bits}."})
+
+    # 4. Week ahead (PD7Day) - beyond the predispatch horizon bids are AEMO's assumptions, so a note.
+    near = {(f["region"], f["date"]) for f in fwd}
+    for w in week or []:
+        if (w["region"], w["date"]) in near or w["evening_max"] is None:
+            continue
+        if w["evening_max"] >= 300:
+            out.append({"region": w["region"], "block": "evening", "level": 2 if w["evening_max"] >= 1000 else 1,
+                        "forward": True, "text":
+                        f"{w['region'].rstrip('1')} {w['date']} evening: 7-day predispatch up to {fmt_px(w['evening_max'])} "
+                        f"(avg {fmt_px(w['evening_avg'])}) - indicative, further out than lodged bids."})
     return out
 
 
@@ -1262,9 +1500,11 @@ def main() -> None:
 
     fwd = forward_look(stack, datetime.strptime(day, "%Y%m%d"))
     result["forward"] = fwd
+    week = week_ahead()
+    result["week"] = week
     usual = {(blk, rg, p["portfolio"]) for blk, B in result["blocks"].items()
              for rg, r in B["regions"].items() for p in r["portfolios"] if p["usually_pivotal"]}
-    result["reads"] = forward_reads(fwd, usual) + result["reads"]
+    result["reads"] = forward_reads(fwd, usual, week) + result["reads"]
     result["generated"] = now.strftime("%Y-%m-%d %H:%M NEM")
     if not result["availability_adjusted"]:
         result["reads"].insert(0, {"region": "NEM", "level": 1, "text":
