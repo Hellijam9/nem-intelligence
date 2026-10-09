@@ -3268,5 +3268,95 @@
     "start": "2026-10-15",
     "end": "2026-10-17",
     "found_at": "2026-10-09T04:01:08.603512"
+  },
+  {
+    "duid": "ER01",
+    "station": "Eraring",
+    "owner": "Origin Energy Eraring Pty Ltd",
+    "region": "NSW1",
+    "delta": -700,
+    "start": "2026-10-16",
+    "end": "2026-10-23",
+    "found_at": "2026-10-09T07:01:11.895258"
+  },
+  {
+    "duid": "ER03",
+    "station": "Eraring",
+    "owner": "Origin Energy Eraring Pty Ltd",
+    "region": "NSW1",
+    "delta": -700,
+    "start": "2026-10-21",
+    "end": "2026-10-21",
+    "found_at": "2026-10-09T07:01:11.895258"
+  },
+  {
+    "duid": "ER01",
+    "station": "Eraring",
+    "owner": "Origin Energy Eraring Pty Ltd",
+    "region": "NSW1",
+    "delta": -500,
+    "start": "2026-10-11",
+    "end": "2026-10-15",
+    "found_at": "2026-10-09T07:01:11.895258"
+  },
+  {
+    "duid": "SWAN_E",
+    "station": "Swanbank E",
+    "owner": "CleanCo Queensland Limited",
+    "region": "QLD1",
+    "delta": -375,
+    "start": "2026-10-11",
+    "end": "2026-10-15",
+    "found_at": "2026-10-09T07:01:11.895258"
+  },
+  {
+    "duid": "URANQ12",
+    "station": "Uranquinty",
+    "owner": "Origin Energy Uranquinty Power Pty Ltd",
+    "region": "NSW1",
+    "delta": 171,
+    "start": "2026-10-12",
+    "end": "2026-10-12",
+    "found_at": "2026-10-09T07:01:11.895258"
+  },
+  {
+    "duid": "URANQ14",
+    "station": "Uranquinty",
+    "owner": "Origin Energy Uranquinty Power Pty Ltd",
+    "region": "NSW1",
+    "delta": -171,
+    "start": "2026-10-16",
+    "end": "2026-10-17",
+    "found_at": "2026-10-09T07:01:11.895258"
+  },
+  {
+    "duid": "URANQ14",
+    "station": "Uranquinty",
+    "owner": "Origin Energy Uranquinty Power Pty Ltd",
+    "region": "NSW1",
+    "delta": 171,
+    "start": "2026-10-11",
+    "end": "2026-10-12",
+    "found_at": "2026-10-09T07:01:11.895258"
+  },
+  {
+    "duid": "URANQ13",
+    "station": "Uranquinty",
+    "owner": "Origin Energy Uranquinty Power Pty Ltd",
+    "region": "NSW1",
+    "delta": -170,
+    "start": "2026-10-15",
+    "end": "2026-10-16",
+    "found_at": "2026-10-09T07:01:11.895258"
+  },
+  {
+    "duid": "URANQ13",
+    "station": "Uranquinty",
+    "owner": "Origin Energy Uranquinty Power Pty Ltd",
+    "region": "NSW1",
+    "delta": 170,
+    "start": "2026-10-12",
+    "end": "2026-10-13",
+    "found_at": "2026-10-09T07:01:11.895258"
   }
 ]
