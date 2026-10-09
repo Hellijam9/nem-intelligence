@@ -3358,5 +3358,25 @@
     "start": "2026-10-12",
     "end": "2026-10-13",
     "found_at": "2026-10-09T07:01:11.895258"
+  },
+  {
+    "duid": "WTAHB1",
+    "station": "Waratah Super Battery",
+    "owner": "Munmorah Battery ProjectCo Pty Ltd",
+    "region": "NSW1",
+    "delta": 700,
+    "start": "2026-10-17",
+    "end": "2029-10-07",
+    "found_at": "2026-10-09T10:01:09.422283"
+  },
+  {
+    "duid": "WTAHB1",
+    "station": "Waratah Super Battery",
+    "owner": "Munmorah Battery ProjectCo Pty Ltd",
+    "region": "NSW1",
+    "delta": 150,
+    "start": "2026-10-16",
+    "end": "2026-10-16",
+    "found_at": "2026-10-09T10:01:09.422283"
   }
 ]
