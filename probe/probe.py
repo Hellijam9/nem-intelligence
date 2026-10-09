@@ -27,10 +27,19 @@ def show(dir_url, pat, rows_for=(), n=1):
 
 
 r = requests.get(BASE, headers=nw.HTTP_HEADERS, timeout=30)
-dirs = sorted(set(re.findall(r'/CURRENT/([^"/]+)/"', r.text, re.I)))
-print("CURRENT dirs matching:", [d for d in dirs if re.search("sens|pasa|predisp|pd7|p5", d, re.I)])
-for d in dirs:
-    if re.search("sensitiv", d, re.I):
-        show(BASE + d + "/", r".*\.zip$", rows_for=("SENSITIV", "SCENARIO"))
-show(BASE + "Predispatch_Reports/", r"^PUBLIC_PREDISPATCH_\d{12}_\d{14}_LEGACY\.zip$", rows_for=("SCENARIO",))
-show(BASE + "STPASA_DUIDAvailability/", r".*\.zip$", rows_for=("DUIDAVAIL",))
+hrefs = re.findall(r'href="([^"]+)"', r.text, re.I)
+print("N hrefs", len(hrefs)); print([h for h in hrefs][:400])
+for d in ["Predispatch_Sensitivities", "PredispatchIS_Reports", "Predispatch_IRSR", "PD7Day", "P5_Reports"]:
+    try:
+        f = nw.list_nemweb_files(BASE + d + "/", r".*\.zip$")
+        print("DIR", d, len(f), [x.rsplit('/',1)[-1] for x in f[-2:]])
+        if f and d != "P5_Reports":
+            t = nw.parse_mms_zip(nw.download_bytes(f[-1]))
+            for k, df in t.items():
+                print("  TABLE", k, df.shape, list(df.columns)[:70])
+                if "SENS" in str(k).upper() or "SCENARIO" in str(k).upper():
+                    print(df.head(6).to_string()[:5000])
+    except Exception as e:
+        print("DIR", d, "FAIL", e)
+f = nw.list_nemweb_files(BASE + "Predispatch_Reports/", r".*\.zip$")
+print("PD all", len(f), sorted({re.sub(r"\d+", "#", x.rsplit('/',1)[-1]) for x in f}))
