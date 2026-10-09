@@ -23,4 +23,4 @@ jobs:
           mkdir -p testout && cp run.log testout/ && cp docs/bidstack/index.html testout/ 2>/dev/null; cp docs/bidstack/data/*.json testout/ 2>/dev/null
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -f testout && git commit -qm "test output [skip ci]" && git pull -q --rebase && git push
+          git add -f testout && git commit -qm "test output [skip ci]" && git push
