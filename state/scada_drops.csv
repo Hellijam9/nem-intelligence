@@ -108,3 +108,4 @@ date,time,duid,region,station,previous_mw,current_mw,drop_mw
 2026-10-11,03:40:00,W/HOE#2,QLD1,Wivenhoe,170.67,0.0,-170.67
 2026-10-11,05:40:00,W/HOE#2,QLD1,Wivenhoe,164.3,0.0,-164.3
 2026-10-11,05:50:00,BARKIPS1,SA1,Barker Inlet,190.45999,85.73,-104.72999
+2026-10-11,06:00:00,TUMUT3,NSW1,Tumut3,124.29,-0.19,-124.48
