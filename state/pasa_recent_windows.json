@@ -3378,5 +3378,15 @@
     "start": "2026-10-16",
     "end": "2026-10-16",
     "found_at": "2026-10-09T10:01:09.422283"
+  },
+  {
+    "duid": "ERB01",
+    "station": "Eraring Battery Energy Storage System",
+    "owner": "Origin Energy Electricity Limited",
+    "region": "NSW1",
+    "delta": -460,
+    "start": "2026-12-18",
+    "end": "2026-12-18",
+    "found_at": "2026-10-12T01:01:01.593235"
   }
 ]
