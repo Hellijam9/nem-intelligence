@@ -3408,5 +3408,55 @@
     "start": "2026-12-04",
     "end": "2026-12-13",
     "found_at": "2026-10-13T04:01:14.863550"
+  },
+  {
+    "duid": "MPP_1",
+    "station": "Millmerran",
+    "owner": "Millmerran Power Partners",
+    "region": "QLD1",
+    "delta": -435,
+    "start": "2027-04-10",
+    "end": "2027-05-12",
+    "found_at": "2026-10-13T10:01:07.475380"
+  },
+  {
+    "duid": "MPP_1",
+    "station": "Millmerran",
+    "owner": "Millmerran Power Partners",
+    "region": "QLD1",
+    "delta": 435,
+    "start": "2027-04-01",
+    "end": "2027-04-01",
+    "found_at": "2026-10-13T10:01:07.475380"
+  },
+  {
+    "duid": "MPP_1",
+    "station": "Millmerran",
+    "owner": "Millmerran Power Partners",
+    "region": "QLD1",
+    "delta": 350,
+    "start": "2027-03-01",
+    "end": "2027-03-31",
+    "found_at": "2026-10-13T10:01:07.475380"
+  },
+  {
+    "duid": "YWPS2",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": -340,
+    "start": "2026-10-20",
+    "end": "2026-11-19",
+    "found_at": "2026-10-13T10:01:07.475380"
+  },
+  {
+    "duid": "YWPS2",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": 340,
+    "start": "2027-03-20",
+    "end": "2027-04-15",
+    "found_at": "2026-10-13T10:01:07.475380"
   }
 ]
