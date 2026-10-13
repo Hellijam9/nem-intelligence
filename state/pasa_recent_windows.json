@@ -3398,5 +3398,15 @@
     "start": "2026-10-20",
     "end": "2026-10-23",
     "found_at": "2026-10-12T10:01:15.184204"
+  },
+  {
+    "duid": "DARTM1",
+    "station": "Dartmouth",
+    "owner": "AGL Hydro Partnership",
+    "region": "VIC1",
+    "delta": -155,
+    "start": "2026-12-04",
+    "end": "2026-12-13",
+    "found_at": "2026-10-13T04:01:14.863550"
   }
 ]
