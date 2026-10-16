@@ -3618,5 +3618,75 @@
     "start": "2026-10-29",
     "end": "2026-10-29",
     "found_at": "2026-10-16T07:01:08.548146"
+  },
+  {
+    "duid": "TUMUT3",
+    "station": "Tumut3",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": -300,
+    "start": "2027-06-03",
+    "end": "2027-06-04",
+    "found_at": "2026-10-16T10:01:22.504304"
+  },
+  {
+    "duid": "TUMUT3",
+    "station": "Tumut3",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": 300,
+    "start": "2026-11-26",
+    "end": "2026-12-07",
+    "found_at": "2026-10-16T10:01:22.504304"
+  },
+  {
+    "duid": "TUMUT3",
+    "station": "Tumut3",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": 300,
+    "start": "2027-03-08",
+    "end": "2027-03-17",
+    "found_at": "2026-10-16T10:01:22.504304"
+  },
+  {
+    "duid": "TUMUT3",
+    "station": "Tumut3",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": 300,
+    "start": "2027-04-12",
+    "end": "2027-04-25",
+    "found_at": "2026-10-16T10:01:22.504304"
+  },
+  {
+    "duid": "TUMUT3",
+    "station": "Tumut3",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": 300,
+    "start": "2027-05-17",
+    "end": "2027-05-21",
+    "found_at": "2026-10-16T10:01:22.504304"
+  },
+  {
+    "duid": "WDBESS1",
+    "station": "Western Downs Battery Energy Storage System",
+    "owner": "Western Downs BESS Pty Ltd as trustee for Western Downs BESS Trust",
+    "region": "QLD1",
+    "delta": 255,
+    "start": "2026-10-21",
+    "end": "2026-10-21",
+    "found_at": "2026-10-16T10:01:22.504304"
+  },
+  {
+    "duid": "WDBESS2",
+    "station": "",
+    "owner": "",
+    "region": "QLD1",
+    "delta": 255,
+    "start": "2026-10-21",
+    "end": "2026-10-21",
+    "found_at": "2026-10-16T10:01:22.504304"
   }
 ]
