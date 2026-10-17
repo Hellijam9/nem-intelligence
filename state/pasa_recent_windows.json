@@ -3688,5 +3688,15 @@
     "start": "2026-10-21",
     "end": "2026-10-21",
     "found_at": "2026-10-16T10:01:22.504304"
+  },
+  {
+    "duid": "TARONG#3",
+    "station": "Tarong",
+    "owner": "Stanwell Corporation Limited",
+    "region": "QLD1",
+    "delta": -350,
+    "start": "2026-11-06",
+    "end": "2026-11-28",
+    "found_at": "2026-10-17T01:01:19.641260"
   }
 ]
