@@ -3698,5 +3698,35 @@
     "start": "2026-11-06",
     "end": "2026-11-28",
     "found_at": "2026-10-17T01:01:19.641260"
+  },
+  {
+    "duid": "BRAEMAR7",
+    "station": "Braemar 2 Power",
+    "owner": "NewGen Braemar 2 Partnership comprising Arrow Braemar 2 Pty Ltd and Arrow Southern Generation Pty Ltd",
+    "region": "QLD1",
+    "delta": -173,
+    "start": "2026-10-26",
+    "end": "2026-10-26",
+    "found_at": "2026-10-19T01:01:05.849394"
+  },
+  {
+    "duid": "BRAEMAR7",
+    "station": "Braemar 2 Power",
+    "owner": "NewGen Braemar 2 Partnership comprising Arrow Braemar 2 Pty Ltd and Arrow Southern Generation Pty Ltd",
+    "region": "QLD1",
+    "delta": 173,
+    "start": "2026-10-31",
+    "end": "2026-11-06",
+    "found_at": "2026-10-19T01:01:05.849394"
+  },
+  {
+    "duid": "MCKAY1",
+    "station": "Bogong_Mackay",
+    "owner": "AGL Hydro Partnership",
+    "region": "VIC1",
+    "delta": -145,
+    "start": "2026-11-17",
+    "end": "2026-11-19",
+    "found_at": "2026-10-19T01:01:05.849394"
   }
 ]
