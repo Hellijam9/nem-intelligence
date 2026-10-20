@@ -269,3 +269,4 @@ date,time,duid,region,station,previous_mw,current_mw,drop_mw
 2026-10-20,20:10:00,W/HOE#1,QLD1,Wivenhoe,164.03,0.0,-164.03
 2026-10-20,20:20:00,POAT220,TAS1,Poatina,139.17828,33.84296,-105.33532
 2026-10-20,22:10:00,W/HOE#2,QLD1,Wivenhoe,191.06999,0.0,-191.06999
+2026-10-20,22:35:00,W/HOE#2,QLD1,Wivenhoe,162.89,0.0,-162.89
