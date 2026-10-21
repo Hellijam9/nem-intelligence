@@ -3818,5 +3818,45 @@
     "start": "2027-07-07",
     "end": "2027-07-29",
     "found_at": "2026-10-21T03:45:21.017399"
+  },
+  {
+    "duid": "GSTONE3",
+    "station": "Gladstone",
+    "owner": "Gladstone Power Station Participants",
+    "region": "QLD1",
+    "delta": 260,
+    "start": "2026-10-25",
+    "end": "2026-10-25",
+    "found_at": "2026-10-21T07:01:24.629490"
+  },
+  {
+    "duid": "VBB1",
+    "station": "Victorian Big Battery",
+    "owner": "Victorian Big Battery Pty Ltd",
+    "region": "VIC1",
+    "delta": 190,
+    "start": "2027-10-01",
+    "end": "2027-10-31",
+    "found_at": "2026-10-21T07:01:24.629490"
+  },
+  {
+    "duid": "VBB1",
+    "station": "Victorian Big Battery",
+    "owner": "Victorian Big Battery Pty Ltd",
+    "region": "VIC1",
+    "delta": 190,
+    "start": "2028-10-01",
+    "end": "2028-10-31",
+    "found_at": "2026-10-21T07:01:24.629490"
+  },
+  {
+    "duid": "VBB1",
+    "station": "Victorian Big Battery",
+    "owner": "Victorian Big Battery Pty Ltd",
+    "region": "VIC1",
+    "delta": 190,
+    "start": "2029-10-01",
+    "end": "2029-10-21",
+    "found_at": "2026-10-21T07:01:24.629490"
   }
 ]
