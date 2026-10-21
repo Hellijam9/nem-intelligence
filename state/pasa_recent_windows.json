@@ -3798,5 +3798,15 @@
     "start": "2027-04-26",
     "end": "2027-04-29",
     "found_at": "2026-10-20T10:01:25.615382"
+  },
+  {
+    "duid": "GSTONE3",
+    "station": "Gladstone",
+    "owner": "Gladstone Power Station Participants",
+    "region": "QLD1",
+    "delta": -260,
+    "start": "2026-10-25",
+    "end": "2026-10-25",
+    "found_at": "2026-10-21T01:01:21.669428"
   }
 ]
