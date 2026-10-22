@@ -3888,5 +3888,15 @@
     "start": "2026-10-25",
     "end": "2026-10-27",
     "found_at": "2026-10-21T10:01:25.923293"
+  },
+  {
+    "duid": "SWAN_E",
+    "station": "Swanbank E",
+    "owner": "CleanCo Queensland Limited",
+    "region": "QLD1",
+    "delta": -375,
+    "start": "2026-10-28",
+    "end": "2026-11-10",
+    "found_at": "2026-10-22T03:44:45.718101"
   }
 ]
