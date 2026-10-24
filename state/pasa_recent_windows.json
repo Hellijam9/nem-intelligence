@@ -3978,5 +3978,15 @@
     "start": "2026-10-25",
     "end": "2026-10-26",
     "found_at": "2026-10-24T01:01:32.288554"
+  },
+  {
+    "duid": "SNB02",
+    "station": NaN,
+    "owner": "Supernode Operations Pty Ltd as the trustee for Supernode BESS 1 Project Trust",
+    "region": "QLD1",
+    "delta": 239,
+    "start": "2026-10-25",
+    "end": "2026-10-26",
+    "found_at": "2026-10-24T10:01:23.268597"
   }
 ]
