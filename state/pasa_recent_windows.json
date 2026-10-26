@@ -3988,5 +3988,25 @@
     "start": "2026-10-25",
     "end": "2026-10-26",
     "found_at": "2026-10-24T10:01:23.268597"
+  },
+  {
+    "duid": "URANQ12",
+    "station": "Uranquinty",
+    "owner": "Origin Energy Uranquinty Power Pty Ltd",
+    "region": "NSW1",
+    "delta": -165,
+    "start": "2026-11-12",
+    "end": "2026-11-12",
+    "found_at": "2026-10-26T07:01:35.719154"
+  },
+  {
+    "duid": "URANQ11",
+    "station": "Uranquinty",
+    "owner": "Origin Energy Uranquinty Power Pty Ltd",
+    "region": "NSW1",
+    "delta": -162,
+    "start": "2026-11-11",
+    "end": "2026-11-11",
+    "found_at": "2026-10-26T07:01:35.719154"
   }
 ]
