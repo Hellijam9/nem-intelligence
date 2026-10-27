@@ -433,3 +433,4 @@ date,time,duid,region,station,previous_mw,current_mw,drop_mw
 2026-10-27,19:45:00,TUMUT3,NSW1,Tumut3,121.00999,1.38,-119.62999
 2026-10-27,20:10:00,W/HOE#2,QLD1,Wivenhoe,164.0,0.0,-164.0
 2026-10-27,22:10:00,W/HOE#1,QLD1,Wivenhoe,165.73999,0.0,-165.73999
+2026-10-27,22:40:00,MCKAY1,VIC1,Bogong_Mackay,142.82999,0.02,-142.80999
