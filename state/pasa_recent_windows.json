@@ -4008,5 +4008,15 @@
     "start": "2026-11-11",
     "end": "2026-11-11",
     "found_at": "2026-10-26T07:01:35.719154"
+  },
+  {
+    "duid": "BRAEMAR3",
+    "station": "Braemar Power",
+    "owner": "Braemar Power Project Pty Ltd",
+    "region": "QLD1",
+    "delta": -167,
+    "start": "2026-11-01",
+    "end": "2026-11-03",
+    "found_at": "2026-10-28T10:01:33.661547"
   }
 ]
