@@ -4048,5 +4048,25 @@
     "start": "2027-09-28",
     "end": "2027-09-30",
     "found_at": "2026-10-29T07:01:39.319817"
+  },
+  {
+    "duid": "MURRAY",
+    "station": "Murray",
+    "owner": "Snowy Hydro Ltd",
+    "region": "VIC1",
+    "delta": -150,
+    "start": "2026-11-09",
+    "end": "2026-11-14",
+    "found_at": "2026-10-29T10:01:38.958548"
+  },
+  {
+    "duid": "MURRAY",
+    "station": "Murray",
+    "owner": "Snowy Hydro Ltd",
+    "region": "VIC1",
+    "delta": -142,
+    "start": "2026-12-18",
+    "end": "2027-01-21",
+    "found_at": "2026-10-29T10:01:38.958548"
   }
 ]
