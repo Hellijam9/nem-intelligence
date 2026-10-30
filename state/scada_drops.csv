@@ -504,3 +504,4 @@ date,time,duid,region,station,previous_mw,current_mw,drop_mw
 2026-10-30,21:10:00,W/HOE#2,QLD1,Wivenhoe,169.25,0.0,-169.25
 2026-10-30,22:40:00,W/HOE#1,QLD1,Wivenhoe,168.73,0.0,-168.73
 2026-10-31,00:40:00,TUMUT3,NSW1,Tumut3,246.53,119.18,-127.35
+2026-10-31,01:15:00,TUMUT3,NSW1,Tumut3,124.64999,3.36,-121.28999
