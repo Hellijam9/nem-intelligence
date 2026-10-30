@@ -4068,5 +4068,35 @@
     "start": "2026-12-18",
     "end": "2027-01-21",
     "found_at": "2026-10-29T10:01:38.958548"
+  },
+  {
+    "duid": "BRNDBES1",
+    "station": "",
+    "owner": "",
+    "region": "QLD1",
+    "delta": 205,
+    "start": "2026-11-09",
+    "end": "2026-11-09",
+    "found_at": "2026-10-30T10:01:39.526872"
+  },
+  {
+    "duid": "KPP_1",
+    "station": "Kogan Creek",
+    "owner": "Kogan Creek Power Station Pty Ltd",
+    "region": "QLD1",
+    "delta": -150,
+    "start": "2026-11-01",
+    "end": "2026-11-02",
+    "found_at": "2026-10-30T10:01:39.526872"
+  },
+  {
+    "duid": "QPS5",
+    "station": "Quarantine",
+    "owner": "Origin Energy Power Limited",
+    "region": "SA1",
+    "delta": -111,
+    "start": "2026-11-04",
+    "end": "2026-11-05",
+    "found_at": "2026-10-30T10:01:39.526872"
   }
 ]
