@@ -11759,3 +11759,263 @@ date,block,region,portfolio,avail_mw,hi300_mw,hi1000_mw,hi5000_mw,pivotal_frac
 2026-11-01,overnight,VIC1,Snowy Hydro,1675.4,1248.2,1248.2,1248.2,0.0
 2026-11-01,overnight,VIC1,Terrang BESS Asset Co,100.0,100.0,100.0,100.0,0.0
 2026-11-01,overnight,VIC1,Tilt Renewables,100.0,0.0,0.0,0.0,0.0
+2026-11-02,morning,NSW1,AGL,1791.0,116.5,116.5,116.5,0.0
+2026-11-02,morning,NSW1,Akaysha,823.6,0.5,0.5,0.5,0.0
+2026-11-02,morning,NSW1,Delta Electricity,1042.7,77.7,77.7,77.7,0.0
+2026-11-02,morning,NSW1,Energy Australia,1045.0,252.0,252.0,252.0,0.0
+2026-11-02,morning,NSW1,Limondale Battery,50.0,0.0,0.0,0.0,0.0
+2026-11-02,morning,NSW1,NEOEN,87.9,78.4,0.0,0.0,0.0
+2026-11-02,morning,NSW1,NESF BESS 1,199.0,69.2,0.0,0.0,0.0
+2026-11-02,morning,NSW1,Orana ProjectCo,415.0,0.0,0.0,0.0,0.0
+2026-11-02,morning,NSW1,Origin Energy,2195.5,838.6,838.6,838.6,0.0
+2026-11-02,morning,NSW1,Snowy Hydro,2968.9,1920.0,1825.0,1825.0,0.0
+2026-11-02,morning,NSW1,Williamsdale BESS Project Co,225.0,3.8,0.0,0.0,0.0
+2026-11-02,morning,QLD1,Akaysha,50.4,1.0,0.4,0.4,0.0
+2026-11-02,morning,QLD1,Alinta Energy,332.3,261.7,251.4,251.4,0.0
+2026-11-02,morning,QLD1,Arrow Energy,323.4,323.4,161.7,161.7,0.0
+2026-11-02,morning,QLD1,Brendale Battery ProjectCo,170.8,34.2,3.4,3.4,0.0
+2026-11-02,morning,QLD1,CS Energy,2299.5,276.3,276.3,276.3,0.0
+2026-11-02,morning,QLD1,Callide Power Trading,822.5,1.8,1.8,1.8,0.0
+2026-11-02,morning,QLD1,CleanCo,502.5,156.0,0.0,0.0,0.0
+2026-11-02,morning,QLD1,ERM Power,128.0,128.0,128.0,116.0,0.0
+2026-11-02,morning,QLD1,Iberdrola Australia Energy Markets,177.2,117.2,117.2,117.2,0.0
+2026-11-02,morning,QLD1,InterGen,416.6,0.0,0.0,0.0,0.0
+2026-11-02,morning,QLD1,NEOEN,272.0,40.1,0.0,0.0,0.0
+2026-11-02,morning,QLD1,Origin Energy,316.6,316.6,316.6,316.6,0.0
+2026-11-02,morning,QLD1,Stanwell Corp,2835.0,275.0,275.0,275.0,0.0
+2026-11-02,morning,QLD1,Supernode Operations,516.0,0.0,0.0,0.0,0.0
+2026-11-02,morning,SA1,AGL,243.0,133.9,133.9,133.9,0.0
+2026-11-02,morning,SA1,AGL SA Generation,187.7,135.0,135.0,135.0,0.0
+2026-11-02,morning,SA1,Bungama Project (Solar) Operations Pty Ltd ATF Bungama Project (Solar) Operation,148.8,3.7,3.7,3.7,0.0
+2026-11-02,morning,SA1,ENGIE,257.0,257.0,237.0,237.0,0.0
+2026-11-02,morning,SA1,Energy Australia,201.4,201.4,201.4,201.4,0.0
+2026-11-02,morning,SA1,Epic Energy,75.2,0.5,0.5,0.5,0.0
+2026-11-02,morning,SA1,NEOEN,248.4,195.1,0.0,0.0,0.0
+2026-11-02,morning,SA1,Nexif Energy,153.0,150.3,150.1,60.1,0.0
+2026-11-02,morning,SA1,Origin Energy,289.1,289.1,289.1,289.1,0.0
+2026-11-02,morning,SA1,Snowy Hydro,118.0,118.0,118.0,118.0,0.0
+2026-11-02,morning,SA1,Zen Energy,84.6,0.0,0.0,0.0,0.0
+2026-11-02,morning,TAS1,Aurora Energy,120.8,112.0,112.0,112.0,0.0
+2026-11-02,morning,TAS1,Hydro Tas,1558.9,101.5,101.5,101.5,1.0
+2026-11-02,morning,VIC1,AGL,2116.3,552.2,148.2,148.2,0.0
+2026-11-02,morning,VIC1,Alinta Energy,1145.6,0.0,0.0,0.0,0.0
+2026-11-02,morning,VIC1,ENGIE,150.0,0.0,0.0,0.0,0.0
+2026-11-02,morning,VIC1,Energy Australia,1078.1,369.0,369.0,369.0,0.0
+2026-11-02,morning,VIC1,Equis Energy (Aust),397.1,78.3,78.3,0.0,0.0
+2026-11-02,morning,VIC1,Mornington BESS Project,182.0,0.0,0.0,0.0,0.0
+2026-11-02,morning,VIC1,NEOEN,63.0,46.6,46.6,44.1,0.0
+2026-11-02,morning,VIC1,Origin Energy,782.0,747.0,747.0,747.0,0.0
+2026-11-02,morning,VIC1,SEC Energy,199.7,119.7,0.0,0.0,0.0
+2026-11-02,morning,VIC1,Shell Energy Retail,318.5,132.8,92.8,92.8,0.0
+2026-11-02,morning,VIC1,Snowy Hydro,1576.8,1167.2,1167.2,1167.2,0.0
+2026-11-02,morning,VIC1,Terrang BESS Asset Co,100.0,0.0,0.0,0.0,0.0
+2026-11-02,morning,VIC1,Tilt Renewables,100.0,0.0,0.0,0.0,0.0
+2026-11-02,daytime,NSW1,AGL,1988.1,365.6,365.6,365.6,0.0
+2026-11-02,daytime,NSW1,AGL Liddell BESS,76.0,76.0,76.0,76.0,0.0
+2026-11-02,daytime,NSW1,Akaysha,820.6,0.5,0.5,0.5,0.0
+2026-11-02,daytime,NSW1,Delta Electricity,1025.6,60.0,60.0,60.0,0.0
+2026-11-02,daytime,NSW1,Energy Australia,1161.6,315.3,315.0,315.0,0.0
+2026-11-02,daytime,NSW1,Limondale Battery,50.0,5.2,0.0,0.0,0.0
+2026-11-02,daytime,NSW1,NEOEN,91.1,90.9,0.0,0.0,0.0
+2026-11-02,daytime,NSW1,NESF BESS 1,190.0,58.0,0.0,0.0,0.0
+2026-11-02,daytime,NSW1,Orana ProjectCo,415.0,108.1,0.1,0.1,0.0
+2026-11-02,daytime,NSW1,Origin Energy,2408.6,988.9,988.9,988.9,0.0
+2026-11-02,daytime,NSW1,Smithfield BESS,57.1,29.3,29.3,29.3,0.0
+2026-11-02,daytime,NSW1,Snowy Hydro,2854.5,2193.1,2073.8,2073.8,0.0
+2026-11-02,daytime,NSW1,Williamsdale BESS Project Co,225.0,136.3,0.0,0.0,0.0
+2026-11-02,daytime,QLD1,Akaysha,144.8,0.1,0.1,0.1,0.0
+2026-11-02,daytime,QLD1,Alinta Energy,278.4,48.4,14.8,14.8,0.0
+2026-11-02,daytime,QLD1,Arrow Energy,303.0,303.0,151.5,151.5,0.0
+2026-11-02,daytime,QLD1,Brendale Battery ProjectCo,200.6,1.3,1.3,1.3,0.0
+2026-11-02,daytime,QLD1,CS Energy,2454.2,408.0,408.0,405.9,0.0
+2026-11-02,daytime,QLD1,Callide Power Trading,844.0,6.2,6.2,6.2,0.0
+2026-11-02,daytime,QLD1,CleanCo,441.0,17.8,0.0,0.0,0.0
+2026-11-02,daytime,QLD1,Iberdrola Australia Energy Markets,177.2,126.0,126.0,126.0,0.0
+2026-11-02,daytime,QLD1,InterGen,414.2,0.0,0.0,0.0,0.0
+2026-11-02,daytime,QLD1,NEOEN,509.9,199.8,0.0,0.0,0.0
+2026-11-02,daytime,QLD1,Origin Energy,309.4,308.9,308.9,308.9,0.0
+2026-11-02,daytime,QLD1,Stanwell Corp,2597.5,205.4,205.4,205.4,0.0
+2026-11-02,daytime,QLD1,Supernode Operations,516.0,34.0,34.0,34.0,0.0
+2026-11-02,daytime,QLD1,Woolooga BESS Fund,88.7,68.8,14.2,14.2,0.0
+2026-11-02,daytime,SA1,AGL,330.7,289.5,289.5,289.5,0.0
+2026-11-02,daytime,SA1,AGL SA Generation,154.7,154.7,154.7,154.7,0.0
+2026-11-02,daytime,SA1,Bungama Project (Solar) Operations Pty Ltd ATF Bungama Project (Solar) Operation,150.0,0.0,0.0,0.0,0.0
+2026-11-02,daytime,SA1,ENGIE,260.4,246.4,227.6,227.6,0.0
+2026-11-02,daytime,SA1,Energy Australia,177.8,177.8,177.8,177.8,0.0
+2026-11-02,daytime,SA1,Epic Energy,97.7,0.1,0.1,0.1,0.0
+2026-11-02,daytime,SA1,NEOEN,249.8,229.9,7.0,0.0,0.0
+2026-11-02,daytime,SA1,Nexif Energy,153.0,150.6,150.6,60.6,0.0
+2026-11-02,daytime,SA1,Origin Energy,284.9,284.9,284.9,284.9,0.0
+2026-11-02,daytime,SA1,Pacific Hydro Clements Gap BESS,60.0,0.0,0.0,0.0,0.0
+2026-11-02,daytime,SA1,Snowy Hydro,119.4,119.4,119.4,119.4,0.0
+2026-11-02,daytime,TAS1,Aurora Energy,118.0,118.0,118.0,118.0,0.0
+2026-11-02,daytime,TAS1,Hydro Tas,1609.1,106.2,106.2,106.2,1.0
+2026-11-02,daytime,VIC1,AGL,2060.4,499.4,95.4,95.4,0.0
+2026-11-02,daytime,VIC1,Alinta Energy,1145.1,0.0,0.0,0.0,0.0
+2026-11-02,daytime,VIC1,ENGIE,150.0,1.6,1.6,1.6,0.0
+2026-11-02,daytime,VIC1,Energy Australia,1079.0,369.0,369.0,369.0,0.0
+2026-11-02,daytime,VIC1,Equis Energy (Aust),400.0,141.4,141.4,0.0,0.0
+2026-11-02,daytime,VIC1,Mornington BESS Project,240.0,4.9,2.5,2.5,0.0
+2026-11-02,daytime,VIC1,NEOEN,56.9,39.7,39.6,34.6,0.0
+2026-11-02,daytime,VIC1,Origin Energy,828.7,653.7,653.7,653.7,0.0
+2026-11-02,daytime,VIC1,SEC Energy,200.0,28.1,0.0,0.0,0.0
+2026-11-02,daytime,VIC1,Shell Energy Retail,308.3,262.9,132.9,132.9,0.0
+2026-11-02,daytime,VIC1,Snowy Hydro,1515.4,868.6,868.6,868.6,0.0
+2026-11-02,daytime,VIC1,Terrang BESS Asset Co,100.0,1.0,1.0,1.0,0.0
+2026-11-02,daytime,VIC1,Tilt Renewables,100.0,1.0,0.0,0.0,0.0
+2026-11-02,evening,NSW1,AGL,2056.7,21.6,9.9,9.9,0.0
+2026-11-02,evening,NSW1,AGL Liddell BESS,456.3,287.5,287.5,287.5,0.0
+2026-11-02,evening,NSW1,Akaysha,839.0,1.0,1.0,1.0,0.0
+2026-11-02,evening,NSW1,Delta Electricity,1238.8,92.9,92.9,92.9,0.0
+2026-11-02,evening,NSW1,Energy Australia,1491.0,315.0,315.0,315.0,0.0
+2026-11-02,evening,NSW1,Limondale Battery,50.0,0.0,0.0,0.0,0.0
+2026-11-02,evening,NSW1,NEOEN,94.7,61.8,0.0,0.0,0.0
+2026-11-02,evening,NSW1,NESF BESS 1,190.0,47.8,0.0,0.0,0.0
+2026-11-02,evening,NSW1,Orana ProjectCo,415.0,0.0,0.0,0.0,0.0
+2026-11-02,evening,NSW1,Origin Energy,2172.3,499.8,499.8,499.8,0.0
+2026-11-02,evening,NSW1,Smithfield BESS,65.0,0.0,0.0,0.0,0.0
+2026-11-02,evening,NSW1,Snowy Hydro,3076.4,1931.6,1762.8,1762.8,0.0
+2026-11-02,evening,NSW1,Williamsdale BESS Project Co,225.0,0.0,0.0,0.0,0.0
+2026-11-02,evening,QLD1,AGL Sales (Queensland Electricity),83.3,49.3,49.3,49.3,0.0
+2026-11-02,evening,QLD1,Akaysha,152.0,0.0,0.0,0.0,0.0
+2026-11-02,evening,QLD1,Alinta Energy,358.0,77.0,16.0,16.0,0.0
+2026-11-02,evening,QLD1,Arrow Energy,307.7,307.7,153.9,153.9,0.0
+2026-11-02,evening,QLD1,Brendale Battery ProjectCo,180.0,0.0,0.0,0.0,0.0
+2026-11-02,evening,QLD1,CS Energy,2264.0,112.4,96.2,96.2,0.0
+2026-11-02,evening,QLD1,Callide Power Trading,844.0,2.0,2.0,2.0,0.0
+2026-11-02,evening,QLD1,CleanCo,841.1,0.0,0.0,0.0,0.0
+2026-11-02,evening,QLD1,ERM Power,157.9,157.9,157.9,142.9,0.0
+2026-11-02,evening,QLD1,Iberdrola Australia Energy Markets,180.0,0.0,0.0,0.0,0.0
+2026-11-02,evening,QLD1,InterGen,428.0,0.0,0.0,0.0,0.0
+2026-11-02,evening,QLD1,NEOEN,509.9,125.4,0.0,0.0,0.0
+2026-11-02,evening,QLD1,Origin Energy,433.9,314.0,314.0,314.0,0.0
+2026-11-02,evening,QLD1,Stanwell Corp,2928.8,215.7,215.7,215.7,0.2
+2026-11-02,evening,QLD1,Supernode Operations,479.4,80.9,80.9,80.9,0.0
+2026-11-02,evening,QLD1,Woolooga BESS Fund,53.1,13.4,0.0,0.0,0.0
+2026-11-02,evening,SA1,AGL,447.0,216.3,216.3,216.3,0.0
+2026-11-02,evening,SA1,AGL SA Generation,193.0,56.1,56.1,56.1,0.0
+2026-11-02,evening,SA1,Bungama Project (Solar) Operations Pty Ltd ATF Bungama Project (Solar) Operation,150.0,0.0,0.0,0.0,0.0
+2026-11-02,evening,SA1,CI Summerfield BESS Pty Ltd ATF CI Summerfield BESS Trust,57.1,0.0,0.0,0.0,0.0
+2026-11-02,evening,SA1,ENGIE,434.3,209.3,209.3,209.3,0.0
+2026-11-02,evening,SA1,Energy Australia,204.0,204.0,204.0,204.0,0.0
+2026-11-02,evening,SA1,Epic Energy,100.0,0.0,0.0,0.0,0.0
+2026-11-02,evening,SA1,NEOEN,275.0,170.0,8.4,0.0,0.0
+2026-11-02,evening,SA1,Nexif Energy,152.0,150.3,150.3,60.3,0.0
+2026-11-02,evening,SA1,Origin Energy,286.3,245.6,245.6,245.6,0.0
+2026-11-02,evening,SA1,Pacific Hydro Clements Gap BESS,60.0,0.0,0.0,0.0,0.0
+2026-11-02,evening,SA1,Snowy Hydro,121.0,121.0,121.0,121.0,0.0
+2026-11-02,evening,SA1,Zen Energy,111.0,18.2,18.2,18.2,0.0
+2026-11-02,evening,TAS1,Aurora Energy,118.0,118.0,118.0,118.0,0.0
+2026-11-02,evening,TAS1,Hydro Tas,1706.6,241.0,241.0,241.0,1.0
+2026-11-02,evening,VIC1,AGL,2090.4,404.7,36.4,36.4,0.0
+2026-11-02,evening,VIC1,Alinta Energy,1144.5,0.0,0.0,0.0,0.0
+2026-11-02,evening,VIC1,ENGIE,150.0,0.0,0.0,0.0,0.0
+2026-11-02,evening,VIC1,Energy Australia,1079.0,369.0,369.0,369.0,0.0
+2026-11-02,evening,VIC1,Equis Energy (Aust),400.0,7.5,7.5,0.0,0.0
+2026-11-02,evening,VIC1,Mornington BESS Project,217.8,0.0,0.0,0.0,0.0
+2026-11-02,evening,VIC1,NEOEN,63.0,19.5,19.5,15.5,0.0
+2026-11-02,evening,VIC1,Origin Energy,802.9,424.5,424.5,424.5,0.0
+2026-11-02,evening,VIC1,SEC Energy,199.6,0.0,0.0,0.0,0.0
+2026-11-02,evening,VIC1,Shell Energy Retail,385.0,40.7,14.3,14.3,0.0
+2026-11-02,evening,VIC1,Snowy Hydro,1527.0,847.8,847.8,847.8,0.0
+2026-11-02,evening,VIC1,Terrang BESS Asset Co,100.0,0.0,0.0,0.0,0.0
+2026-11-02,evening,VIC1,Tilt Renewables,100.0,0.0,0.0,0.0,0.0
+2026-11-02,late,NSW1,AGL,2030.0,0.0,0.0,0.0,0.0
+2026-11-02,late,NSW1,Akaysha,839.0,1.0,1.0,1.0,0.0
+2026-11-02,late,NSW1,Delta Electricity,1320.0,120.0,120.0,120.0,0.0
+2026-11-02,late,NSW1,Energy Australia,1472.2,90.0,90.0,90.0,0.0
+2026-11-02,late,NSW1,Limondale Battery,50.0,0.0,0.0,0.0,0.0
+2026-11-02,late,NSW1,NEOEN,96.0,84.7,0.0,0.0,0.0
+2026-11-02,late,NSW1,NESF BESS 1,134.3,26.4,0.0,0.0,0.0
+2026-11-02,late,NSW1,Orana ProjectCo,279.1,0.7,0.7,0.7,0.0
+2026-11-02,late,NSW1,Origin Energy,1714.0,347.3,347.3,347.3,0.0
+2026-11-02,late,NSW1,Smithfield BESS,61.3,51.8,51.8,51.8,0.0
+2026-11-02,late,NSW1,Snowy Hydro,3150.1,2245.9,2140.2,2140.2,0.0
+2026-11-02,late,NSW1,Williamsdale BESS Project Co,225.0,0.0,0.0,0.0,0.0
+2026-11-02,late,QLD1,Akaysha,144.5,0.4,0.4,0.4,0.0
+2026-11-02,late,QLD1,Alinta Energy,354.0,233.9,208.0,208.0,0.0
+2026-11-02,late,QLD1,Arrow Energy,315.1,315.1,157.6,157.6,0.0
+2026-11-02,late,QLD1,Brendale Battery ProjectCo,77.3,24.1,0.0,0.0,0.0
+2026-11-02,late,QLD1,CS Energy,2036.4,124.0,104.0,104.0,0.0
+2026-11-02,late,QLD1,Callide Power Trading,844.0,2.0,2.0,2.0,0.0
+2026-11-02,late,QLD1,CleanCo,641.4,143.4,0.0,0.0,0.0
+2026-11-02,late,QLD1,Iberdrola Australia Energy Markets,180.0,102.9,102.9,102.9,0.0
+2026-11-02,late,QLD1,InterGen,421.4,0.0,0.0,0.0,0.0
+2026-11-02,late,QLD1,NEOEN,310.9,100.0,0.0,0.0,0.0
+2026-11-02,late,QLD1,Origin Energy,534.4,326.7,326.7,326.7,0.0
+2026-11-02,late,QLD1,Stanwell Corp,2761.9,71.2,71.2,71.2,0.5
+2026-11-02,late,QLD1,Supernode Operations,61.9,23.6,23.6,23.6,0.0
+2026-11-02,late,SA1,AGL,393.8,213.4,213.4,213.4,0.0
+2026-11-02,late,SA1,AGL SA Generation,190.0,0.7,0.7,0.7,0.0
+2026-11-02,late,SA1,Bungama Project (Solar) Operations Pty Ltd ATF Bungama Project (Solar) Operation,150.0,0.0,0.0,0.0,0.0
+2026-11-02,late,SA1,ENGIE,440.1,215.1,215.1,215.1,0.0
+2026-11-02,late,SA1,Energy Australia,204.0,204.0,204.0,204.0,0.0
+2026-11-02,late,SA1,Epic Energy,100.0,0.0,0.0,0.0,0.0
+2026-11-02,late,SA1,NEOEN,275.0,187.1,0.0,0.0,0.0
+2026-11-02,late,SA1,Nexif Energy,152.0,150.9,150.0,60.0,0.0
+2026-11-02,late,SA1,Origin Energy,288.7,233.7,233.7,233.7,0.0
+2026-11-02,late,SA1,Pacific Hydro Clements Gap BESS,60.0,0.0,0.0,0.0,0.0
+2026-11-02,late,SA1,Snowy Hydro,121.0,121.0,121.0,121.0,0.0
+2026-11-02,late,SA1,Zen Energy,111.0,0.0,0.0,0.0,0.0
+2026-11-02,late,TAS1,Aurora Energy,118.0,118.0,118.0,118.0,0.0
+2026-11-02,late,TAS1,Hydro Tas,1712.6,284.9,284.9,284.9,1.0
+2026-11-02,late,VIC1,AGL,2112.8,505.0,101.0,101.0,0.0
+2026-11-02,late,VIC1,Alinta Energy,1143.0,0.0,0.0,0.0,0.0
+2026-11-02,late,VIC1,ENGIE,150.0,0.0,0.0,0.0,0.0
+2026-11-02,late,VIC1,Energy Australia,1079.0,369.0,369.0,369.0,0.0
+2026-11-02,late,VIC1,Equis Energy (Aust),164.6,31.9,31.9,0.0,0.0
+2026-11-02,late,VIC1,Mornington BESS Project,110.1,0.0,0.0,0.0,0.0
+2026-11-02,late,VIC1,NEOEN,63.0,43.9,43.9,41.7,0.0
+2026-11-02,late,VIC1,Origin Energy,539.0,311.1,311.1,311.1,0.0
+2026-11-02,late,VIC1,SEC Energy,200.0,89.5,0.0,0.0,0.0
+2026-11-02,late,VIC1,Shell Energy Retail,83.2,0.0,0.0,0.0,0.0
+2026-11-02,late,VIC1,Snowy Hydro,1542.6,870.7,870.7,870.7,0.0
+2026-11-02,late,VIC1,Terrang BESS Asset Co,100.0,0.0,0.0,0.0,0.0
+2026-11-02,late,VIC1,Tilt Renewables,100.0,2.4,0.0,0.0,0.0
+2026-11-02,overnight,NSW1,AGL,2030.0,0.0,0.0,0.0,0.0
+2026-11-02,overnight,NSW1,Akaysha,839.0,1.0,1.0,1.0,0.0
+2026-11-02,overnight,NSW1,Delta Electricity,1297.5,97.5,97.5,97.5,0.0
+2026-11-02,overnight,NSW1,Energy Australia,1045.0,0.0,0.0,0.0,0.0
+2026-11-02,overnight,NSW1,Limondale Battery,50.0,0.0,0.0,0.0,0.0
+2026-11-02,overnight,NSW1,NEOEN,96.0,96.0,0.0,0.0,0.0
+2026-11-02,overnight,NSW1,Orana ProjectCo,228.8,0.8,0.8,0.8,0.0
+2026-11-02,overnight,NSW1,Origin Energy,1625.0,555.8,313.8,313.8,0.0
+2026-11-02,overnight,NSW1,Snowy Hydro,3151.8,2239.4,2144.4,2144.4,0.0
+2026-11-02,overnight,NSW1,Williamsdale BESS Project Co,225.0,0.0,0.0,0.0,0.0
+2026-11-02,overnight,QLD1,Akaysha,151.8,0.1,0.1,0.1,0.0
+2026-11-02,overnight,QLD1,Alinta Energy,347.5,347.5,347.5,347.5,0.0
+2026-11-02,overnight,QLD1,Arrow Energy,321.8,321.8,160.9,160.9,0.0
+2026-11-02,overnight,QLD1,Brendale Battery ProjectCo,199.8,5.1,5.1,5.1,0.0
+2026-11-02,overnight,QLD1,CS Energy,2295.8,90.0,70.0,70.0,0.0
+2026-11-02,overnight,QLD1,Callide Power Trading,844.0,2.0,2.0,2.0,0.0
+2026-11-02,overnight,QLD1,CleanCo,634.0,251.0,0.0,0.0,0.0
+2026-11-02,overnight,QLD1,Iberdrola Australia Energy Markets,180.0,180.0,180.0,180.0,0.0
+2026-11-02,overnight,QLD1,InterGen,422.5,0.0,0.0,0.0,0.0
+2026-11-02,overnight,QLD1,NEOEN,267.5,109.7,0.0,0.0,0.0
+2026-11-02,overnight,QLD1,Origin Energy,373.0,335.5,335.5,335.5,0.0
+2026-11-02,overnight,QLD1,Stanwell Corp,2655.0,53.8,53.8,53.8,0.0
+2026-11-02,overnight,SA1,AGL,372.6,248.9,248.9,248.9,0.0
+2026-11-02,overnight,SA1,AGL SA Generation,193.0,5.0,5.0,5.0,0.0
+2026-11-02,overnight,SA1,Bungama Project (Solar) Operations Pty Ltd ATF Bungama Project (Solar) Operation,150.0,0.0,0.0,0.0,0.0
+2026-11-02,overnight,SA1,ENGIE,442.4,217.4,217.4,217.4,0.0
+2026-11-02,overnight,SA1,Energy Australia,204.0,204.0,204.0,204.0,0.0
+2026-11-02,overnight,SA1,Epic Energy,100.0,0.0,0.0,0.0,0.0
+2026-11-02,overnight,SA1,NEOEN,275.0,200.0,0.0,0.0,0.0
+2026-11-02,overnight,SA1,Nexif Energy,152.0,151.1,150.0,60.0,0.0
+2026-11-02,overnight,SA1,Origin Energy,291.6,291.6,291.6,291.6,0.0
+2026-11-02,overnight,SA1,Pacific Hydro Clements Gap BESS,60.0,0.0,0.0,0.0,0.0
+2026-11-02,overnight,SA1,Snowy Hydro,121.0,121.0,121.0,121.0,0.0
+2026-11-02,overnight,SA1,Zen Energy,111.0,0.0,0.0,0.0,0.0
+2026-11-02,overnight,TAS1,Aurora Energy,118.0,118.0,118.0,118.0,0.0
+2026-11-02,overnight,TAS1,Hydro Tas,1707.4,355.5,355.5,355.5,1.0
+2026-11-02,overnight,VIC1,AGL,2119.0,559.0,155.0,155.0,0.0
+2026-11-02,overnight,VIC1,Alinta Energy,1143.0,0.0,0.0,0.0,0.0
+2026-11-02,overnight,VIC1,ENGIE,150.0,0.0,0.0,0.0,0.0
+2026-11-02,overnight,VIC1,Energy Australia,1079.0,369.0,369.0,369.0,0.0
+2026-11-02,overnight,VIC1,Equis Energy (Aust),326.4,153.5,153.5,0.0,0.0
+2026-11-02,overnight,VIC1,NEOEN,63.0,53.0,53.0,53.0,0.0
+2026-11-02,overnight,VIC1,Origin Energy,543.0,543.0,543.0,543.0,0.0
+2026-11-02,overnight,VIC1,SEC Energy,200.0,175.0,0.0,0.0,0.0
+2026-11-02,overnight,VIC1,Snowy Hydro,1545.0,1064.1,1064.1,1064.1,0.0
+2026-11-02,overnight,VIC1,Terrang BESS Asset Co,100.0,0.0,0.0,0.0,0.0
+2026-11-02,overnight,VIC1,Tilt Renewables,92.4,0.0,0.0,0.0,0.0
