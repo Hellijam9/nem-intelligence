@@ -4098,5 +4098,35 @@
     "start": "2026-11-04",
     "end": "2026-11-05",
     "found_at": "2026-10-30T10:01:39.526872"
+  },
+  {
+    "duid": "BRAEMAR2",
+    "station": "Braemar Power",
+    "owner": "Braemar Power Project Pty Ltd",
+    "region": "QLD1",
+    "delta": -167,
+    "start": "2026-11-28",
+    "end": "2026-11-29",
+    "found_at": "2026-11-02T04:01:43.559271"
+  },
+  {
+    "duid": "BRAEMAR3",
+    "station": "Braemar Power",
+    "owner": "Braemar Power Project Pty Ltd",
+    "region": "QLD1",
+    "delta": -167,
+    "start": "2026-12-01",
+    "end": "2026-12-11",
+    "found_at": "2026-11-02T04:01:43.559271"
+  },
+  {
+    "duid": "BRAEMAR3",
+    "station": "Braemar Power",
+    "owner": "Braemar Power Project Pty Ltd",
+    "region": "QLD1",
+    "delta": 167,
+    "start": "2026-11-16",
+    "end": "2026-11-22",
+    "found_at": "2026-11-02T04:01:43.559271"
   }
 ]
