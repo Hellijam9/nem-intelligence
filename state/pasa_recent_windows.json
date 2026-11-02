@@ -4128,5 +4128,25 @@
     "start": "2026-11-16",
     "end": "2026-11-22",
     "found_at": "2026-11-02T04:01:43.559271"
+  },
+  {
+    "duid": "STAN-2",
+    "station": "Stanwell",
+    "owner": "Stanwell Corporation Limited",
+    "region": "QLD1",
+    "delta": -365,
+    "start": "2026-11-21",
+    "end": "2026-11-29",
+    "found_at": "2026-11-02T07:01:42.487767"
+  },
+  {
+    "duid": "STAN-2",
+    "station": "Stanwell",
+    "owner": "Stanwell Corporation Limited",
+    "region": "QLD1",
+    "delta": 365,
+    "start": "2026-11-08",
+    "end": "2026-11-12",
+    "found_at": "2026-11-02T07:01:42.487767"
   }
 ]
