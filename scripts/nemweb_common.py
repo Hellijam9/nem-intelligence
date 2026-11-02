@@ -615,8 +615,13 @@ def push_ntfy(topic: str, message: str, title: Optional[str] = None,
 
 def push_ntfy_attachment(topic: str, filename: str, content: str, short_message: str,
                           title: Optional[str] = None, priority: Optional[str] = None,
-                          tags: Optional[list[str]] = None) -> bool:
+                          tags: Optional[list[str]] = None, click_url: Optional[str] = None) -> bool:
     """
+    `click_url` (opt-in): makes tapping the notification open this URL in the browser. Needed for
+    pages that draw themselves with JavaScript - ntfy serves attachments as text/plain +
+    Content-Disposition: attachment, so such a page opened from the attachment shows only its
+    empty HTML skeleton (the bid stack dashboard looked like a blank template for this reason).
+
     Push a notification whose full content rides as a downloadable file attachment instead of
     the message body - for content too long for ntfy's ~4096-byte body limit (push_ntfy's own
     NTFY_MAX_MESSAGE_BYTES guard truncates instead; this is for callers who don't want any of
@@ -642,6 +647,8 @@ def push_ntfy_attachment(topic: str, filename: str, content: str, short_message:
         headers["Priority"] = priority
     if tags:
         headers["Tags"] = ",".join(tags)
+    if click_url:
+        headers["Click"] = click_url
     delivered = False
     try:
         resp = requests.post(url, data=content.encode("utf-8"), headers=headers,

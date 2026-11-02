@@ -129,6 +129,7 @@ INTERCONNECTORS = {            # positive MWFLOW direction: FROM -> TO
 
 DOCS_DIR = nw.PROJECT_ROOT / "docs" / "bidstack"
 TEMPLATE = nw.PROJECT_ROOT / "scripts" / "bid_stack_template.html"
+BIDSTACK_PAGE_URL = "https://hellijam9.github.io/nem-intelligence/bidstack/"
 HISTORY_FILE = nw.STATE_DIR / "bidstack_history.csv"
 REGION_HISTORY_FILE = nw.STATE_DIR / "bidstack_region_history.csv"
 STATE_FILE = "bidstack_state.json"
@@ -1500,7 +1501,8 @@ def push_latest() -> None:
     headline = ranked[0]["text"] if ranked else "No standout bidding moves."
     ok = nw.push_ntfy_attachment(topic, f"bidstack-{day}.html", page.read_text(),
                                  short_message=f"Tap to open. {headline}"[:300].replace("\n", " "),
-                                 title=f"Bid stack - {day}", tags=["bar_chart"])
+                                 title=f"Bid stack - {day}", tags=["bar_chart"],
+                                 click_url=BIDSTACK_PAGE_URL)
     if ok:
         state["last_pushed_day"] = day
         nw.write_state(STATE_FILE, state)
