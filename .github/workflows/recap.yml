@@ -38,6 +38,8 @@ concurrency:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   run:
@@ -116,3 +118,16 @@ jobs:
               sleep 5
             done
           fi
+
+      # Publish the bid stack dashboard to GitHub Pages. The catch-up run above is what actually
+      # builds the day's page now that bid-stack.yml's 05:30 trigger lands before AEMO publishes
+      # (AEDT), and only bid-stack.yml used to deploy - so the live page (the push's tap target)
+      # sat a day behind the notification. Same steps/soft-fail behaviour as bid-stack.yml.
+      - uses: actions/configure-pages@v5
+        continue-on-error: true
+      - uses: actions/upload-pages-artifact@v3
+        continue-on-error: true
+        with:
+          path: docs
+      - uses: actions/deploy-pages@v4
+        continue-on-error: true
