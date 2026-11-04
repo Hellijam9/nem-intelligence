@@ -4158,5 +4158,45 @@
     "start": "2026-11-10",
     "end": "2026-11-13",
     "found_at": "2026-11-04T01:01:43.852890"
+  },
+  {
+    "duid": "ORABESS1",
+    "station": "",
+    "owner": "",
+    "region": "NSW1",
+    "delta": -415,
+    "start": "2026-11-16",
+    "end": "2026-11-16",
+    "found_at": "2026-11-04T04:01:45.170433"
+  },
+  {
+    "duid": "ORABESS1",
+    "station": "",
+    "owner": "",
+    "region": "NSW1",
+    "delta": 208,
+    "start": "2026-11-20",
+    "end": "2026-11-26",
+    "found_at": "2026-11-04T04:01:45.170433"
+  },
+  {
+    "duid": "ORABESS1",
+    "station": "",
+    "owner": "",
+    "region": "NSW1",
+    "delta": -207,
+    "start": "2026-11-17",
+    "end": "2026-11-19",
+    "found_at": "2026-11-04T04:01:45.170433"
+  },
+  {
+    "duid": "BRNDBES1",
+    "station": "",
+    "owner": "",
+    "region": "QLD1",
+    "delta": -205,
+    "start": "2026-11-09",
+    "end": "2026-11-09",
+    "found_at": "2026-11-04T04:01:45.170433"
   }
 ]
