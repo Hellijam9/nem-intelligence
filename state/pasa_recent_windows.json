@@ -4208,5 +4208,45 @@
     "start": "2026-12-06",
     "end": "2026-12-20",
     "found_at": "2026-11-04T13:01:32.516069"
+  },
+  {
+    "duid": "SWAN_E",
+    "station": "Swanbank E",
+    "owner": "CleanCo Queensland Limited",
+    "region": "QLD1",
+    "delta": -375,
+    "start": "2026-11-11",
+    "end": "2026-11-14",
+    "found_at": "2026-11-05T01:01:49.614121"
+  },
+  {
+    "duid": "BARKIPS1",
+    "station": "Barker Inlet",
+    "owner": "AGL Barker Inlet Pty Ltd",
+    "region": "SA1",
+    "delta": -210,
+    "start": "2027-03-24",
+    "end": "2027-03-26",
+    "found_at": "2026-11-05T01:01:49.614121"
+  },
+  {
+    "duid": "BARKIPS1",
+    "station": "Barker Inlet",
+    "owner": "AGL Barker Inlet Pty Ltd",
+    "region": "SA1",
+    "delta": -193,
+    "start": "2027-03-15",
+    "end": "2027-03-23",
+    "found_at": "2026-11-05T01:01:49.614121"
+  },
+  {
+    "duid": "BARKIPS1",
+    "station": "Barker Inlet",
+    "owner": "AGL Barker Inlet Pty Ltd",
+    "region": "SA1",
+    "delta": 193,
+    "start": "2027-10-04",
+    "end": "2027-10-08",
+    "found_at": "2026-11-05T01:01:49.614121"
   }
 ]
