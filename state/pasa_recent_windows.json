@@ -4288,5 +4288,45 @@
     "start": "2026-11-09",
     "end": "2026-11-09",
     "found_at": "2026-11-05T05:39:42.818021"
+  },
+  {
+    "duid": "CG2",
+    "station": "Colongra",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": -178,
+    "start": "2027-06-21",
+    "end": "2027-07-10",
+    "found_at": "2026-11-05T10:01:49.773981"
+  },
+  {
+    "duid": "CG2",
+    "station": "Colongra",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": 171,
+    "start": "2027-04-26",
+    "end": "2027-05-15",
+    "found_at": "2026-11-05T10:01:49.773981"
+  },
+  {
+    "duid": "CG4",
+    "station": "Colongra",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": -171,
+    "start": "2027-05-10",
+    "end": "2027-05-29",
+    "found_at": "2026-11-05T10:01:49.773981"
+  },
+  {
+    "duid": "CG4",
+    "station": "Colongra",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": 171,
+    "start": "2027-04-05",
+    "end": "2027-04-24",
+    "found_at": "2026-11-05T10:01:49.773981"
   }
 ]
