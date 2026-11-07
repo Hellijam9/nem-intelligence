@@ -1,1 +1,30 @@
-[bid_stack] Bidmove_Complete for 20261106 not published yet - will retry on the next trigger
+[bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20261106_0000000547101541.zip
+[bid_stack] bids: 480 DUIDs with energy price bands, 138240 per-interval volume rows; 100 DUIDs bidding to consume
+[bid_stack] dispatch: 165600 unit-interval rows
+[bid_stack] NOTE: 1 DUIDs not yet fuel-classified by AEMO (shown as Unclassified): WINNSF1
+[bid_stack] stack: 136389 unit-interval-band rows from 138240 unit-intervals
+[bid_stack] load bids: 24023 unit-interval-band rows
+[bid_stack] interconnector limits: 83 peak intervals
+[bid_stack] price sensitivities: PUBLIC_PREDISPATCH_SENSITIVITIES_20261107100653_0000000547139421.zip (36 half-hours)
+[bid_stack] ST PASA unit availability: PUBLIC_STPASA_DUIDAVAILABILITY_202611071000_0000000547138569.zip
+[bid_stack] forward look: 20 region-blocks
+[bid_stack] dashboard written: /home/runner/work/nem-intelligence/nem-intelligence/docs/bidstack/index.html
+Bid stack 2026-11-06 (evening 17:00-20:30 NEM)
+NSW: peak 18:55 | sub-$300 headroom 3,563MW | most $300+: Snowy Hydro 2,058MW
+QLD: peak 18:35 | sub-$300 headroom 1,979MW | most $300+: Alinta Energy 367MW
+VIC: peak 19:40 | sub-$300 headroom 3,245MW | most $300+: Snowy Hydro 1,321MW
+SA: peak 19:45 | sub-$300 headroom 1,027MW | most $300+: Origin Energy 289MW
+TAS: peak 19:20 | sub-$300 headroom 107MW | most $300+: Hydro Tas 1,098MW
+Daytime 09:00-17:00:
+NSW: <=$0 1% of intervals | 7,231MW below $0, 57MW at floor | charge bids 2,682MW
+QLD: <=$0 79% of intervals | 7,001MW below $0, 726MW at floor | charge bids 2,077MW
+VIC: <=$0 83% of intervals | 5,484MW below $0, 10MW at floor | charge bids 1,293MW
+SA: <=$0 100% of intervals | 933MW below $0, 40MW at floor | charge bids 709MW
+TAS: <=$0 69% of intervals | 572MW below $0, 50MW at floor | charge bids 0MW
+
+- TAS Sat 07 Nov 19:30 (evening peak): forecast demand 1,130MW vs yesterday's offers (capped at today's PASA, wind+solar at forecast 143MW) leaves -20MW of sub-$300 headroom.
+- NSW week ahead (7-day predispatch, indicative): evening highs Mon 09 $20,111, Wed 11 $1,061, Fri 13 $20,111.
+- QLD week ahead (7-day predispatch, indicative): evening highs Mon 09 $986, Wed 11 $986, Fri 13 $1,312.
+- SA week ahead (7-day predispatch, indicative): evening highs Mon 09 $9,717, Tue 10 $574, Wed 11 $1,017, Thu 12 $20,500, Fri 13 $21,790.
+- TAS week ahead (7-day predispatch, indicative): evening highs Mon 09 $1,096, Tue 10 $388, Thu 12 $12,517, Fri 13 $8,820.
+- VIC week ahead (7-day predispatch, indicative): evening highs Mon 09 $1,202, Tue 10 $417, Thu 12 $13,949, Fri 13 $20,299.
