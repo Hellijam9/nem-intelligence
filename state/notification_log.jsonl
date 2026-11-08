@@ -8870,3 +8870,4 @@
 {"ts": "2026-11-09T04:46:35.922568+10:00", "source": "spot_spike", "topic": "nem-spot-6917e229", "title": "Spot price spike (1 region-event(s))", "message": "Spot price spike:\n  SA1: price spike $305", "delivered": true}
 {"ts": "2026-11-09T04:51:53.150260+10:00", "source": "spot_spike", "topic": "nem-spot-6917e229", "title": "Spot price spike (1 region-event(s))", "message": "Spot price spike:\n  SA1: price drop $265", "delivered": true}
 {"ts": "2026-11-09T04:56:45.358358+10:00", "source": "spot_spike", "topic": "nem-spot-6917e229", "title": "Spot price spike (1 region-event(s))", "message": "Spot price spike:\n  SA1: price spike $306", "delivered": true}
+{"ts": "2026-11-09T05:02:10.996963+10:00", "source": "spot_spike", "topic": "nem-spot-6917e229", "title": "Spot price spike (1 region-event(s))", "message": "Spot price spike:\n  SA1: price drop $296", "delivered": true}
