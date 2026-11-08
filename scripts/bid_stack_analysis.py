@@ -133,6 +133,7 @@ BIDSTACK_PAGE_URL = "https://hellijam9.github.io/nem-intelligence/bidstack/"
 HISTORY_FILE = nw.STATE_DIR / "bidstack_history.csv"
 REGION_HISTORY_FILE = nw.STATE_DIR / "bidstack_region_history.csv"
 STATE_FILE = "bidstack_state.json"
+MAX_CATCHUP_DAYS = 3
 TS_FMT = "%Y/%m/%d %H:%M:%S"
 
 
@@ -1539,15 +1540,41 @@ def main() -> None:
         log(f"already processed {day_iso} - skipping")
         return
 
+    # Catch up days missed since the last processed one (AEMO sometimes posts a day's Bidmove_Complete
+    # very late or not at all - 2026-11-09 had no file for the 8th). Oldest first so the baseline
+    # history stays in order. A missing older day is retried while no later file exists yet, and
+    # given up on once AEMO has moved on to a later day.
+    days = [day_iso]
+    if not args and not force and state.get("last_trading_day"):
+        d = datetime.strptime(state["last_trading_day"], "%Y-%m-%d") + timedelta(days=1)
+        end_d = datetime.strptime(day_iso, "%Y-%m-%d")
+        gap = []
+        while d < end_d and len(gap) < MAX_CATCHUP_DAYS:
+            gap.append(d.strftime("%Y-%m-%d"))
+            d += timedelta(days=1)
+        days = gap + [day_iso]
+
+    for i, di in enumerate(days):
+        latest = i == len(days) - 1
+        res = process_day(di.replace("-", ""), di, state, now, latest and not allow_partial, allow_partial)
+        if res == "done":
+            state = nw.read_state(STATE_FILE, default={}) or {}
+        elif res == "missing" and not latest:
+            log(f"{di} still not published - skipping it if a later day is available")
+        else:
+            return
+
+
+def process_day(day: str, day_iso: str, state: dict, now, wait_for_dispatch: bool, allow_partial: bool) -> str:
     try:
         result, hist, rhist, stack = analyse(day)
     except FileNotFoundError as exc:
         log(f"{exc} - will retry on the next trigger")
-        return
+        return "missing"
 
-    if not result["availability_adjusted"] and not allow_partial and now.hour < 9:
+    if not result["availability_adjusted"] and wait_for_dispatch and now.hour < 9:
         log("Next_Day_Dispatch missing - waiting for a later run rather than publishing untrimmed volumes")
-        return
+        return "waiting"
 
     fwd = forward_look(stack, datetime.strptime(day, "%Y%m%d"))
     result["forward"] = fwd
@@ -1572,6 +1599,7 @@ def main() -> None:
     prev = state.get("last_pushed_day")
     nw.write_state(STATE_FILE, {"last_trading_day": day_iso, "generated": result["generated"],
                                 **({"last_pushed_day": prev} if prev else {})})
+    return "done"
 
 
 if __name__ == "__main__":
