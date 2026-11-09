@@ -4428,5 +4428,45 @@
     "start": "2026-11-28",
     "end": "2026-12-01",
     "found_at": "2026-11-09T07:01:53.897437"
+  },
+  {
+    "duid": "KPP_1",
+    "station": "Kogan Creek",
+    "owner": "Kogan Creek Power Station Pty Ltd",
+    "region": "QLD1",
+    "delta": -430,
+    "start": "2026-11-18",
+    "end": "2026-11-25",
+    "found_at": "2026-11-09T10:23:59.503311"
+  },
+  {
+    "duid": "CALL_B_1",
+    "station": "Callide B",
+    "owner": "CS Energy",
+    "region": "QLD1",
+    "delta": -350,
+    "start": "2027-04-01",
+    "end": "2027-04-28",
+    "found_at": "2026-11-09T10:23:59.503311"
+  },
+  {
+    "duid": "CALL_B_1",
+    "station": "Callide B",
+    "owner": "CS Energy",
+    "region": "QLD1",
+    "delta": -325,
+    "start": "2027-03-30",
+    "end": "2027-03-31",
+    "found_at": "2026-11-09T10:23:59.503311"
+  },
+  {
+    "duid": "CALL_B_2",
+    "station": "Callide B",
+    "owner": "CS Energy",
+    "region": "QLD1",
+    "delta": -310,
+    "start": "2027-03-31",
+    "end": "2027-04-29",
+    "found_at": "2026-11-09T10:23:59.503311"
   }
 ]
