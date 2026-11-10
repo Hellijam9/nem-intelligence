@@ -4468,5 +4468,25 @@
     "start": "2027-03-31",
     "end": "2027-04-29",
     "found_at": "2026-11-09T10:23:59.503311"
+  },
+  {
+    "duid": "KPP_1",
+    "station": "Kogan Creek",
+    "owner": "Kogan Creek Power Station Pty Ltd",
+    "region": "QLD1",
+    "delta": 430,
+    "start": "2026-11-24",
+    "end": "2026-11-25",
+    "found_at": "2026-11-10T04:01:56.248094"
+  },
+  {
+    "duid": "MPP_1",
+    "station": "Millmerran",
+    "owner": "Millmerran Power Partners",
+    "region": "QLD1",
+    "delta": -350,
+    "start": "2026-11-18",
+    "end": "2026-11-22",
+    "found_at": "2026-11-10T04:01:56.248094"
   }
 ]
