@@ -4488,5 +4488,15 @@
     "start": "2026-11-18",
     "end": "2026-11-22",
     "found_at": "2026-11-10T04:01:56.248094"
+  },
+  {
+    "duid": "KPP_1",
+    "station": "Kogan Creek",
+    "owner": "Kogan Creek Power Station Pty Ltd",
+    "region": "QLD1",
+    "delta": -430,
+    "start": "2026-11-24",
+    "end": "2026-11-26",
+    "found_at": "2026-11-10T07:02:06.793303"
   }
 ]
