@@ -66,6 +66,7 @@ STPASA_PATTERN = r"^PUBLIC_STPASA_\d{12}_\d+\.zip$"
 STPASA_DUID_URL = "https://www.nemweb.com.au/REPORTS/CURRENT/STPASA_DUIDAvailability/"
 STPASA_DUID_PATTERN = r"^PUBLIC_STPASA_DUIDAVAILABILITY_\d{12}_\d+\.zip$"
 DUID_THRESHOLD_MW = 100
+DUID_STATE_FILE = "reserve_outlook_duid_state.json"
 
 NEM_TZ = timezone(timedelta(hours=10))
 
@@ -158,17 +159,33 @@ def build_interconnector_reduction_lines(ic_df: pd.DataFrame) -> tuple[bool, lis
 
 
 def build_duid_change_lines() -> tuple[bool, list[str]]:
-    """Returns (has_genuine_changes, lines) - the bool is used to help decide whether to notify."""
+    """
+    Returns (has_genuine_changes, lines) - the bool is used to help decide whether to notify.
+
+    Diffs the latest snapshot against the one this script last ran on (stored in
+    DUID_STATE_FILE), i.e. everything declared since the previous run - not just the last hour
+    (comparing only the two newest hourly files, once a day, could never see a change made at
+    1pm: confirmed 2026-11-11 with Bayswater BW04 -685MW). Falls back to the snapshot ~24h
+    back if there's no stored one or it has rolled off the directory.
+    """
     try:
-        files = nw.get_latest_files(STPASA_DUID_URL, STPASA_DUID_PATTERN, n=2)
+        files = nw.get_latest_files(STPASA_DUID_URL, STPASA_DUID_PATTERN, n=72)
     except Exception as exc:
         return False, [f"\n[reserve_outlook] WARNING: could not list STPASA_DUIDAvailability: {exc}"]
 
     if len(files) < 2:
         return False, ["\n(Not enough STPASA_DUIDAvailability snapshots yet to diff DUID-level changes.)"]
 
-    prev_min = fetch_stpasa_duid_daily_min(files[0])
-    curr_min = fetch_stpasa_duid_daily_min(files[1])
+    latest = files[-1]
+    stored = (nw.read_state(DUID_STATE_FILE, default={}) or {}).get("last_url")
+    if stored in files and stored != latest:
+        previous = stored
+    else:
+        previous = files[-25] if len(files) >= 25 else files[0]
+    nw.write_state(DUID_STATE_FILE, {"last_url": latest})
+
+    prev_min = fetch_stpasa_duid_daily_min(previous)
+    curr_min = fetch_stpasa_duid_daily_min(latest)
     # Inner join: only compare days present in both snapshots, so the rolling window's
     # far edge (a day newly visible in curr but absent from prev) doesn't show up as a
     # fake "change" from zero.
@@ -177,12 +194,12 @@ def build_duid_change_lines() -> tuple[bool, list[str]]:
     changes = merged[merged["delta"].abs() >= DUID_THRESHOLD_MW].copy()
 
     if changes.empty:
-        return False, [f"\nSTPASA DUID-level changes (>= {DUID_THRESHOLD_MW} MW, next ~7 days): none since last snapshot."]
+        return False, [f"\nSTPASA DUID-level changes (>= {DUID_THRESHOLD_MW} MW, next ~7 days): none since the last run."]
 
     registry = nw.load_registry()
     reg_lookup = registry.merged.set_index("DUID") if registry.merged is not None else None
 
-    lines = [f"\nSTPASA DUID-level availability changes since last snapshot (>= {DUID_THRESHOLD_MW} MW, next ~7 days):"]
+    lines = [f"\nSTPASA DUID-level availability changes since the last run (>= {DUID_THRESHOLD_MW} MW, next ~7 days):"]
     for duid, group in changes.groupby("DUID"):
         station = owner = region = ""
         if reg_lookup is not None and duid in reg_lookup.index:
