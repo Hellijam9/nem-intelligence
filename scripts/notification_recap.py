@@ -118,7 +118,22 @@ CLEAR_PATTERN = re.compile(r"back under|price drop|no longer|cleared", re.IGNORE
 
 
 def overnight_window(now: datetime) -> datetime:
-    """Start of the overnight window: 4pm previous day, or 4pm Friday on Mondays."""
+    """
+    Start of the recap window: the moment the PREVIOUS recap went out (last_recap_at), so every
+    notification since then is covered with no gap - a fixed 4pm cut-off dropped everything
+    declared between the last recap (~7:30am) and 4pm, e.g. a 1pm PASA change
+    (Bayswater BW04, 2026-11-11). Mondays naturally reach back to Friday's recap. Falls back to
+    4pm previous day (4pm Friday on Mondays) when there is no usable previous recap time
+    (first run, or older than 5 days).
+    """
+    last = (nw.read_state(STATE_FILE, default={}) or {}).get("last_recap_at")
+    if last:
+        try:
+            start = datetime.fromisoformat(last).astimezone(now.tzinfo)
+            if timedelta(hours=1) < now - start <= timedelta(days=5):
+                return start
+        except ValueError:
+            pass
     days_back = 3 if now.weekday() == 0 else 1
     start_day = now - timedelta(days=days_back)
     return start_day.replace(hour=16, minute=0, second=0, microsecond=0)
@@ -1544,7 +1559,7 @@ def format_bidstack_section(now: datetime) -> list[str]:
 def build_recap(now: datetime, log_entries: list[dict]) -> str:
     since = overnight_window(now)
     is_monday = now.weekday() == 0
-    span_desc = "since Friday" if is_monday else "overnight"
+    span_desc = "since last recap"
 
     window_entries = [
         e for e in log_entries
