@@ -220,22 +220,37 @@ def build_headline_block(cutoff: datetime) -> tuple[str, int]:
 
 
 def summarize_with_groq(headline_block: str, api_key: str) -> str:
-    resp = requests.post(
-        GROQ_URL,
-        headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
-        json={
-            "model": GROQ_MODEL,
-            "messages": [
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": headline_block},
-            ],
-            "temperature": 0.4,
-            "max_tokens": 2000,
-        },
-        timeout=REQUEST_TIMEOUT_SECONDS,
-    )
-    resp.raise_for_status()
-    return resp.json()["choices"][0]["message"]["content"].strip()
+    """
+    gpt-oss is a reasoning model: its hidden reasoning tokens count against max_tokens, so a
+    fixed 2000 cap could be spent before the answer finished - 2026-11-12's briefing stopped
+    mid-sentence at "GAS - European gas prices" with finish_reason "length". Low reasoning
+    effort leaves the budget for the answer; if it still comes back cut off (finish_reason
+    "length") it is retried once with a bigger budget, and flagged if still incomplete.
+    """
+    content = ""
+    for max_tokens in (4000, 7000):
+        resp = requests.post(
+            GROQ_URL,
+            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+            json={
+                "model": GROQ_MODEL,
+                "messages": [
+                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {"role": "user", "content": headline_block},
+                ],
+                "temperature": 0.4,
+                "reasoning_effort": "low",
+                "max_tokens": max_tokens,
+            },
+            timeout=REQUEST_TIMEOUT_SECONDS,
+        )
+        resp.raise_for_status()
+        choice = resp.json()["choices"][0]
+        content = (choice["message"].get("content") or "").strip()
+        if choice.get("finish_reason") != "length" and content:
+            return content
+        print(f"[morning_macro_news] WARNING: summary hit the token limit at max_tokens={max_tokens} - retrying bigger.")
+    return content + "\n\n[Summary was cut off by the model's token limit.]"
 
 
 def push_ntfy_attachment(topic: str, filename: str, html_content: str, short_message: str, title: str) -> None:
