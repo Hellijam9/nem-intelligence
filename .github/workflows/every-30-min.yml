@@ -36,6 +36,12 @@ jobs:
       - run: python scripts/cap_dayahead.py
       - run: python scripts/predispatch_tracker.py
 
+      # Hourly STPASA unit-availability changes (>= 100MW), the near-term counterpart of
+      # pasa_monitor.py (MTPASA, every 3 hours). Own state guard, so most ticks are a no-op.
+      # continue-on-error: an alert-side failure must not block the state commit below.
+      - run: python scripts/stpasa_monitor.py
+        continue-on-error: true
+
       - name: Commit and push state changes
         run: |
           git config user.name "github-actions[bot]"
