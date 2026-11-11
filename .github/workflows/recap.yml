@@ -111,8 +111,13 @@ jobs:
             echo "No state changes to commit."
           else
             git commit -m "Update state [skip ci]"
+            # 2026-11-12: all 3 attempts failed with "cannot pull with rebase: You have unstaged
+            # changes" (something outside state/ + docs/bidstack was modified), so the recap's
+            # state commit and the Pages deploy were lost. --autostash tolerates stray changes;
+            # git status is printed so the culprit shows up in the log next time.
+            git status --short | head -20
             for i in 1 2 3; do
-              git pull --rebase origin main && git push && break
+              git pull --rebase --autostash origin main && git push && break
               echo "Push attempt $i failed, retrying..."
               git rebase --abort 2>/dev/null || true
               sleep 5
