@@ -86,7 +86,7 @@ SYDNEY_TZ = ZoneInfo("Australia/Sydney")
 # lines got pooled AND dropped entirely once format_network_outage_changes_overnight started
 # covering all transmission assets (confirmed live: a 29-line dump, a strict subset of the
 # broader section - keeping both was pure duplication).
-ASIS_DISCRETE_SOURCES = ["rebid_reconciler", "pasa_monitor"]
+ASIS_DISCRETE_SOURCES = ["rebid_reconciler", "pasa_monitor", "stpasa_monitor"]
 # customer_watcher + scada_drop_monitor are merged into one per-unit section instead
 # (format_unit_events_overnight) - both scripts check each 5-min interval independently with
 # NO debounce (a volatile night could otherwise produce dozens of near-identical blocks), and

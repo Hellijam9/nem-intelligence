@@ -29,6 +29,7 @@ import pandas as pd
 from dateutil.relativedelta import relativedelta
 
 import nemweb_common as nw
+import pasa_monitor as pm
 
 STPASA_URL = "https://www.nemweb.com.au/REPORTS/CURRENT/STPASA_DUIDAvailability/"
 STPASA_PATTERN = r"^PUBLIC_STPASA_DUIDAVAILABILITY_\d{12}_\d+\.zip$"
@@ -36,6 +37,11 @@ STPASA_PATTERN = r"^PUBLIC_STPASA_DUIDAVAILABILITY_\d{12}_\d+\.zip$"
 THRESHOLD_MW = 100  # same limit as pasa_monitor.py
 STATE_FILE = "stpasa_last_processed.json"
 INTERVAL = timedelta(minutes=30)
+# Windows at least this long also go into pasa_recent_windows.json (day-level, shared with
+# pasa_monitor.py) so the morning/Monday recaps' "Units out today" / "Large outages" see them
+# straight away rather than waiting for MTPASA to catch up. Shorter intraday dips would read
+# as a whole-day outage there, so they stay alert-only.
+CACHE_MIN_HOURS = 12
 AVAIL_COL = "GENERATION_PASA_AVAILABILITY"
 
 
@@ -142,6 +148,19 @@ def main() -> None:
     windows = group_into_windows(changes)
     windows.sort(key=lambda w: (-abs(w["delta"]), w["start"]))
     now = datetime.now(nw.NEM_TZ).replace(tzinfo=None)
+
+    cache_windows = []
+    for w in windows:
+        end = w["end"] + INTERVAL
+        if end - w["start"] < timedelta(hours=CACHE_MIN_HOURS):
+            continue
+        region = ""
+        if reg_lookup is not None and w["duid"] in reg_lookup.index:
+            region = reg_lookup.loc[w["duid"]].get("REGIONID") or ""
+        cache_windows.append({"duid": w["duid"], "delta": w["delta"], "region": region,
+                              "start": w["start"], "end": end - timedelta(seconds=1)})
+    if cache_windows:
+        pm.update_recent_windows_cache(cache_windows, reg_lookup)
 
     duid_windows: dict[str, list[dict]] = {}
     for w in windows:
