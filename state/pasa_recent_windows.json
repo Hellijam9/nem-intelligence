@@ -4588,5 +4588,45 @@
     "start": "2026-11-16",
     "end": "2026-11-19",
     "found_at": "2026-11-12T00:33:09.124041"
+  },
+  {
+    "duid": "TALWA1",
+    "station": "Tallawarra",
+    "owner": "EnergyAustralia Tallawarra Pty Ltd",
+    "region": "NSW1",
+    "delta": -435,
+    "start": "2027-09-15",
+    "end": "2027-09-24",
+    "found_at": "2026-11-12T04:01:56.624245"
+  },
+  {
+    "duid": "TALWA1",
+    "station": "Tallawarra",
+    "owner": "EnergyAustralia Tallawarra Pty Ltd",
+    "region": "NSW1",
+    "delta": -415,
+    "start": "2026-12-08",
+    "end": "2026-12-10",
+    "found_at": "2026-11-12T04:01:56.624245"
+  },
+  {
+    "duid": "W/HOE#2",
+    "station": "Wivenhoe",
+    "owner": "CleanCo Queensland Limited",
+    "region": "QLD1",
+    "delta": 285,
+    "start": "2026-11-17",
+    "end": "2026-11-19",
+    "found_at": "2026-11-12T04:01:56.624245"
+  },
+  {
+    "duid": "REECE1",
+    "station": "Reece",
+    "owner": "Hydro-Electric Corporation",
+    "region": "TAS1",
+    "delta": -119,
+    "start": "2026-11-30",
+    "end": "2026-12-02",
+    "found_at": "2026-11-12T04:01:56.624245"
   }
 ]
