@@ -4578,5 +4578,15 @@
     "start": "2027-10-01",
     "end": "2027-10-01",
     "found_at": "2026-11-12T00:12:13.901347"
+  },
+  {
+    "duid": "W/HOE#2",
+    "station": "Wivenhoe",
+    "owner": "CleanCo Queensland Limited",
+    "region": "QLD1",
+    "delta": 285,
+    "start": "2026-11-16",
+    "end": "2026-11-19",
+    "found_at": "2026-11-12T00:33:09.124041"
   }
 ]
