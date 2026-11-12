@@ -4558,5 +4558,25 @@
     "start": "2026-11-15",
     "end": "2026-11-16",
     "found_at": "2026-11-11T10:01:31.229166"
+  },
+  {
+    "duid": "MP1",
+    "station": "Mt Piper",
+    "owner": "EnergyAustralia NSW Pty Ltd",
+    "region": "NSW1",
+    "delta": -730,
+    "start": "2027-10-22",
+    "end": "2027-10-22",
+    "found_at": "2026-11-12T00:12:13.901347"
+  },
+  {
+    "duid": "MP1",
+    "station": "Mt Piper",
+    "owner": "EnergyAustralia NSW Pty Ltd",
+    "region": "NSW1",
+    "delta": 730,
+    "start": "2027-10-01",
+    "end": "2027-10-01",
+    "found_at": "2026-11-12T00:12:13.901347"
   }
 ]
