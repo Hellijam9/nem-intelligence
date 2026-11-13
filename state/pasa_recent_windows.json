@@ -4648,5 +4648,75 @@
     "start": "2026-11-14",
     "end": "2026-11-15",
     "found_at": "2026-11-12T13:35:15.905973"
+  },
+  {
+    "duid": "TUMUT3",
+    "station": "Tumut3",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": -600,
+    "start": "2026-11-15",
+    "end": "2026-11-18",
+    "found_at": "2026-11-13T01:01:44.265863"
+  },
+  {
+    "duid": "LNGS1",
+    "station": "Laverton North",
+    "owner": "Snowy Hydro Ltd",
+    "region": "VIC1",
+    "delta": -162,
+    "start": "2027-04-05",
+    "end": "2027-04-09",
+    "found_at": "2026-11-13T01:01:44.265863"
+  },
+  {
+    "duid": "LNGS2",
+    "station": "Laverton North",
+    "owner": "Snowy Hydro Ltd",
+    "region": "VIC1",
+    "delta": -162,
+    "start": "2027-04-05",
+    "end": "2027-04-09",
+    "found_at": "2026-11-13T01:01:44.265863"
+  },
+  {
+    "duid": "DARTM1",
+    "station": "Dartmouth",
+    "owner": "AGL Hydro Partnership",
+    "region": "VIC1",
+    "delta": -155,
+    "start": "2027-02-10",
+    "end": "2027-02-11",
+    "found_at": "2026-11-13T01:01:44.265863"
+  },
+  {
+    "duid": "LNGS1",
+    "station": "Laverton North",
+    "owner": "Snowy Hydro Ltd",
+    "region": "VIC1",
+    "delta": 151,
+    "start": "2027-02-08",
+    "end": "2027-02-12",
+    "found_at": "2026-11-13T01:01:44.265863"
+  },
+  {
+    "duid": "LNGS2",
+    "station": "Laverton North",
+    "owner": "Snowy Hydro Ltd",
+    "region": "VIC1",
+    "delta": -151,
+    "start": "2026-11-25",
+    "end": "2026-11-30",
+    "found_at": "2026-11-13T01:01:44.265863"
+  },
+  {
+    "duid": "LNGS2",
+    "station": "Laverton North",
+    "owner": "Snowy Hydro Ltd",
+    "region": "VIC1",
+    "delta": 151,
+    "start": "2027-02-08",
+    "end": "2027-02-12",
+    "found_at": "2026-11-13T01:01:44.265863"
   }
 ]
