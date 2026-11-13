@@ -4728,5 +4728,15 @@
     "start": "2026-11-14",
     "end": "2026-11-15",
     "found_at": "2026-11-13T01:33:56.015941"
+  },
+  {
+    "duid": "YWPS1",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": -345,
+    "start": "2026-11-15",
+    "end": "2026-11-20",
+    "found_at": "2026-11-13T02:33:17.346883"
   }
 ]
