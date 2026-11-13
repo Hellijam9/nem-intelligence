@@ -4738,5 +4738,25 @@
     "start": "2026-11-15",
     "end": "2026-11-20",
     "found_at": "2026-11-13T02:33:17.346883"
+  },
+  {
+    "duid": "BW04",
+    "station": "Bayswater",
+    "owner": "AGL Macquarie Pty Limited",
+    "region": "NSW1",
+    "delta": -685,
+    "start": "2026-11-23",
+    "end": "2026-11-24",
+    "found_at": "2026-11-13T04:01:39.521097"
+  },
+  {
+    "duid": "YWPS1",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": -330,
+    "start": "2026-11-15",
+    "end": "2026-11-23",
+    "found_at": "2026-11-13T04:01:39.521097"
   }
 ]
