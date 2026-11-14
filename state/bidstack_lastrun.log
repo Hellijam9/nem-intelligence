@@ -1,1 +1,29 @@
-[bid_stack] Bidmove_Complete for 20261113 not published yet - will retry on the next trigger
+[bid_stack] downloading PUBLIC_BIDMOVE_COMPLETE_20261113_0000000548466910.zip
+[bid_stack] bids: 482 DUIDs with energy price bands, 138816 per-interval volume rows; 101 DUIDs bidding to consume
+[bid_stack] dispatch: 166176 unit-interval rows
+[bid_stack] stack: 135473 unit-interval-band rows from 138816 unit-intervals
+[bid_stack] load bids: 24395 unit-interval-band rows
+[bid_stack] interconnector limits: 83 peak intervals
+[bid_stack] price sensitivities: PUBLIC_PREDISPATCH_SENSITIVITIES_20261114103516_0000000548508173.zip (35 half-hours)
+[bid_stack] ST PASA unit availability: PUBLIC_STPASA_DUIDAVAILABILITY_202611141000_0000000548503752.zip
+[bid_stack] forward look: 20 region-blocks
+[bid_stack] dashboard written: /home/runner/work/nem-intelligence/nem-intelligence/docs/bidstack/index.html
+Bid stack 2026-11-13 (evening 17:00-20:30 NEM)
+NSW: peak 17:05 | sub-$300 headroom 2,866MW | most $300+: Snowy Hydro 910MW
+QLD: peak 17:05 | sub-$300 headroom 2,743MW | most $300+: Origin Energy 453MW
+VIC: peak 17:50 | sub-$300 headroom 1,920MW | most $300+: Snowy Hydro 1,153MW
+SA: peak 19:25 | sub-$300 headroom 1,561MW | most $300+: Origin Energy 312MW
+TAS: peak 19:40 | sub-$300 headroom 490MW | most $300+: Hydro Tas 392MW
+Daytime 09:00-17:00:
+NSW: <=$0 0% of intervals | 6,788MW below $0, 97MW at floor | charge bids 2,307MW
+QLD: <=$0 6% of intervals | 8,046MW below $0, 510MW at floor | charge bids 1,839MW
+VIC: <=$0 1% of intervals | 3,847MW below $0, 44MW at floor | charge bids 1,813MW
+SA: <=$0 6% of intervals | 982MW below $0, 331MW at floor | charge bids 726MW
+TAS: <=$0 0% of intervals | 473MW below $0, 47MW at floor | charge bids 0MW
+
+- NSW week ahead (7-day predispatch, indicative): evening highs Mon 16 $23,200, Tue 17 $23,200, Wed 18 $23,200, Thu 19 $23,200, Fri 20 $23,200.
+- QLD week ahead (7-day predispatch, indicative): evening highs Mon 16 $21,829, Tue 17 $21,021, Wed 18 $20,212, Thu 19 $20,396, Fri 20 $20,581.
+- SA week ahead (7-day predispatch, indicative): evening highs Mon 16 $21,478, Tue 17 $22,707, Wed 18 $23,200, Thu 19 $23,200, Fri 20 $23,200.
+- TAS week ahead (7-day predispatch, indicative): evening highs Mon 16 $19,301, Tue 17 $19,925, Wed 18 $19,986, Thu 19 $20,870, Fri 20 $20,400.
+- VIC week ahead (7-day predispatch, indicative): evening highs Mon 16 $21,527, Tue 17 $22,278, Wed 18 $22,337, Thu 19 $23,192, Fri 20 $23,200.
+- NSW evening peak: Akaysha priced 61pp more of its capacity at $300+ than its 20-day norm (64% of 842MW).
