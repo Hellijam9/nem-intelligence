@@ -4788,5 +4788,25 @@
     "start": "2026-11-15",
     "end": "2026-11-15",
     "found_at": "2026-11-14T05:27:06.080482"
+  },
+  {
+    "duid": "ER04",
+    "station": "Eraring",
+    "owner": "Origin Energy Eraring Pty Ltd",
+    "region": "NSW1",
+    "delta": -700,
+    "start": "2026-11-24",
+    "end": "2026-11-25",
+    "found_at": "2026-11-16T01:02:02.808352"
+  },
+  {
+    "duid": "BRAEMAR3",
+    "station": "Braemar Power",
+    "owner": "Braemar Power Project Pty Ltd",
+    "region": "QLD1",
+    "delta": 167,
+    "start": "2026-12-01",
+    "end": "2026-12-11",
+    "found_at": "2026-11-16T01:02:02.808352"
   }
 ]
