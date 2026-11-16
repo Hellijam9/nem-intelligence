@@ -4808,5 +4808,15 @@
     "start": "2026-12-01",
     "end": "2026-12-11",
     "found_at": "2026-11-16T01:02:02.808352"
+  },
+  {
+    "duid": "TUMUT3",
+    "station": "Tumut3",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": -200,
+    "start": "2026-11-21",
+    "end": "2026-11-23",
+    "found_at": "2026-11-16T02:34:00.331464"
   }
 ]
