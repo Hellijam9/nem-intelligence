@@ -4918,5 +4918,15 @@
     "start": "2026-11-24",
     "end": "2026-11-24",
     "found_at": "2026-11-17T07:01:56.583517"
+  },
+  {
+    "duid": "GORDON",
+    "station": "Gordon",
+    "owner": "Hydro-Electric Corporation",
+    "region": "TAS1",
+    "delta": -144,
+    "start": "2027-01-12",
+    "end": "2027-01-14",
+    "found_at": "2026-11-18T00:42:20.249626"
   }
 ]
