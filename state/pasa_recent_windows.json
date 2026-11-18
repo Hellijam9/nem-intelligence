@@ -4978,5 +4978,35 @@
     "start": "2026-12-01",
     "end": "2026-12-03",
     "found_at": "2026-11-18T07:02:13.443699"
+  },
+  {
+    "duid": "HUNTER1",
+    "station": "Hunter Power Station",
+    "owner": "Snowy Hydro Limited",
+    "region": "NSW1",
+    "delta": -330,
+    "start": "2026-12-01",
+    "end": "2026-12-04",
+    "found_at": "2026-11-18T10:01:41.014428"
+  },
+  {
+    "duid": "HUNTER2",
+    "station": "Hunter Power Station",
+    "owner": "Snowy Hydro Limited",
+    "region": "NSW1",
+    "delta": -330,
+    "start": "2026-12-01",
+    "end": "2026-12-04",
+    "found_at": "2026-11-18T10:01:41.014428"
+  },
+  {
+    "duid": "TUMUT3",
+    "station": "Tumut3",
+    "owner": "Snowy Hydro Ltd",
+    "region": "NSW1",
+    "delta": 300,
+    "start": "2026-11-23",
+    "end": "2026-11-23",
+    "found_at": "2026-11-18T10:01:41.014428"
   }
 ]
