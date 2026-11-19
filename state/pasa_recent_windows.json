@@ -5038,5 +5038,35 @@
     "start": "2026-11-23",
     "end": "2026-11-25",
     "found_at": "2026-11-19T02:33:52.671172"
+  },
+  {
+    "duid": "LOYYB1",
+    "station": "Loy Yang B",
+    "owner": "Gippsland Power Pty Ltd / LYB Ventures Australia Pty Ltd / Traralgon Power Pty Ltd / Latrobe Power Pty Ltd / LYB Australia Limited",
+    "region": "VIC1",
+    "delta": 580,
+    "start": "2029-11-18",
+    "end": "2029-11-18",
+    "found_at": "2026-11-19T04:01:56.012669"
+  },
+  {
+    "duid": "ER01",
+    "station": "Eraring",
+    "owner": "Origin Energy Eraring Pty Ltd",
+    "region": "NSW1",
+    "delta": -490,
+    "start": "2026-11-27",
+    "end": "2026-11-27",
+    "found_at": "2026-11-19T04:01:56.012669"
+  },
+  {
+    "duid": "MPP_1",
+    "station": "Millmerran",
+    "owner": "Millmerran Power Partners",
+    "region": "QLD1",
+    "delta": -350,
+    "start": "2026-11-23",
+    "end": "2026-11-25",
+    "found_at": "2026-11-19T04:01:56.012669"
   }
 ]
