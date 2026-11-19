@@ -5008,5 +5008,25 @@
     "start": "2026-11-23",
     "end": "2026-11-23",
     "found_at": "2026-11-18T10:01:41.014428"
+  },
+  {
+    "duid": "LYA1",
+    "station": "Loy Yang A",
+    "owner": "AGL Loy Yang Marketing Pty Ltd",
+    "region": "VIC1",
+    "delta": -560,
+    "start": "2026-11-26",
+    "end": "2026-11-28",
+    "found_at": "2026-11-19T00:00:28.309773"
+  },
+  {
+    "duid": "LYA1",
+    "station": "Loy Yang A",
+    "owner": "AGL Loy Yang Marketing Pty Ltd",
+    "region": "VIC1",
+    "delta": -540,
+    "start": "2026-11-29",
+    "end": "2026-11-30",
+    "found_at": "2026-11-19T00:00:28.309773"
   }
 ]
