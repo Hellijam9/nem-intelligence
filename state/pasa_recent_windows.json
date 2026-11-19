@@ -5108,5 +5108,25 @@
     "start": "2026-12-04",
     "end": "2026-12-05",
     "found_at": "2026-11-19T07:01:58.076011"
+  },
+  {
+    "duid": "GSTONE1",
+    "station": "Gladstone",
+    "owner": "Gladstone Power Station Participants",
+    "region": "QLD1",
+    "delta": -280,
+    "start": "2026-11-23",
+    "end": "2026-11-27",
+    "found_at": "2026-11-19T10:04:44.853038"
+  },
+  {
+    "duid": "GSTONE1",
+    "station": "Gladstone",
+    "owner": "Gladstone Power Station Participants",
+    "region": "QLD1",
+    "delta": -240,
+    "start": "2026-11-21",
+    "end": "2026-11-23",
+    "found_at": "2026-11-19T10:04:44.853038"
   }
 ]
