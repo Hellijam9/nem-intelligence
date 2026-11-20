@@ -5258,5 +5258,25 @@
     "start": "2026-12-18",
     "end": "2026-12-19",
     "found_at": "2026-11-20T04:01:51.481803"
+  },
+  {
+    "duid": "MPP_1",
+    "station": "Millmerran",
+    "owner": "Millmerran Power Partners",
+    "region": "QLD1",
+    "delta": -435,
+    "start": "2026-11-26",
+    "end": "2026-11-27",
+    "found_at": "2026-11-20T05:34:20.615128"
+  },
+  {
+    "duid": "MP2",
+    "station": "Mt Piper",
+    "owner": "EnergyAustralia NSW Pty Ltd",
+    "region": "NSW1",
+    "delta": -420,
+    "start": "2026-11-26",
+    "end": "2026-11-28",
+    "found_at": "2026-11-20T05:34:20.615128"
   }
 ]
