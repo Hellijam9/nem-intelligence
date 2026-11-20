@@ -5188,5 +5188,25 @@
     "start": "2026-11-23",
     "end": "2026-11-25",
     "found_at": "2026-11-20T01:33:03.535347"
+  },
+  {
+    "duid": "MP2",
+    "station": "Mt Piper",
+    "owner": "EnergyAustralia NSW Pty Ltd",
+    "region": "NSW1",
+    "delta": -700,
+    "start": "2026-11-25",
+    "end": "2026-11-25",
+    "found_at": "2026-11-20T02:33:49.898516"
+  },
+  {
+    "duid": "LVES1",
+    "station": "Latrobe Valley BESS",
+    "owner": "Tilt Renewables Australia Pty Ltd",
+    "region": "VIC1",
+    "delta": -100,
+    "start": "2026-11-23",
+    "end": "2026-11-25",
+    "found_at": "2026-11-20T02:33:49.898516"
   }
 ]
