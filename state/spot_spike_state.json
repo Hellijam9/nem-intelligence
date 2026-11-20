@@ -2,9 +2,9 @@
   "active_tier": {
     "NSW1": -1,
     "QLD1": -1,
-    "VIC1": 2,
+    "VIC1": -1,
     "SA1": -1,
-    "TAS1": 2
+    "TAS1": -1
   },
-  "last_settlementdate": "2026/11/21 02:15:00"
+  "last_settlementdate": "2026/11/21 02:20:00"
 }
