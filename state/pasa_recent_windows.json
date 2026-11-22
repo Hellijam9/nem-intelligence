@@ -5318,5 +5318,25 @@
     "start": "2026-11-28",
     "end": "2026-12-11",
     "found_at": "2026-11-21T04:02:08.433631"
+  },
+  {
+    "duid": "YWPS1",
+    "station": "Yallourn",
+    "owner": "EnergyAustralia Yallourn Pty Ltd",
+    "region": "VIC1",
+    "delta": -345,
+    "start": "2026-11-24",
+    "end": "2026-11-25",
+    "found_at": "2026-11-22T23:15:40.010474"
+  },
+  {
+    "duid": "YABULU",
+    "station": "Townsville Gas Turbine",
+    "owner": "RATCH-Australia",
+    "region": "QLD1",
+    "delta": -174,
+    "start": "2026-11-24",
+    "end": "2026-11-30",
+    "found_at": "2026-11-22T23:15:40.010474"
   }
 ]
