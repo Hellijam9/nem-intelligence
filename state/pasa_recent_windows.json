@@ -5338,5 +5338,25 @@
     "start": "2026-11-24",
     "end": "2026-11-30",
     "found_at": "2026-11-22T23:15:40.010474"
+  },
+  {
+    "duid": "TORRB4",
+    "station": "Torrens Island B",
+    "owner": "AGL SA Generation Pty Limited",
+    "region": "SA1",
+    "delta": 185,
+    "start": "2026-12-15",
+    "end": "2026-12-15",
+    "found_at": "2026-11-23T04:02:11.662070"
+  },
+  {
+    "duid": "ER03",
+    "station": "Eraring",
+    "owner": "Origin Energy Eraring Pty Ltd",
+    "region": "NSW1",
+    "delta": -180,
+    "start": "2026-12-01",
+    "end": "2026-12-01",
+    "found_at": "2026-11-23T04:02:11.662070"
   }
 ]
