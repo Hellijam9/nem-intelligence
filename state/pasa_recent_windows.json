@@ -5358,5 +5358,45 @@
     "start": "2026-12-01",
     "end": "2026-12-01",
     "found_at": "2026-11-23T04:02:11.662070"
+  },
+  {
+    "duid": "WILLBES1",
+    "station": "",
+    "owner": "",
+    "region": "NSW1",
+    "delta": -250,
+    "start": "2027-08-22",
+    "end": "2027-08-28",
+    "found_at": "2026-11-23T06:21:46.328428"
+  },
+  {
+    "duid": "WILLBES1",
+    "station": "",
+    "owner": "",
+    "region": "NSW1",
+    "delta": -250,
+    "start": "2028-08-27",
+    "end": "2028-09-02",
+    "found_at": "2026-11-23T06:21:46.328428"
+  },
+  {
+    "duid": "WILLBES1",
+    "station": "",
+    "owner": "",
+    "region": "NSW1",
+    "delta": -250,
+    "start": "2029-08-26",
+    "end": "2029-09-01",
+    "found_at": "2026-11-23T06:21:46.328428"
+  },
+  {
+    "duid": "ER03",
+    "station": "Eraring",
+    "owner": "Origin Energy Eraring Pty Ltd",
+    "region": "NSW1",
+    "delta": 160,
+    "start": "2026-12-01",
+    "end": "2026-12-01",
+    "found_at": "2026-11-23T06:21:46.328428"
   }
 ]
