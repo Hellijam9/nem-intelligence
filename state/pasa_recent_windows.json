@@ -5448,5 +5448,35 @@
     "start": "2027-07-12",
     "end": "2027-07-22",
     "found_at": "2026-11-24T04:01:55.434780"
+  },
+  {
+    "duid": "BW04",
+    "station": "Bayswater",
+    "owner": "AGL Macquarie Pty Limited",
+    "region": "NSW1",
+    "delta": -685,
+    "start": "2026-11-26",
+    "end": "2026-11-30",
+    "found_at": "2026-11-24T05:33:28.602317"
+  },
+  {
+    "duid": "TARONG#3",
+    "station": "Tarong",
+    "owner": "Stanwell Corporation Limited",
+    "region": "QLD1",
+    "delta": 350,
+    "start": "2026-11-30",
+    "end": "2026-12-01",
+    "found_at": "2026-11-24T05:33:28.602317"
+  },
+  {
+    "duid": "MP2",
+    "station": "Mt Piper",
+    "owner": "EnergyAustralia NSW Pty Ltd",
+    "region": "NSW1",
+    "delta": 220,
+    "start": "2026-12-01",
+    "end": "2026-12-02",
+    "found_at": "2026-11-24T05:33:28.602317"
   }
 ]
