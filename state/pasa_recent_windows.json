@@ -5438,5 +5438,15 @@
     "start": "2026-11-25",
     "end": "2026-11-25",
     "found_at": "2026-11-24T01:33:44.680388"
+  },
+  {
+    "duid": "MCKAY1",
+    "station": "Bogong_Mackay",
+    "owner": "AGL Hydro Partnership",
+    "region": "VIC1",
+    "delta": 300,
+    "start": "2027-07-12",
+    "end": "2027-07-22",
+    "found_at": "2026-11-24T04:01:55.434780"
   }
 ]
