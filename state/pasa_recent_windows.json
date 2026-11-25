@@ -5558,5 +5558,25 @@
     "start": "2026-12-02",
     "end": "2026-12-12",
     "found_at": "2026-11-25T07:02:03.023863"
+  },
+  {
+    "duid": "BW04",
+    "station": "Bayswater",
+    "owner": "AGL Macquarie Pty Limited",
+    "region": "NSW1",
+    "delta": -685,
+    "start": "2026-11-30",
+    "end": "2026-12-02",
+    "found_at": "2026-11-25T22:33:40.088873"
+  },
+  {
+    "duid": "GSTONE1",
+    "station": "Gladstone",
+    "owner": "Gladstone Power Station Participants",
+    "region": "QLD1",
+    "delta": -250,
+    "start": "2026-11-27",
+    "end": "2026-12-03",
+    "found_at": "2026-11-25T22:33:40.088873"
   }
 ]
