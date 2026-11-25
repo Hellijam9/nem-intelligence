@@ -5508,5 +5508,15 @@
     "start": "2027-10-11",
     "end": "2027-10-19",
     "found_at": "2026-11-24T07:02:13.745355"
+  },
+  {
+    "duid": "MPP_1",
+    "station": "Millmerran",
+    "owner": "Millmerran Power Partners",
+    "region": "QLD1",
+    "delta": 435,
+    "start": "2026-11-27",
+    "end": "2026-11-27",
+    "found_at": "2026-11-25T02:33:33.852217"
   }
 ]
