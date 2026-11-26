@@ -5618,5 +5618,25 @@
     "start": "2026-11-29",
     "end": "2026-11-30",
     "found_at": "2026-11-26T04:33:49.748863"
+  },
+  {
+    "duid": "TARONG#3",
+    "station": "Tarong",
+    "owner": "Stanwell Corporation Limited",
+    "region": "QLD1",
+    "delta": -350,
+    "start": "2026-11-30",
+    "end": "2026-12-02",
+    "found_at": "2026-11-26T07:34:45.941229"
+  },
+  {
+    "duid": "URANQ14",
+    "station": "Uranquinty",
+    "owner": "Origin Energy Uranquinty Power Pty Ltd",
+    "region": "NSW1",
+    "delta": -173,
+    "start": "2026-11-28",
+    "end": "2026-11-30",
+    "found_at": "2026-11-26T07:34:45.941229"
   }
 ]
