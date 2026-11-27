@@ -5758,5 +5758,135 @@
     "start": "2026-11-29",
     "end": "2026-11-30",
     "found_at": "2026-11-27T03:04:17.974449"
+  },
+  {
+    "duid": "TNPS1",
+    "station": "Tarong North",
+    "owner": "Stanwell Corporation Limited",
+    "region": "QLD1",
+    "delta": 443,
+    "start": "2029-04-06",
+    "end": "2029-06-01",
+    "found_at": "2026-11-27T04:02:21.820072"
+  },
+  {
+    "duid": "ER01",
+    "station": "Eraring",
+    "owner": "Origin Energy Eraring Pty Ltd",
+    "region": "NSW1",
+    "delta": -420,
+    "start": "2026-12-11",
+    "end": "2026-12-12",
+    "found_at": "2026-11-27T04:02:21.820072"
+  },
+  {
+    "duid": "ER01",
+    "station": "Eraring",
+    "owner": "Origin Energy Eraring Pty Ltd",
+    "region": "NSW1",
+    "delta": 420,
+    "start": "2026-12-04",
+    "end": "2026-12-05",
+    "found_at": "2026-11-27T04:02:21.820072"
+  },
+  {
+    "duid": "ER02",
+    "station": "Eraring",
+    "owner": "Origin Energy Eraring Pty Ltd",
+    "region": "NSW1",
+    "delta": -420,
+    "start": "2026-12-11",
+    "end": "2026-12-12",
+    "found_at": "2026-11-27T04:02:21.820072"
+  },
+  {
+    "duid": "ER02",
+    "station": "Eraring",
+    "owner": "Origin Energy Eraring Pty Ltd",
+    "region": "NSW1",
+    "delta": 420,
+    "start": "2026-12-05",
+    "end": "2026-12-05",
+    "found_at": "2026-11-27T04:02:21.820072"
+  },
+  {
+    "duid": "ER03",
+    "station": "Eraring",
+    "owner": "Origin Energy Eraring Pty Ltd",
+    "region": "NSW1",
+    "delta": -420,
+    "start": "2026-12-11",
+    "end": "2026-12-12",
+    "found_at": "2026-11-27T04:02:21.820072"
+  },
+  {
+    "duid": "ER03",
+    "station": "Eraring",
+    "owner": "Origin Energy Eraring Pty Ltd",
+    "region": "NSW1",
+    "delta": 420,
+    "start": "2026-12-04",
+    "end": "2026-12-05",
+    "found_at": "2026-11-27T04:02:21.820072"
+  },
+  {
+    "duid": "ER04",
+    "station": "Eraring",
+    "owner": "Origin Energy Eraring Pty Ltd",
+    "region": "NSW1",
+    "delta": -420,
+    "start": "2026-12-11",
+    "end": "2026-12-12",
+    "found_at": "2026-11-27T04:02:21.820072"
+  },
+  {
+    "duid": "ER04",
+    "station": "Eraring",
+    "owner": "Origin Energy Eraring Pty Ltd",
+    "region": "NSW1",
+    "delta": 420,
+    "start": "2026-12-04",
+    "end": "2026-12-05",
+    "found_at": "2026-11-27T04:02:21.820072"
+  },
+  {
+    "duid": "TARONG#2",
+    "station": "Tarong",
+    "owner": "Stanwell Corporation Limited",
+    "region": "QLD1",
+    "delta": -350,
+    "start": "2029-04-06",
+    "end": "2029-06-21",
+    "found_at": "2026-11-27T04:02:21.820072"
+  },
+  {
+    "duid": "TARONG#2",
+    "station": "Tarong",
+    "owner": "Stanwell Corporation Limited",
+    "region": "QLD1",
+    "delta": 350,
+    "start": "2028-08-18",
+    "end": "2028-11-02",
+    "found_at": "2026-11-27T04:02:21.820072"
+  },
+  {
+    "duid": "ER02",
+    "station": "Eraring",
+    "owner": "Origin Energy Eraring Pty Ltd",
+    "region": "NSW1",
+    "delta": 340,
+    "start": "2026-12-04",
+    "end": "2026-12-04",
+    "found_at": "2026-11-27T04:02:21.820072"
+  },
+  {
+    "duid": "BRAEMAR3",
+    "station": "Braemar Power",
+    "owner": "Braemar Power Project Pty Ltd",
+    "region": "QLD1",
+    "delta": 167,
+    "start": "2026-11-30",
+    "end": "2026-11-30",
+    "found_at": "2026-11-27T04:02:21.820072"
   }
 ]
