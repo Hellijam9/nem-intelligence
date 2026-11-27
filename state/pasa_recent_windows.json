@@ -5898,5 +5898,35 @@
     "start": "2026-11-29",
     "end": "2026-11-30",
     "found_at": "2026-11-27T06:34:13.164020"
+  },
+  {
+    "duid": "HUNTER1",
+    "station": "Hunter Power Station",
+    "owner": "Snowy Hydro Limited",
+    "region": "NSW1",
+    "delta": -330,
+    "start": "2026-12-09",
+    "end": "2026-12-22",
+    "found_at": "2026-11-27T10:02:05.624450"
+  },
+  {
+    "duid": "HUNTER2",
+    "station": "Hunter Power Station",
+    "owner": "Snowy Hydro Limited",
+    "region": "NSW1",
+    "delta": -330,
+    "start": "2026-12-09",
+    "end": "2026-12-22",
+    "found_at": "2026-11-27T10:02:05.624450"
+  },
+  {
+    "duid": "LNGS2",
+    "station": "Laverton North",
+    "owner": "Snowy Hydro Ltd",
+    "region": "VIC1",
+    "delta": -151,
+    "start": "2026-12-01",
+    "end": "2026-12-01",
+    "found_at": "2026-11-27T10:02:05.624450"
   }
 ]
